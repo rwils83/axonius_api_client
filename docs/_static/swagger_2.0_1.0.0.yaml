@@ -1,15 +1,15 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Axonius REST API
   description: API for Axonius
-  termsOfService: 'http://swagger.io/terms/'
+  termsOfService: "http://swagger.io/terms/"
   contact:
     email: support@axonius.com
     name: Axonius
-    url: 'https://axonius.com'
+    url: "https://axonius.com"
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   version: "2.0_1.0.0"
 basePath: /api/V1
 securityDefinitions:
@@ -44,29 +44,29 @@ paths:
         - in: body
           name: RequestAssets
           schema:
-            $ref: '#/definitions/RequestAssets'
+            $ref: "#/definitions/RequestAssets"
       responses:
-        '200':
-          $ref: '#/responses/AssetsResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
-  '/users/{id}':
+        "200":
+          $ref: "#/responses/AssetsResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
+  "/users/{id}":
     get:
       tags:
         - Users
       summary: Get all adapter keys and values for a user by internal_axon_id
       operationId: AssetByIdUserOperation
       parameters:
-        - $ref: '#/parameters/asset_id_parameter'
+        - $ref: "#/parameters/asset_id_parameter"
       responses:
-        '200':
-          $ref: '#/responses/AssetByIdResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
-        '404':
-          $ref: '#/responses/ErrorNotFoundByIdResponse'
+        "200":
+          $ref: "#/responses/AssetByIdResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
+        "404":
+          $ref: "#/responses/ErrorNotFoundByIdResponse"
   /users/count:
     post:
       tags:
@@ -77,14 +77,14 @@ paths:
         - in: body
           name: RequestAssetCount
           schema:
-            $ref: '#/definitions/RequestAssetCount'
+            $ref: "#/definitions/RequestAssetCount"
       responses:
-        '200':
-          $ref: '#/responses/AssetCountResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetCountResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
   /users/fields:
     get:
       tags:
@@ -92,10 +92,10 @@ paths:
       summary: Get all fields defined for user assets
       operationId: AssetFieldsUserOperation
       responses:
-        '200':
-          $ref: '#/responses/AssetFieldsResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetFieldsResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
   /users/labels:
     get:
       tags:
@@ -103,10 +103,10 @@ paths:
       summary: Get all labels (tags in GUI) assigned to user assets
       operationId: AssetLabelUserAddOperation
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelGetResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelGetResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Users
@@ -116,14 +116,14 @@ paths:
         - in: body
           name: RequestAssetLabelAddRemove
           schema:
-            $ref: '#/definitions/RequestAssetLabelAddRemove'
+            $ref: "#/definitions/RequestAssetLabelAddRemove"
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Users
@@ -133,14 +133,14 @@ paths:
         - in: body
           name: RequestAssetLabelAddRemove
           schema:
-            $ref: '#/definitions/RequestAssetLabelAddRemove'
+            $ref: "#/definitions/RequestAssetLabelAddRemove"
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
   /devices:
     post:
       tags:
@@ -153,29 +153,29 @@ paths:
         - in: body
           name: RequestAssets
           schema:
-            $ref: '#/definitions/RequestAssets'
+            $ref: "#/definitions/RequestAssets"
       responses:
-        '200':
-          $ref: '#/responses/AssetsResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
-  '/devices/{id}':
+        "200":
+          $ref: "#/responses/AssetsResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
+  "/devices/{id}":
     get:
       tags:
         - Devices
       summary: Get all adapter keys and values for a device by internal_axon_id
       operationId: AssetByIdDeviceOperation
       parameters:
-        - $ref: '#/parameters/asset_id_parameter'
+        - $ref: "#/parameters/asset_id_parameter"
       responses:
-        '200':
-          $ref: '#/responses/AssetByIdResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
-        '404':
-          $ref: '#/responses/ErrorNotFoundByIdResponse'
+        "200":
+          $ref: "#/responses/AssetByIdResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
+        "404":
+          $ref: "#/responses/ErrorNotFoundByIdResponse"
   /devices/count:
     post:
       tags:
@@ -186,14 +186,14 @@ paths:
         - in: body
           name: RequestAssetCount
           schema:
-            $ref: '#/definitions/RequestAssetCount'
+            $ref: "#/definitions/RequestAssetCount"
       responses:
-        '200':
-          $ref: '#/responses/AssetCountResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetCountResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
   /devices/fields:
     get:
       tags:
@@ -201,10 +201,10 @@ paths:
       summary: Get all fields defined for device assets
       operationId: AssetFieldsDeviceOperation
       responses:
-        '200':
-          $ref: '#/responses/AssetFieldsResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetFieldsResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
   /devices/labels:
     get:
       tags:
@@ -212,10 +212,10 @@ paths:
       summary: Get all labels (tags in GUI) assigned to device assets
       operationId: AssetLabelDeviceGetOperation
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelGetResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelGetResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Devices
@@ -225,14 +225,14 @@ paths:
         - in: body
           name: RequestAssetLabelAddRemove
           schema:
-            $ref: '#/definitions/RequestAssetLabelAddRemove'
+            $ref: "#/definitions/RequestAssetLabelAddRemove"
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Devices
@@ -242,14 +242,14 @@ paths:
         - in: body
           name: RequestAssetLabelAddRemove
           schema:
-            $ref: '#/definitions/RequestAssetLabelAddRemove'
+            $ref: "#/definitions/RequestAssetLabelAddRemove"
       responses:
-        '200':
-          $ref: '#/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/responses/ErrorUnauthorizedResponse"
 
 parameters:
   node_id_parameter:
@@ -397,9 +397,9 @@ definitions:
       assets:
         type: array
         items:
-          $ref: '#/definitions/ObjectAsset'
+          $ref: "#/definitions/ObjectAsset"
       page:
-        $ref: '#/definitions/ObjectPageInfo'
+        $ref: "#/definitions/ObjectPageInfo"
     required:
       - assets
       - page
@@ -409,14 +409,14 @@ definitions:
       generic:
         type: array
         items:
-          $ref: '#/definitions/ObjectField'
+          $ref: "#/definitions/ObjectField"
       schema:
         type: object
         properties:
           generic:
             type: array
             items:
-              $ref: '#/definitions/ObjectField'
+              $ref: "#/definitions/ObjectField"
           specific:
             type: object
             description: keyed on adapter name for every configured adapter
@@ -424,7 +424,7 @@ definitions:
               adapter_name:
                 type: array
                 items:
-                  $ref: '#/definitions/ObjectField'
+                  $ref: "#/definitions/ObjectField"
       specific:
         type: object
         description: keyed on adapter name for every configured adapter
@@ -432,7 +432,7 @@ definitions:
           adapter_name:
             type: array
             items:
-              $ref: '#/definitions/ObjectField'
+              $ref: "#/definitions/ObjectField"
     description: This returns variable information based on the configured adapters
   ResponseArrayLabels:
     type: array
@@ -499,7 +499,7 @@ definitions:
       unique:
         type: boolean
       items:
-        $ref: '#/definitions/ObjectFieldItems'
+        $ref: "#/definitions/ObjectFieldItems"
     required:
       - name
       - title
@@ -514,7 +514,7 @@ definitions:
         type: string
         example: Host Name
       type:
-        $ref: '#/definitions/StringCommonTypes'
+        $ref: "#/definitions/StringCommonTypes"
       branched:
         type: boolean
       description:
@@ -528,11 +528,11 @@ definitions:
         items:
           type: string
       format:
-        $ref: '#/definitions/StringCommonFormats'
+        $ref: "#/definitions/StringCommonFormats"
       unique:
         type: boolean
       items:
-        $ref: '#/definitions/ArrayFieldItems'
+        $ref: "#/definitions/ArrayFieldItems"
     required:
       - type
   ArrayFieldItems:
@@ -547,7 +547,7 @@ definitions:
           type: string
           example: Host Name
         type:
-          $ref: '#/definitions/StringCommonTypes'
+          $ref: "#/definitions/StringCommonTypes"
         branched:
           type: boolean
         description:
@@ -561,11 +561,11 @@ definitions:
           items:
             type: string
         format:
-          $ref: '#/definitions/StringCommonFormats'
+          $ref: "#/definitions/StringCommonFormats"
         unique:
           type: boolean
         items:
-          $ref: '#/definitions/ObjectFieldItems'
+          $ref: "#/definitions/ObjectFieldItems"
       required:
         - name
         - title
@@ -636,21 +636,21 @@ responses:
       Response from getting device or user assets with optional filter (query
       in GUI) and fields (columns in GUI) using paging
     schema:
-      $ref: '#/definitions/ResponseAssetPage'
+      $ref: "#/definitions/ResponseAssetPage"
   AssetByIdResponse:
     description: Response from getting a device or user asset by internal_axon_id
     schema:
-      $ref: '#/definitions/ObjectAsset'
+      $ref: "#/definitions/ObjectAsset"
   AssetFieldsResponse:
     description: Response from getting fields for device or user assets
     schema:
-      $ref: '#/definitions/ResponseAssetFields'
+      $ref: "#/definitions/ResponseAssetFields"
   AssetLabelGetResponse:
     description: >-
       Response from getting all known labels (tags in GUI) for device or user
       assets
     schema:
-      $ref: '#/definitions/ResponseArrayLabels'
+      $ref: "#/definitions/ResponseArrayLabels"
   AssetLabelAddRemoveResponse:
     description: >-
       Response from adding or removing labels (tags in GUI) to device or user
@@ -661,20 +661,20 @@ responses:
   ErrorUnauthorizedResponse:
     description: errors that come back with 401 codes
     schema:
-      $ref: '#/definitions/ResponseError'
+      $ref: "#/definitions/ResponseError"
   ErrorMalformedLabelAddRemoveResponse:
     description: Error when request is missing entities or labels properties
     schema:
-      $ref: '#/definitions/ResponseError'
+      $ref: "#/definitions/ResponseError"
   ErrorMalformedQueryResponse:
     description: Error when mongo query is malformed
     schema:
-      $ref: '#/definitions/ResponseError'
+      $ref: "#/definitions/ResponseError"
   ErrorNotFoundByIdResponse:
     description: Error when asset ID is not found
     schema:
-      $ref: '#/definitions/ResponseError'
+      $ref: "#/definitions/ResponseError"
 
 externalDocs:
   description: Axonius API Client in Python
-  url: 'https://axonius-api-client.readthedocs.io/en/latest/'
+  url: "https://axonius-api-client.readthedocs.io/en/latest/"
