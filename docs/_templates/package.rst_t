@@ -1,0 +1,52 @@
+{%- macro automodule(modname, options) -%}
+.. automodule:: {{ modname }}
+    :no-members:
+{%- endmacro %}
+
+
+{%- if pkgname.split(".")|length > 1 %}
+    {%- set shortname = pkgname.split(".")[1:] | join(".") -%}
+{%- else %}
+    {%- set shortname = pkgname -%}
+{% endif %}
+
+{%- macro toctree(docnames) -%}
+.. toctree::
+{% for docname in docnames %}
+   {{ docname }}
+{%- endfor %}
+{%- endmacro %}
+
+{%- if is_namespace %}
+{{- [shortname, "namespace"] | join(" ") | e | heading }}
+{% else %}
+{{- [shortname, "package"] | join(" ") | e | heading }}
+{% endif %}
+
+{%- if modulefirst and not is_namespace %}
+{{ automodule(pkgname, automodule_options) }}
+{% endif %}
+
+{%- if subpackages %}
+{{ toctree(subpackages) }}
+{% endif %}
+
+{%- if submodules %}
+{% if separatemodules %}
+{{ toctree(submodules) }}
+{%- else %}
+{%- for submodule in submodules %}
+{% if show_headings %}
+{{- [submodule, "module"] | join(" ") | e | heading(2) }}
+{% endif %}
+{{ automodule(submodule, automodule_options) }}
+{% endfor %}
+{%- endif %}
+{% endif %}
+
+{%- if not modulefirst and not is_namespace %}
+Module contents
+---------------
+
+{{ automodule(pkgname, automodule_options) }}
+{% endif %}

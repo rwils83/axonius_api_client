@@ -1,67 +1,37 @@
-.. include:: /root/.special.rst
-|MIT license|
-|made-with-python|
-|code-black|
+.. include:: /main/.special.rst
 
-Axonius API Client: Python API library for the Axonius Platform
+|MIT license| |made-with-python| |PyPi| |github| |doc-status| |Downloads|
+
+Axonius API Client
 ##################################################################
 
-Axonius API Client is a Python API library for the `Axonius Platform <https://www.axonius.com>`_.
+axonius-api-client is an API client for `Axonius`_. You can :doc:`Install it <main/install>` today!
+It provides:
 
-Installation
-#########################
+* A powerful :doc:`command line interface <main/usage_cli/usage_cli>` that exposes most of the
+  functionality of the underlying python library.
+* A fully modeled :doc:`python API library <main/usage_api/usage_api>` that makes using
+  the Axonius REST API easy.
 
-This library is actively maintained on GitHub, where the code is `always available <https://github.com/Axonius/axonius_api_client>`_.
+Resources:
 
-Supported & Tested Python versions
-==========================================================
-
-* 3.7.3, 3.6.8, 2.7.16
-* Windows, OSX, Linux
-
-Install into the system site-packages using pip
-============================================================
-
-   .. code-block:: console
-
-      $ pip install axonius_api_client
-
-Read more about `pip <https://pypi.org/project/pip/>`_
-
-Install into a virtual environment using pipenv
-============================================================
-
-   .. code-block:: console
-
-      $ pipenv install axonius_api_client
-
-Read more about `pipenv <https://pipenv.readthedocs.io/en/latest/>`_
-
-Clone the axonius_api_client repository using git
-============================================================
-
-   .. code-block:: console
-
-      $ git clone git://github.com/Axonius/axonius_api_client.git
-
-Directly from GitHub
-============================================================
-
-* Get the `master branch <https://github.com/Axonius/axonius_api_client/archive/master.zip>`_ which will always be the most recent stable release
-* Download a specific version from the `releases page <https://github.com/Axonius/axonius_api_client/releases>`_.
-
+* `Documentation`_
+* `PyPi package listing`_
+* `GitHub repository`_
 
 Table of Contents
 ###############################################
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :numbered:
 
-   root/release_strategy.rst
-   root/changelog.rst
-   root/todo.rst
-   root/api_ref/toc.rst
+   main/install.rst
+   main/axtokens.rst
+   main/usage_cli/usage_cli.rst
+   main/usage_api/usage_api.rst
+   main/contributing.rst
+   main/releases.rst
 
 Indices and tables
 ###############################################
@@ -70,12 +40,22 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-
+.. _Axonius: https://www.axonius.com
+.. _Documentation: https://axonius-api-client.readthedocs.io/
+.. _GitHub repository: https://github.com/Axonius/axonius_api_client
+.. _PyPi package listing: https://pypi.org/project/axonius-api-client/
+.. |Downloads| image:: https://pepy.tech/badge/axonius-api-client
+   :target: https://pepy.tech/project/axonius-api-client
 .. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
    :target: https://lbesson.mit-license.org/
-
 .. |made-with-python| image:: https://img.shields.io/badge/Made%20with-Python-1f425f.svg
    :target: https://www.python.org/
-
-.. |code-black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/python/black
+.. |PyPi| image:: https://badge.fury.io/py/axonius-api-client.svg
+   :target: https://pypi.org/project/axonius-api-client/
+   :alt: PyPi listing
+.. |github| image:: https://badge.fury.io/gh/Axonius%2Faxonius_api_client.svg
+   :target: https://github.com/Axonius/axonius_api_client
+   :alt: GitHub repository
+.. |doc-status| image:: https://readthedocs.org/projects/axonius-api-client/badge/?version=latest
+   :target: https://axonius-api-client.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status

@@ -1,16 +1,22 @@
-PACKAGE := "axonius_api_client"
-VERSION := $(shell grep __version__ $(PACKAGE)/version.py | cut -d\" -f2)
-
-# FUTURE: write Makefile doc
-# FUTURE: add check that only master branch can publish / git tag
+PACKAGE := axonius_api_client
+VERSION := $(shell python get_version.py)
+PYVER := $(cat .python_version)
 
 .PHONY: build docs
 
+help:
+	@cat Makefile.help
+
 init:
+	@echo ">>>>>>>> INITIALIZING FOR VERSION: $(VERSION)"
 	$(MAKE) pip_install_tools
 	$(MAKE) clean
 	$(MAKE) pyenv_init
 	$(MAKE) pipenv_init
+	$(MAKE) pipenv_install_lint
+	$(MAKE) pipenv_install_dev
+	$(MAKE) pipenv_install_docs
+	$(MAKE) pipenv_install_build
 
 pip_install_tools:
 	pip install --quiet --upgrade --requirement requirements-pkg.txt
@@ -27,53 +33,61 @@ pipenv_install_build:
 pipenv_install_docs:
 	pipenv run pip install --quiet --upgrade --requirement docs/requirements.txt
 
-pipenv_clean:
-	pipenv --rm || true
-
 pipenv_init:
 	pipenv install --dev --skip-lock
 
+pipenv_clean:
+	pipenv --rm || true
+
 pyenv_init:
-	pyenv install 3.7.3 -s || true
-	pyenv install 3.6.8 -s || true
-	pyenv install 2.7.16 -s || true
-	pyenv local 3.7.3 3.6.8 2.7.16 || true
+	pyenv install $(PYVER) -s || true
 
 lint:
-	$(MAKE) pipenv_install_lint
-	pipenv run which black && black $(PACKAGE) setup.py
-	pipenv run flake8 --max-line-length 89 $(PACKAGE) setup.py
-	pipenv run bandit -r . --skip B101 -x playground.py,setup.py
+	pipenv run isort $(PACKAGE) setup.py shell.py
+	pipenv run pipenv run black -l 100 $(PACKAGE) setup.py shell.py
+	pipenv run pydocstyle --match-dir='(?!tests).*' --match-dir='(?!examples).*' $(PACKAGE) setup.py shell.py
+	pipenv run flake8 --max-line-length 100 $(PACKAGE) setup.py shell.py
+	pipenv run bandit -x $(PACKAGE)/examples,$(PACKAGE)/tests --skip B101 -r $(PACKAGE)
 
 test:
-	$(MAKE) pipenv_install_dev
-	pipenv run pytest -rA --junitxml=junit-report.xml --cov-config=.coveragerc --cov-report=term --cov-report xml --cov-report=html:cov_html --cov=$(PACKAGE) --showlocals --log-cli-level=INFO --verbose --exitfirst $(PACKAGE)/tests
+	pipenv run pytest -ra -vv --showlocals --exitfirst --pdb --cov-config=.coveragerc --cov-report xml --cov-report=html:cov_html --cov=$(PACKAGE) $(PACKAGE)/tests
 
-test_debug:
-	$(MAKE) pipenv_install_dev
-	pipenv run pytest -rA --capture=no --showlocals --log-cli-level=DEBUG --verbose --exitfirst $(PACKAGE)/tests
+test_last:
+	pipenv run pytest -ra -vv --showlocals --exitfirst --last-failed --pdb --cov-config=.coveragerc --cov-report xml --cov-report=html:cov_html --cov=$(PACKAGE) $(PACKAGE)/tests
+
+test_cov_open:
+	open cov_html/index.html
 
 test_clean:
-	rm -rf .egg .eggs junit-report.xml cov_html .tox .pytest_cache .coverage
+	rm -rf .egg .eggs junit-report.xml cov_html .tox .pytest_cache .coverage coverage.xml
 
 docs:
-	$(MAKE) pipenv_install_docs
+	(cd docs && pipenv run make html SPHINXOPTS="-Wna" && cd ..)
+
+docs_dev:
 	(cd docs && pipenv run make html SPHINXOPTS="-na" && cd ..)
+
+docs_apigen:
+	pip install sphinx -t /tmp/sphinx-latest --quiet --upgrade
+	rm -rf docs/main/api
+	PYTHONPATH=/tmp/sphinx-latest /tmp/sphinx-latest/bin/sphinx-apidoc -e -P -M -f -T -t docs/_templates -o docs/main/api $(PACKAGE) $(PACKAGE)/tests $(PACKAGE)/cli
+
+docs_open:
 	open docs/_build/html/index.html
 
 docs_coverage:
-	$(MAKE) pipenv_install_docs
 	(cd docs && pipenv run make coverage && cd ..)
 	cat docs/_build/coverage/python.txt
 
 docs_linkcheck:
-	$(MAKE) pipenv_install_docs
 	(cd docs && pipenv run make linkcheck && cd ..)
 	cat docs/_build/linkcheck/output.txt
 
 docs_clean:
-	$(MAKE) pipenv_install_docs
-	(cd docs && pipenv run make clean && cd ..)
+	rm -rf docs/_build
+
+docs_dumprefs:
+	pipenv run python -m sphinx.ext.intersphinx docs/_build/html/objects.inv
 
 git_check:
 	@git diff-index --quiet HEAD && echo "*** REPO IS CLEAN" || (echo "!!! REPO IS DIRTY"; false)
@@ -84,15 +98,14 @@ git_tag:
 	@git push --tags
 	@echo "*** ADDED TAG: $(VERSION)"
 
-publish:
-	$(MAKE) lint
-	$(MAKE) build
+pkg_publish:
+	# FUTURE: add check that only master branch can publish / git tag
+	$(MAKE) pkg_build
 	$(MAKE) git_check
 	pipenv run twine upload dist/*
 
-build:
-	$(MAKE) build_clean
-	$(MAKE) pipenv_install_build
+pkg_build:
+	$(MAKE) pkg_clean
 
 	@echo "*** Building Source and Wheel (universal) distribution"
 	pipenv run python setup.py sdist bdist_wheel --universal
@@ -100,18 +113,23 @@ build:
 	@echo "*** Checking package with twine"
 	pipenv run twine check dist/*
 
-build_clean:
+pkg_install:
+	$(MAKE) pkg_build
+	pip install dist/*.whl --upgrade
+
+pkg_clean:
 	rm -rf build dist *.egg-info
 
-
-clean_files:
+files_clean:
 	find . -type d -name "__pycache__" | xargs rm -rf
 	find . -type f -name ".DS_Store" | xargs rm -f
 	find . -type f -name "*.pyc" | xargs rm -f
 
 clean:
-	$(MAKE) clean_files
-	$(MAKE) build_clean
+	$(MAKE) files_clean
+	$(MAKE) pkg_clean
 	$(MAKE) test_clean
 	$(MAKE) docs_clean
 	$(MAKE) pipenv_clean
+
+# FUTURE: add cov_publish

@@ -1,19 +1,20 @@
 # axonius_api_client
 
-An API client for [Axonius](https://axonius.com).
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![Made With Python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![PyPi package](https://badge.fury.io/py/axonius-api-client.svg)](https://pypi.org/project/axonius-api-client/)
+[![GitHub Repository](https://badge.fury.io/gh/Axonius%2Faxonius_api_client.svg)](https://github.com/Axonius/axonius_api_client)
+[![Documentation Status](https://readthedocs.org/projects/axonius-api-client/badge/?version=latest)](https://axonius-api-client.readthedocs.io/en/latest/?badge=latest)
+[![Downloads](https://pepy.tech/badge/axonius-api-client)](https://pepy.tech/project/axonius-api-client)
 
-## Installing
+axonius-api-client is an API client for [Axonius](https://axonius.com) that provides:
 
-Installing axonius_api_client via [pip](https://pypi.org/project/pip/) or [pipenv](https://pipenv.readthedocs.io/en/latest/) will automatically install all of the necessary dependencies.
+* A fully modeled python API library that makes using the Axonius REST API easy.
+* A powerful command line interface that exposes most of the functionality of the
+  underlying python library.
 
-## Documentation
+Resources:
 
-Found [here](https://axonius-api-client.readthedocs.io/en/latest/?)
-
-## Examples
-
-TODO
-
-## Testing
-
-TODO
+* [Documentation](https://axonius-api-client.readthedocs.io/)
+* [PyPi package listing](https://pypi.org/project/axonius-api-client/)
+* [GitHub repository](https://github.com/Axonius/axonius_api_client)

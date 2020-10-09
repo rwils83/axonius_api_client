@@ -1,4 +1,5 @@
-sphinx
-sphinx-git
-sphinx_bootstrap_theme
+Sphinx>=3.2.1
 docutils
+sphinx-click
+sphinx-rtd-theme
+sphinx-autodoc-typehints

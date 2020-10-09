@@ -1,10 +1,110 @@
 # -*- coding: utf-8 -*-
-"""Parent exception and warnings for this package."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+"""Exceptions and warnings."""
 
 
-class PackageError(Exception):
-    """Parent exception for all package errors."""
+class AxonWarning(Warning):
+    """Base class for all warnings in this package."""
+
+
+class ApiWarning(AxonWarning):
+    """Warnings for :obj:`axonius_api_client.api.mixins.Model`."""
+
+
+class AxonError(Exception):
+    """Base class for all exceptions in this package."""
+
+
+class ApiError(AxonError):
+    """Errors for :obj:`axonius_api_client.api.mixins.Model`."""
+
+
+class ToolsError(AxonError):
+    """Errors for :mod:`axonius_api_client.tools`."""
+
+
+class AuthError(AxonError):
+    """Errors for :obj:`axonius_api_client.auth.models.Model`."""
+
+
+class NotFoundError(ApiError):
+    """Error when something is not found."""
+
+
+class InvalidCredentials(AuthError):
+    """Error when credentials are invalid."""
+
+
+class NotLoggedIn(AuthError):
+    """Error when not logged in."""
+
+
+class AlreadyLoggedIn(AuthError):
+    """Error when already logged in."""
+
+
+class ConnectError(AxonError):
+    """Error in :obj:`axonius_api_client.connect.Connect`."""
+
+
+class HttpError(AxonError):
+    """Errors for :obj:`axonius_api_client.http.Http`."""
+
+
+class ConfigError(ApiError):
+    """Errors in a configuration."""
+
+
+class ConfigInvalidValue(ConfigError):
+    """Error when a supplied configuration has a bad type or is the wrong choice."""
+
+
+class ConfigUnchanged(ConfigError):
+    """Error when a supplied configuration is no different from the current configuration."""
+
+
+class ConfigUnknown(ConfigError):
+    """Error when an unknown configuration key is supplied."""
+
+
+class ConfigRequired(ConfigError):
+    """Error when a required configuration key is not supplied."""
+
+
+class CnxError(ApiError):
+    """Errors for connections."""
+
+
+class CnxGoneError(CnxError):
+    """Errors when a connection has gone away."""
+
+
+class CnxUpdateError(CnxError):
+    """Errors when updating a connections configuration."""
+
+
+class CnxTestError(CnxError):
+    """Errors when testing a connections configuration."""
+
+
+class CnxAddError(CnxError):
+    """Errors when adding a new connection."""
+
+
+class ResponseError(ApiError):
+    """Errors when checking responses."""
+
+
+class ResponseNotOk(ResponseError):
+    """Error if response has a status code that is an error and error_status is True."""
+
+
+class JsonInvalid(ResponseError):
+    """Error when response has invalid JSON."""
+
+
+class JsonError(ResponseError):
+    """Error when JSON has key:error that is not empty or key:status=error."""
+
+
+class WizardError(ApiError):
+    """Errors in query wizards."""
