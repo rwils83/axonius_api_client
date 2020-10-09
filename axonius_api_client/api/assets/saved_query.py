@@ -20,7 +20,8 @@ def check_gui_page_size(size: Optional[int] = None) -> int:
     size = size or GUI_PAGE_SIZES[0]
     if size not in GUI_PAGE_SIZES:
         raise ApiError(
-            f"gui_page_size of {size} is invalid, must be one of {GUI_PAGE_SIZES}")
+            f"gui_page_size of {size} is invalid, must be one of {GUI_PAGE_SIZES}"
+        )
     return size
 
 
@@ -239,7 +240,10 @@ class SavedQuery(ChildMixins, PagingMixinsObject):
         return self.request(method="delete", path=path, json=data)
 
     def _get(
-        self, query: Optional[str] = None, row_start: int = 0, page_size: int = PAGE_SIZE
+        self,
+        query: Optional[str] = None,
+        row_start: int = 0,
+        page_size: int = PAGE_SIZE,
     ) -> List[dict]:
         """Direct API method to get saved queries.
 

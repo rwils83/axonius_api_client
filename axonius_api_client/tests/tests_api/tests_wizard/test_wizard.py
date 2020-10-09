@@ -131,7 +131,8 @@ class TestData:
                 "field": f"{cplex}",
                 "fieldType": "axonius",
                 "filter": (
-                    f'and (({cplex} == ({{"$exists":true,"$ne":[]}})) and ' f"{cplex} != [])"
+                    f'and (({cplex} == ({{"$exists":true,"$ne":[]}})) and '
+                    f"{cplex} != [])"
                 ),
                 "filteredAdapters": None,
                 "leftBracket": False,
@@ -157,7 +158,9 @@ class TestData:
                 "compOp": "",
                 "field": f"{cplex}",
                 "fieldType": "axonius",
-                "filter": (f'and not ({cplex} == match([({sub} == regex("boom", "i"))]))'),
+                "filter": (
+                    f'and not ({cplex} == match([({sub} == regex("boom", "i"))]))'
+                ),
                 "filteredAdapters": None,
                 "leftBracket": False,
                 "logicOp": "and",
@@ -183,8 +186,7 @@ class TestCheckEntryType(TestWizard):
         assert "Invalid type" in str(exc.value)
 
     def test_valid(self, wizard):
-        ret = wizard._check_entry_type(
-            etype=Types.DICT[0].upper(), types=Types.DICT)
+        ret = wizard._check_entry_type(etype=Types.DICT[0].upper(), types=Types.DICT)
         assert ret == Types.DICT[0]
 
 
@@ -223,8 +225,7 @@ class TestGetFieldComplex(TestWizard):
 
     def test_valid(self, wizard):
         field = wizard.APIOBJ.FIELD_COMPLEX
-        ret = wizard._get_field_complex(
-            value=field, value_raw=f"{field} blah blah")
+        ret = wizard._get_field_complex(value=field, value_raw=f"{field} blah blah")
         assert ret["name_qual"] == field
 
 
@@ -236,8 +237,7 @@ class TestGetOperator(TestWizard):
             "name": "badwolf",
             "parent": "moo",
         }
-        ret = wizard._get_operator(
-            field=field, operator="equals", value_raw="boom")
+        ret = wizard._get_operator(field=field, operator="equals", value_raw="boom")
         assert ret == Operators.equals_str
 
     def test_invalid(self, wizard):
@@ -378,8 +378,7 @@ class TestSplitComplex(TestWizard):
             ],
             [
                 "badwolf // subfield contains blah // subfield contains moo",
-                ("badwolf", ["subfield contains blah",
-                             "subfield contains moo"]),
+                ("badwolf", ["subfield contains blah", "subfield contains moo"]),
             ],
             [
                 "badwolf_moo.foo // subfield contains blah // subfield contains moo",
@@ -829,7 +828,8 @@ class TestParse(TestWizard, TestData):
             pass
 
         sq = wizard.APIOBJ.saved_query.add(
-            name=name, query=ret_query, expressions=ret_exprs)
+            name=name, query=ret_query, expressions=ret_exprs
+        )
         assert sq["name"] == name
         assert sq["view"]["query"]["filter"] == exp_query
         assert sq["view"]["query"]["expressions"] == exp_exprs

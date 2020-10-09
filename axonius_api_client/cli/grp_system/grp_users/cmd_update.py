@@ -58,8 +58,7 @@ ROLE_NAME = click.option(
     show_envvar=True,
     show_default=True,
 )
-OPTIONS = [*AUTH, EXPORT, FIRST_NAME, LAST_NAME,
-           EMAIL, USER_NAME, PASSWORD, ROLE_NAME]
+OPTIONS = [*AUTH, EXPORT, FIRST_NAME, LAST_NAME, EMAIL, USER_NAME, PASSWORD, ROLE_NAME]
 
 
 @click.command(name="update", context_settings=CONTEXT_SETTINGS)

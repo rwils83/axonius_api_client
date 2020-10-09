@@ -37,7 +37,9 @@ class Signup:
         response = self.http(method="get", path=self.router.root)
         return response.json()
 
-    def _signup_post(self, password: str, company_name: str, contact_email: str) -> dict:
+    def _signup_post(
+        self, password: str, company_name: str, contact_email: str
+    ) -> dict:
         """Do the initial signup."""
         data = {
             "companyName": company_name,

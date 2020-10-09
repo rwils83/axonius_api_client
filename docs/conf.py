@@ -22,8 +22,7 @@ class FilterForIssue123(pylogging.Filter):
         return not record.getMessage().startswith("Cannot treat a function")
 
 
-logging.getLogger("sphinx_autodoc_typehints").logger.addFilter(
-    FilterForIssue123())
+logging.getLogger("sphinx_autodoc_typehints").logger.addFilter(FilterForIssue123())
 
 # -- Project information -------------------------------------------
 project = pkg.version.__project__

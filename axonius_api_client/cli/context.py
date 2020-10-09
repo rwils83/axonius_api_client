@@ -49,8 +49,7 @@ class AliasedGroup(click.Group):
         if rv is not None:
             return rv
 
-        matches = [x for x in self.list_commands(
-            ctx) if x.startswith(cmd_name)]
+        matches = [x for x in self.list_commands(ctx) if x.startswith(cmd_name)]
 
         if not matches:
             return None
@@ -167,8 +166,7 @@ class Context:
         stream_name = format(getattr(stream, "name", stream))
 
         if stream.isatty():
-            self.echo_error(
-                msg=f"No input provided on {stream_name!r}", abort=True)
+            self.echo_error(msg=f"No input provided on {stream_name!r}", abort=True)
 
         # its STDIN with input or a file
         content = stream.read().strip()
@@ -176,7 +174,8 @@ class Context:
 
         if not content:
             self.echo_error(
-                msg=f"Empty content supplied to {stream_name!r}", abort=True)
+                msg=f"Empty content supplied to {stream_name!r}", abort=True
+            )
 
         return content
 

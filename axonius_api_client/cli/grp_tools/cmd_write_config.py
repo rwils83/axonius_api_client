@@ -34,5 +34,4 @@ def cmd(ctx, url, key, secret):
     click.secho(message=msg, err=True, fg="green")
     dotenv.set_key(dotenv_path=path, key_to_set="AX_URL", value_to_set=url)
     dotenv.set_key(dotenv_path=path, key_to_set="AX_KEY", value_to_set=key)
-    dotenv.set_key(dotenv_path=path, key_to_set="AX_SECRET",
-                   value_to_set=secret)
+    dotenv.set_key(dotenv_path=path, key_to_set="AX_SECRET", value_to_set=secret)

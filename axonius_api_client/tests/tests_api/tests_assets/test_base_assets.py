@@ -55,8 +55,9 @@ class ModelMixinsBase:
     def test_model_json_error(self, apiobj):
         """Test exc thrown when json has error status."""
         with pytest.raises(JsonError):
-            apiobj.request(path=apiobj.router.root + "/badwolf",
-                           method="get", error_status=False)
+            apiobj.request(
+                path=apiobj.router.root + "/badwolf", method="get", error_status=False
+            )
 
     def test_model_no_json_error(self, apiobj):
         """Test exc thrown when status code != 200."""
@@ -75,8 +76,7 @@ class ModelMixinsBase:
 
     def test_model_json_invalid_text(self, apiobj):
         """Test that str is returned when is_json=True and error_json_invalid=False."""
-        response = apiobj.request(
-            path="", method="get", error_json_invalid=False)
+        response = apiobj.request(path="", method="get", error_json_invalid=False)
         assert isinstance(response, str)
 
     def test_model_child(self, apiobj):
@@ -150,8 +150,7 @@ class AssetsPrivate:
         query = apiobj._build_query(inner=inner, pre=pre, post=post)
         assert query == f"{pre} ({inner}) {post}"
 
-        query = apiobj._build_query(
-            inner=inner, pre=pre, post=post, not_flag=True)
+        query = apiobj._build_query(inner=inner, pre=pre, post=post, not_flag=True)
         assert query == f"{pre} (not ({inner})) {post}"
 
 
@@ -326,8 +325,7 @@ class AssetsPublic:
         regex_value = value[0:5]
 
         method = getattr(apiobj, f"get_by_{method}_regex")
-        method_args = {"value": regex_value,
-                       "not_flag": not_flag, "max_rows": 5}
+        method_args = {"value": regex_value, "not_flag": not_flag, "max_rows": 5}
         if use_field:
             method_args["field"] = use_field
 
@@ -350,7 +348,11 @@ class AssetsPublic:
             use_field=use_field,
         )
         self._get_by_value(
-            apiobj=apiobj, method=method, field=field, not_flag=True, use_field=use_field
+            apiobj=apiobj,
+            method=method,
+            field=field,
+            not_flag=True,
+            use_field=use_field,
         )
         self._get_by_values(
             apiobj=apiobj,
@@ -360,7 +362,11 @@ class AssetsPublic:
             use_field=use_field,
         )
         self._get_by_values(
-            apiobj=apiobj, method=method, field=field, not_flag=True, use_field=use_field
+            apiobj=apiobj,
+            method=method,
+            field=field,
+            not_flag=True,
+            use_field=use_field,
         )
         self._get_by_value_re(
             apiobj=apiobj,
@@ -370,5 +376,9 @@ class AssetsPublic:
             use_field=use_field,
         )
         self._get_by_value_re(
-            apiobj=apiobj, method=method, field=field, not_flag=True, use_field=use_field
+            apiobj=apiobj,
+            method=method,
+            field=field,
+            not_flag=True,
+            use_field=use_field,
         )

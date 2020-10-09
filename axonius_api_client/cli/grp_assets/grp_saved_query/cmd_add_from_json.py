@@ -14,8 +14,7 @@ OPTIONS = [*AUTH, INPUT_FILE, ABORT]
 @click.pass_context
 def cmd(ctx, url, key, secret, input_file, abort, **kwargs):
     """Add saved queries from a JSON file."""
-    new_sqs = listify(ctx.obj.read_stream_json(
-        stream=input_file, expect=(list, dict)))
+    new_sqs = listify(ctx.obj.read_stream_json(stream=input_file, expect=(list, dict)))
 
     for new_sq in new_sqs:
         remove_keys = [
@@ -38,7 +37,8 @@ def cmd(ctx, url, key, secret, input_file, abort, **kwargs):
             missing_keys = ", ".join(missing_keys)
 
             ctx.obj.echo_error(
-                msg=f"Missing required keys: {missing_keys}", abort=abort)
+                msg=f"Missing required keys: {missing_keys}", abort=abort
+            )
 
         client = ctx.obj.start_client(url=url, key=key, secret=secret)
 
@@ -55,12 +55,12 @@ def cmd(ctx, url, key, secret, input_file, abort, **kwargs):
             )
             continue
         except NotFoundError:
-            ctx.obj.echo_ok(
-                f"Saved query {sq_name!r} does not exist, will add")
+            ctx.obj.echo_ok(f"Saved query {sq_name!r} does not exist, will add")
 
         with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror, abort=abort):
             sq_uuid = apiobj.saved_query._add(data=new_sq)
             ctx.obj.echo_ok(
-                f"Successfully created saved query: {sq_name} with UUID {sq_uuid}")
+                f"Successfully created saved query: {sq_name} with UUID {sq_uuid}"
+            )
 
     ctx.exit(0)

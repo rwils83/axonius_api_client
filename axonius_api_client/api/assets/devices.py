@@ -95,7 +95,9 @@ class Devices(AssetMixin):
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_mac(self, value: str, **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_mac(
+        self, value: str, **kwargs
+    ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where mac == value."""
         kwargs["field"] = self.FIELD_MAC
         kwargs["field_manual"] = True
@@ -120,7 +122,9 @@ class Devices(AssetMixin):
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_ip(self, value: str, **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_ip(
+        self, value: str, **kwargs
+    ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip == value."""
         kwargs["field"] = self.FIELD_IP
         kwargs["field_manual"] = True
@@ -128,7 +132,12 @@ class Devices(AssetMixin):
         return self.get_by_value(**kwargs)
 
     def get_by_subnet(
-        self, value: str, not_flag: bool = False, pre: str = "", post: str = "", **kwargs
+        self,
+        value: str,
+        not_flag: bool = False,
+        pre: str = "",
+        post: str = "",
+        **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip in subnet."""
         field = self.FIELD_IP_RAW
@@ -136,8 +145,7 @@ class Devices(AssetMixin):
         network = ipaddress.ip_network(value)
         gte = int(network.network_address)
         lte = int(network.broadcast_address)
-        match = "".join(
-            ['match({"$gte": ', str(gte), ', "$lte": ', str(lte), "})"])
+        match = "".join(['match({"$gte": ', str(gte), ', "$lte": ', str(lte), "})"])
 
         inner = f"{field} == {match}"
 

@@ -28,8 +28,7 @@ class TestCallbacksTable(Callbacks):
             for x in get_schema(apiobj=apiobj, field=field_complex, key="sub_fields")
             if x["is_root"]
         ]
-        original_rows = get_rows_exist(
-            apiobj=apiobj, fields=field_complex, max_rows=5)
+        original_rows = get_rows_exist(apiobj=apiobj, fields=field_complex, max_rows=5)
 
         io_fd = io.StringIO()
 
@@ -62,8 +61,9 @@ class TestCallbacksTable(Callbacks):
             cbobj.check_table_format("badwolf")
 
     def test_check_stop(self, cbexport, apiobj):
-        cbobj = self.get_cbobj(apiobj=apiobj, cbexport=cbexport, getargs={
-                               "table_max_rows": 10})
+        cbobj = self.get_cbobj(
+            apiobj=apiobj, cbexport=cbexport, getargs={"table_max_rows": 10}
+        )
         cbobj.STATE["rows_processed_total"] = 10
         cbobj.check_stop()
         assert cbobj.STATE["stop_fetch"]

@@ -30,8 +30,7 @@ class Meta(ChildMixins):
 
     def _get_version(self, about: dict) -> str:
         """Pass."""
-        version = about.pop("Version", "") or about.pop(
-            "Installed Version", "")
+        version = about.pop("Version", "") or about.pop("Installed Version", "")
         version = version.replace("_", ".")
         return version
 

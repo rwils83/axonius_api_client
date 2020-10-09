@@ -139,7 +139,9 @@ def check_sq_exist(ctx, apiobj, name, overwrite):
     else:
         if not overwrite:
             ctx.obj.echo_error(
-                f"Saved Query named {name!r} exists and overwrite is False")
+                f"Saved Query named {name!r} exists and overwrite is False"
+            )
         else:
             ctx.obj.echo_ok(
-                f"Saved query {name!r} exists and overwrite is True, will add")
+                f"Saved query {name!r} exists and overwrite is True, will add"
+            )

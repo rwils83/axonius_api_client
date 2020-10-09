@@ -80,8 +80,9 @@ class Adapters(ModelMixins):
         adapters = self.get()
 
         keys = ["node_name", "node_id"]
-        nodes = [x for x in adapters if node.lower() in [str(x[k]).lower()
-                                                         for k in keys]]
+        nodes = [
+            x for x in adapters if node.lower() in [str(x[k]).lower() for k in keys]
+        ]
 
         if not nodes:
             err = f"No node named {node!r} found"
@@ -95,7 +96,9 @@ class Adapters(ModelMixins):
         err = f"No adapter named {name!r} found on node {node!r}"
         raise NotFoundError(tablize_adapters(adapters=adapters, err=err))
 
-    def config_get(self, name: str, node: str = DEFAULT_NODE, config_type: str = "generic") -> dict:
+    def config_get(
+        self, name: str, node: str = DEFAULT_NODE, config_type: str = "generic"
+    ) -> dict:
         """Get the advanced settings for an adapter.
 
         Args:
@@ -120,20 +123,23 @@ class Adapters(ModelMixins):
 
         if not name_config:
             name = adapter["name"]
-            valid = ", ".join(
-                [x for x in CONFIG_TYPES if f"{x}_name" in schemas])
+            valid = ", ".join([x for x in CONFIG_TYPES if f"{x}_name" in schemas])
             raise ApiError(
-                f"Adapter {name} has no config type {config_type!r}, valids: {valid}!")
+                f"Adapter {name} has no config type {config_type!r}, valids: {valid}!"
+            )
 
-        data = self._config_get(name_plugin=name_plugin,
-                                name_config=name_config)
+        data = self._config_get(name_plugin=name_plugin, name_config=name_config)
 
         data["schema"] = parse_schema(raw=data["schema"])
 
         return data
 
     def config_update(
-        self, name: str, node: str = DEFAULT_NODE, config_type: str = "generic", **kwargs
+        self,
+        name: str,
+        node: str = DEFAULT_NODE,
+        config_type: str = "generic",
+        **kwargs,
     ) -> dict:
         """Update the advanced settings for an adapter.
 
@@ -147,8 +153,7 @@ class Adapters(ModelMixins):
         kwargs.update(kwargs_config)
         adapter = self.get_by_name(name=name, node=node)
 
-        config_map = self.config_refetch(
-            adapter=adapter, config_type=config_type)
+        config_map = self.config_refetch(adapter=adapter, config_type=config_type)
 
         name_config = f"{config_type}_name"
         name_config = adapter["schemas"][name_config]
@@ -243,7 +248,9 @@ class Adapters(ModelMixins):
         path = self.router.config_set.format(
             adapter_name_raw=name_raw, adapter_config_name=name_config
         )
-        return self.request(method="post", path=path, json=new_config, error_json_invalid=False)
+        return self.request(
+            method="post", path=path, json=new_config, error_json_invalid=False
+        )
 
     def _config_get(self, name_plugin: str, name_config: str) -> dict:
         """Direct API method to set advanced settings for an adapter.
@@ -283,10 +290,10 @@ class Adapters(ModelMixins):
             file_headers: headers to use for file
         """
         data = {"field_name": field_name}
-        files = {"userfile": (file_name, file_content,
-                              file_content_type, file_headers)}
+        files = {"userfile": (file_name, file_content, file_content_type, file_headers)}
         path = self.router.file_upload.format(
-            adapter_name_raw=name_raw, adapter_node_id=node_id)
+            adapter_name_raw=name_raw, adapter_node_id=node_id
+        )
         ret = self.request(method="post", path=path, data=data, files=files)
         ret["filename"] = file_name
         return ret

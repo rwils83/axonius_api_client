@@ -29,13 +29,11 @@ class PageSizeMixin:
         self, page_size: Optional[int] = MAX_PAGE_SIZE, max_rows: Optional[int] = None
     ) -> int:
         if max_rows and max_rows < page_size:
-            self.LOG.debug(
-                f"CHANGED PAGE SIZE {page_size} to max_rows {max_rows}")
+            self.LOG.debug(f"CHANGED PAGE SIZE {page_size} to max_rows {max_rows}")
             page_size = max_rows
 
         if page_size > MAX_PAGE_SIZE or not page_size:
-            self.LOG.debug(
-                f"CHANGED PAGE SIZE {page_size} to max {MAX_PAGE_SIZE}")
+            self.LOG.debug(f"CHANGED PAGE SIZE {page_size} to max {MAX_PAGE_SIZE}")
             page_size = MAX_PAGE_SIZE
 
         return page_size
@@ -90,8 +88,7 @@ class ModelMixins(Model, PageSizeMixin):
         msgs += [f"Original exception: {exc}"] if exc else []
         msgs += [
             "Request Body:",
-            json_reload(obj=response.request.body,
-                        error=False, trim=MAX_BODY_LEN),
+            json_reload(obj=response.request.body, error=False, trim=MAX_BODY_LEN),
             "",
             "Response details:",
             f"  code: {response.status_code!r}",
@@ -106,8 +103,7 @@ class ModelMixins(Model, PageSizeMixin):
 
         if isinstance(response_obj, dict):
             if "additional_data" in response_obj:
-                msg = json_reload(obj=response_obj.pop(
-                    "additional_data"), error=False)
+                msg = json_reload(obj=response_obj.pop("additional_data"), error=False)
                 msgs += ["  ** Additional Data:", msg]
 
             if "status" in response_obj:
@@ -227,7 +223,9 @@ class ModelMixins(Model, PageSizeMixin):
             if error_json_invalid:
                 respexc = JsonInvalid(
                     self._build_err_msg(
-                        response=response, error="JSON is not valid in response", exc=exc
+                        response=response,
+                        error="JSON is not valid in response",
+                        exc=exc,
                     )
                 )
                 respexc.exc = exc
@@ -371,7 +369,10 @@ class PagingMixinsObject(PageSizeMixin):
 
                 state["rows_processed_total"] += 1
 
-                if state["max_rows"] and state["rows_processed_total"] >= state["max_rows"]:
+                if (
+                    state["max_rows"]
+                    and state["rows_processed_total"] >= state["max_rows"]
+                ):
                     stop_msg = "'rows_processed_total' greater than 'max_rows'"
                     state["stop_msg"] = stop_msg
                     state["stop_fetch"] = True

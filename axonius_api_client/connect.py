@@ -7,7 +7,16 @@ from typing import List, Optional, Union
 
 import requests
 
-from .api import Adapters, Dashboard, Devices, Enforcements, Instances, RunAction, System, Users
+from .api import (
+    Adapters,
+    Dashboard,
+    Devices,
+    Enforcements,
+    Instances,
+    RunAction,
+    System,
+    Users,
+)
 from .auth import ApiKey
 from .constants import (
     LOG_FILE_MAX_FILES,
@@ -105,8 +114,7 @@ class Connect:
                     reason = self._get_exc_reason(exc=exc)
                     cnxexc = ConnectError(f"{pre}: {reason}")
                 elif isinstance(exc, InvalidCredentials):
-                    cnxexc = ConnectError(
-                        f"{pre}: Invalid Credentials supplied")
+                    cnxexc = ConnectError(f"{pre}: Invalid Credentials supplied")
                 else:
                     cnxexc = ConnectError(f"{pre}: {exc}")
                 cnxexc.exc = exc
@@ -209,12 +217,10 @@ class Connect:
         self.url: str = url
         """URL of Axonius instance to use"""
 
-        self.TIMEOUT_CONNECT: int = kwargs.get(
-            "timeout_connect", TIMEOUT_CONNECT)
+        self.TIMEOUT_CONNECT: int = kwargs.get("timeout_connect", TIMEOUT_CONNECT)
         """Seconds to wait for connections to open to :attr:`url` ``kwargs=timeout_connect``"""
 
-        self.TIMEOUT_RESPONSE: int = kwargs.get(
-            "timeout_response", TIMEOUT_RESPONSE)
+        self.TIMEOUT_RESPONSE: int = kwargs.get("timeout_response", TIMEOUT_RESPONSE)
         """Seconds to wait for responses from :attr:`url` ``kwargs=timeout_response``"""
 
         self.CERT_CLIENT_KEY: Optional[Union[str, pathlib.Path]] = kwargs.get(
@@ -241,12 +247,14 @@ class Connect:
         """log level for this class ``kwargs=log_level``"""
 
         self.LOG_REQUEST_ATTRS: Optional[List[str]] = kwargs.get(
-            "log_request_attrs", None)
+            "log_request_attrs", None
+        )
         """request attrs to log :attr:`axonius_api_client.constants.REQUEST_ATTR_MAP`
         ``kwargs=log_request_attrs``"""
 
         self.LOG_RESPONSE_ATTRS: Optional[List[str]] = kwargs.get(
-            "log_response_attrs", None)
+            "log_response_attrs", None
+        )
         """response attrs to log :attr:`axonius_api_client.constants.RESPONSE_ATTR_MAP`
         ``kwargs=log_response_attrs``"""
 
@@ -260,51 +268,56 @@ class Connect:
         """logger to use as package root logger ``kwargs=log_logger``"""
 
         self.LOG_LEVEL_PACKAGE: Union[str, int] = kwargs.get(
-            "log_level_package", LOG_LEVEL_PACKAGE)
+            "log_level_package", LOG_LEVEL_PACKAGE
+        )
         """log level for entire package ``kwargs=log_level_package``"""
 
         self.LOG_LEVEL_HTTP: Union[str, int] = kwargs.get(
-            "log_level_http", LOG_LEVEL_HTTP)
+            "log_level_http", LOG_LEVEL_HTTP
+        )
         """log level for :obj:`axonius_api_client.http.Http` ``kwargs=log_level_http``"""
 
         self.LOG_LEVEL_AUTH: Union[str, int] = kwargs.get(
-            "log_level_auth", LOG_LEVEL_AUTH)
+            "log_level_auth", LOG_LEVEL_AUTH
+        )
         """log level for :obj:`axonius_api_client.auth.models.Mixins` ``kwargs=log_level_auth``"""
 
-        self.LOG_LEVEL_API: Union[str, int] = kwargs.get(
-            "log_level_api", LOG_LEVEL_API)
+        self.LOG_LEVEL_API: Union[str, int] = kwargs.get("log_level_api", LOG_LEVEL_API)
         """log level for :obj:`axonius_api_client.api.mixins.ModelMixins`
         ``kwargs=log_level_api``"""
 
         self.LOG_LEVEL_CONSOLE: Union[str, int] = kwargs.get(
-            "log_level_console", LOG_LEVEL_CONSOLE)
+            "log_level_console", LOG_LEVEL_CONSOLE
+        )
         """log level for logs sent to console ``kwargs=log_level_console``"""
 
         self.LOG_LEVEL_FILE: Union[str, int] = kwargs.get(
-            "log_level_file", LOG_LEVEL_FILE)
+            "log_level_file", LOG_LEVEL_FILE
+        )
         """log level for logs sent to file ``kwargs=log_level_file``"""
 
-        self.LOG_CONSOLE_FMT: str = kwargs.get(
-            "log_console_fmt", LOG_FMT_BRIEF)
+        self.LOG_CONSOLE_FMT: str = kwargs.get("log_console_fmt", LOG_FMT_BRIEF)
         """logging format to use for logs sent to console ``kwargs=log_console_fmt``"""
 
         self.LOG_FILE_FMT: str = kwargs.get("log_file_fmt", LOG_FMT_VERBOSE)
         """logging format to use for logs sent to file ``kwargs=log_file_fmt``"""
 
         self.LOG_FILE_NAME: Union[str, pathlib.Path] = kwargs.get(
-            "log_file_name", LOG_FILE_NAME)
+            "log_file_name", LOG_FILE_NAME
+        )
         """name of file to write logs to under :attr:`LOG_FILE_PATH` ``kwargs=log_file_name``"""
 
         self.LOG_FILE_PATH: Union[str, pathlib.Path] = kwargs.get(
-            "log_file_path", LOG_FILE_PATH)
+            "log_file_path", LOG_FILE_PATH
+        )
         """path to write :attr:`LOG_FILE_NAME` to ``kwargs=log_file_path``"""
 
-        self.LOG_FILE_MAX_MB: int = kwargs.get(
-            "log_file_max_mb", LOG_FILE_MAX_MB)
+        self.LOG_FILE_MAX_MB: int = kwargs.get("log_file_max_mb", LOG_FILE_MAX_MB)
         """rollover file logs at this many MB ``kwargs=log_file_max_mb``"""
 
         self.LOG_FILE_MAX_FILES: int = kwargs.get(
-            "log_file_max_files", LOG_FILE_MAX_FILES)
+            "log_file_max_files", LOG_FILE_MAX_FILES
+        )
         """number of rollover file logs to keep ``kwargs=log_file_max_files``"""
 
         self.WRAPERROR: bool = kwargs.get("wraperror", True)
@@ -326,7 +339,9 @@ class Connect:
 
         if log_console:
             self.HANDLER_CON = add_stderr(
-                obj=self.LOG_LOGGER, level=self.LOG_LEVEL_CONSOLE, fmt=self.LOG_CONSOLE_FMT
+                obj=self.LOG_LOGGER,
+                level=self.LOG_LEVEL_CONSOLE,
+                fmt=self.LOG_CONSOLE_FMT,
             )
 
         if log_file:
@@ -361,7 +376,10 @@ class Connect:
         """arguments to use for creating :attr:`HTTP`"""
 
         self.AUTH_ARGS: dict = {
-            "key": key, "secret": secret, "log_level": self.LOG_LEVEL_AUTH}
+            "key": key,
+            "secret": secret,
+            "log_level": self.LOG_LEVEL_AUTH,
+        }
         """arguments to use for creating :attr:`AUTH`"""
 
         self.HTTP = Http(**self.HTTP_ARGS)
@@ -370,8 +388,7 @@ class Connect:
         self.AUTH = ApiKey(http=self.HTTP, **self.AUTH_ARGS)
         """:obj:`axonius_api_client.auth.api_key.ApiKey` auth method to use for all API models"""
 
-        self.API_ARGS: dict = {"auth": self.AUTH,
-                               "log_level": self.LOG_LEVEL_API}
+        self.API_ARGS: dict = {"auth": self.AUTH, "log_level": self.LOG_LEVEL_API}
         """arguments to use for all API models"""
 
     def __str__(self) -> str:

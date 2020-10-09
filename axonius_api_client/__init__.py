@@ -42,7 +42,19 @@ Examples:
     >>> dashboard = ctx.dashboard
 
 """
-from . import api, auth, cli, constants, data, exceptions, http, logs, tools, url_parser, version
+from . import (
+    api,
+    auth,
+    cli,
+    constants,
+    data,
+    exceptions,
+    http,
+    logs,
+    tools,
+    url_parser,
+    version,
+)
 from .api import (
     Adapters,
     Dashboard,

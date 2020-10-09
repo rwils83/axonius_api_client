@@ -32,14 +32,12 @@ class Table(Base):
         table_api_fields = self.GETARGS.get("table_api_fields", False)
         if not table_api_fields:
             field_excludes = listify(self.GETARGS.get("field_excludes", []))
-            self.GETARGS["field_excludes"] = field_excludes + \
-                self.APIOBJ.FIELDS_API
+            self.GETARGS["field_excludes"] = field_excludes + self.APIOBJ.FIELDS_API
 
         table_max_rows = self.GETARGS.get("table_max_rows", TABLE_MAX_ROWS)
         self.GETARGS["table_max_rows"] = table_max_rows
 
-        table_format = self.GETARGS.get(
-            "table_format", TABLE_FORMAT) or TABLE_FORMAT
+        table_format = self.GETARGS.get("table_format", TABLE_FORMAT) or TABLE_FORMAT
         self.check_table_format(fmt=table_format)
         self.GETARGS["table_format"] = table_format
 

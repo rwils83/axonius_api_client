@@ -107,8 +107,7 @@ class Flags:
     }
     LFMT: str = "[" + " ".join(list(FLAGS)) + "]"
     RFMT: str = f"[{RIGHTB}]"
-    FMT_TEXT: str = "\n# " + \
-        "\n# ".join([f"{k}  {v}" for k, v in FLAGS.items()])
+    FMT_TEXT: str = "\n# " + "\n# ".join([f"{k}  {v}" for k, v in FLAGS.items()])
     FMT_CSV: str = ", ".join([f"{k} {v}" for k, v in FLAGS.items()])
 
 
@@ -177,7 +176,9 @@ class Docs:
     OPVAL: str = "FIELD OPERATOR VALUE"
 
     FMT_SIMPLE: str = f"{Flags.LFMT} {OPVAL} {Flags.RFMT}"
-    FMT_COMPLEX: str = f"{Flags.LFMT} COMPLEX-FIELD{Entry.CSPLIT}SUB-{OPVAL}{SUB_OPT} {Flags.RFMT}"
+    FMT_COMPLEX: str = (
+        f"{Flags.LFMT} COMPLEX-FIELD{Entry.CSPLIT}SUB-{OPVAL}{SUB_OPT} {Flags.RFMT}"
+    )
     DESC_SIMPLE: str = "Filter entry for simple fields"
     DESC_COMPLEX: str = "Filter entry for complex fields and their sub-fields"
     EX_SIMPLE1: str = f"{Flags.LEFTB} hostname contains test"

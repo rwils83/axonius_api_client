@@ -51,7 +51,8 @@ class Xlsx(Base):
             self.echo(msg=msg, error=ApiError, level="error")
 
         self._workbook = xlsxwriter.Workbook(
-            str(self._file_path), {"constant_memory": True})
+            str(self._file_path), {"constant_memory": True}
+        )
         self._cell_format = self._workbook.add_format(self.CELL_FORMAT)
 
         worksheet = f"{self.APIOBJ.__class__.__name__}"
@@ -76,15 +77,13 @@ class Xlsx(Base):
         rows = listify(row)
         rows = self.do_pre_row(rows=rows)
 
-        row_return = [{"internal_axon_id": row["internal_axon_id"]}
-                      for row in rows]
+        row_return = [{"internal_axon_id": row["internal_axon_id"]} for row in rows]
         rows = self.do_row(rows=rows)
 
         for row in listify(rows):
             for idx, column_name in enumerate(self.final_columns):
                 self._worksheet.write(
-                    self._rowtracker, idx, row.get(
-                        column_name), self._cell_format
+                    self._rowtracker, idx, row.get(column_name), self._cell_format
                 )
 
             self._rowtracker += 1

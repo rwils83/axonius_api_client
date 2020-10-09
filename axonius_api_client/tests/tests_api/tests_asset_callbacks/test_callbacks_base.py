@@ -19,8 +19,7 @@ class TestCallbacksBase(Callbacks):
 
     def test_row_as_is(self, cbexport, apiobj, caplog):
         getargs = {}
-        cbobj = self.get_cbobj(
-            apiobj=apiobj, cbexport=cbexport, getargs=getargs)
+        cbobj = self.get_cbobj(apiobj=apiobj, cbexport=cbexport, getargs=getargs)
         cbobj.start()
 
         rows_orig = get_rows_exist(apiobj=apiobj, max_rows=5)
@@ -41,8 +40,7 @@ class TestCallbacksBase(Callbacks):
             "field_null": True,
             "report_adapters_missing": True,
         }
-        cbobj = self.get_cbobj(
-            apiobj=apiobj, cbexport=cbexport, getargs=getargs)
+        cbobj = self.get_cbobj(apiobj=apiobj, cbexport=cbexport, getargs=getargs)
         cbobj.start()
 
         rows_orig = get_rows_exist(apiobj=apiobj, max_rows=5)

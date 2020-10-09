@@ -48,8 +48,7 @@ class Json(Base):
         """
         rows = listify(row)
         rows = self.do_pre_row(rows=rows)
-        row_return = [{"internal_axon_id": row["internal_axon_id"]}
-                      for row in rows]
+        row_return = [{"internal_axon_id": row["internal_axon_id"]} for row in rows]
         rows = self.do_row(rows=rows)
         self.write_rows(rows=rows)
         del rows, row

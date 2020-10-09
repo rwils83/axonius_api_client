@@ -27,8 +27,7 @@ class SettingsBasePublic:
         assert meta["name"] == name
         assert isinstance(meta["title"], str) and meta["title"]
         assert isinstance(meta["schemas"], dict) and meta["schemas"]
-        assert isinstance(meta["sub_sections"],
-                          dict) and not meta["sub_sections"]
+        assert isinstance(meta["sub_sections"], dict) and not meta["sub_sections"]
         assert isinstance(meta["parent_name"], str) and meta["parent_name"]
         assert isinstance(meta["parent_title"], str) and meta["parent_title"]
 
@@ -46,22 +45,21 @@ class SettingsBasePublic:
         assert isinstance(meta["schemas"], dict) and meta["schemas"]
         assert isinstance(meta["sub_sections"], dict)
         assert isinstance(meta["parent_name"], str) and not meta["parent_name"]
-        assert isinstance(meta["parent_title"],
-                          str) and not meta["parent_title"]
+        assert isinstance(meta["parent_title"], str) and not meta["parent_title"]
 
         assert isinstance(meta["config"], dict)
 
         self.val_schemas(schemas=meta["schemas"], config=meta["config"])
         for sub_name, sub_meta in meta["sub_sections"].items():
-            self.val_sub_section(
-                name=sub_name, meta=sub_meta, settings=settings)
+            self.val_sub_section(name=sub_name, meta=sub_meta, settings=settings)
 
     def test_get(self, apiobj):
         settings = apiobj.get()
         assert isinstance(settings, dict)
 
-        assert isinstance(settings["settings_title"],
-                          str) and settings["settings_title"]
+        assert (
+            isinstance(settings["settings_title"], str) and settings["settings_title"]
+        )
         assert isinstance(settings["sections"], dict) and settings["sections"]
         assert isinstance(settings["config"], dict) and settings["config"]
 
@@ -76,8 +74,7 @@ class TestSettingsGui(SettingsBasePublic):
         return api_system.settings_gui
 
     def test_get_section_full_config_true(self, apiobj):
-        result = apiobj.get_section(
-            section=GUI_SECTION_WITH_SUBS, full_config=True)
+        result = apiobj.get_section(section=GUI_SECTION_WITH_SUBS, full_config=True)
         assert isinstance(result, dict)
         assert "full_config" in result
 
@@ -89,14 +86,15 @@ class TestSettingsGui(SettingsBasePublic):
         assert "full_config" in result
 
     def test_get_section_full_config_false(self, apiobj):
-        result = apiobj.get_section(
-            section=GUI_SECTION_WITH_SUBS, full_config=False)
+        result = apiobj.get_section(section=GUI_SECTION_WITH_SUBS, full_config=False)
         assert isinstance(result, dict)
         assert "full_config" not in result
 
     def test_get_sub_section_full_config_false(self, apiobj):
         result = apiobj.get_sub_section(
-            section=GUI_SECTION_WITH_SUBS, sub_section=GUI_SUB_SECTION, full_config=False
+            section=GUI_SECTION_WITH_SUBS,
+            sub_section=GUI_SUB_SECTION,
+            full_config=False,
         )
         assert isinstance(result, dict)
         assert "full_config" not in result
@@ -107,13 +105,11 @@ class TestSettingsGui(SettingsBasePublic):
 
     def test_get_sub_section_error(self, apiobj):
         with pytest.raises(NotFoundError):
-            apiobj.get_sub_section(
-                section=GUI_SECTION_WITH_SUBS, sub_section="badwolf")
+            apiobj.get_sub_section(section=GUI_SECTION_WITH_SUBS, sub_section="badwolf")
 
     def test_get_sub_section_no_subsections(self, apiobj):
         with pytest.raises(ApiError):
-            apiobj.get_sub_section(
-                section=GUI_SECTION_NO_SUBS, sub_section="badwolf")
+            apiobj.get_sub_section(section=GUI_SECTION_NO_SUBS, sub_section="badwolf")
 
     def test_update_section(self, apiobj):
         old_section = apiobj.get_section(section=GUI_SECTION_WITH_SUBS)
@@ -124,13 +120,15 @@ class TestSettingsGui(SettingsBasePublic):
 
         new_section_args = {GUI_NON_SUB_SECTION: update_value}
         new_section = apiobj.update_section(
-            section=GUI_SECTION_WITH_SUBS, **new_section_args)
+            section=GUI_SECTION_WITH_SUBS, **new_section_args
+        )
         new_value = new_section["config"][GUI_NON_SUB_SECTION]
         assert new_value == update_value and old_value != new_value
 
         reset_section_args = {GUI_NON_SUB_SECTION: old_value}
         reset_section = apiobj.update_section(
-            section=GUI_SECTION_WITH_SUBS, **reset_section_args)
+            section=GUI_SECTION_WITH_SUBS, **reset_section_args
+        )
         reset_value = reset_section["config"][GUI_NON_SUB_SECTION]
         assert reset_value == old_value and reset_value != new_value
 
@@ -145,14 +143,18 @@ class TestSettingsGui(SettingsBasePublic):
 
         new_section_args = {sub_key: update_value}
         new_section = apiobj.update_sub_section(
-            section=GUI_SECTION_WITH_SUBS, sub_section=GUI_SUB_SECTION, **new_section_args
+            section=GUI_SECTION_WITH_SUBS,
+            sub_section=GUI_SUB_SECTION,
+            **new_section_args
         )
         new_value = new_section["config"][sub_key]
         assert new_value == update_value and old_value != new_value
 
         reset_section_args = {sub_key: old_value}
         reset_section = apiobj.update_sub_section(
-            section=GUI_SECTION_WITH_SUBS, sub_section=GUI_SUB_SECTION, **reset_section_args
+            section=GUI_SECTION_WITH_SUBS,
+            sub_section=GUI_SUB_SECTION,
+            **reset_section_args
         )
         reset_value = reset_section["config"][sub_key]
         assert reset_value == old_value and reset_value != new_value

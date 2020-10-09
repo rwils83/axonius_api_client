@@ -53,12 +53,10 @@ SIMPLE: Tuple[Type] = (str, int, bool, float)
 EMPTY: List[Union[str, list, dict, tuple]] = [None, "", [], {}, ()]
 """Values that should be considered as empty"""
 
-YES: List[Union[bool, int, str]] = [
-    True, 1, "1", "true", "t", "yes", "y", "on"]
+YES: List[Union[bool, int, str]] = [True, 1, "1", "true", "t", "yes", "y", "on"]
 """Values that should be considered as truthy"""
 
-NO: List[Union[bool, int, str]] = [
-    False, 0, "0", "false", "f", "no", "n", "off"]
+NO: List[Union[bool, int, str]] = [False, 0, "0", "false", "f", "no", "n", "off"]
 """Values that should be considered as falsey"""
 
 MAX_PAGE_SIZE: int = 2000
@@ -99,7 +97,8 @@ TIMEOUT_RESPONSE: int = 900
 """seconds to wait for response from API."""
 
 LOG_FMT_VERBOSE: str = (
-    "%(asctime)s %(levelname)-8s [%(name)s:%(funcName)s:%(pathname)s:%(lineno)d] " "%(message)s"
+    "%(asctime)s %(levelname)-8s [%(name)s:%(funcName)s:%(pathname)s:%(lineno)d] "
+    "%(message)s"
 )
 """Logging format to use for verbose logging."""
 
@@ -149,8 +148,7 @@ LOG_LEVELS_STR: List[str] = ["debug", "info", "warning", "error", "fatal"]
 LOG_LEVELS_STR_CSV: str = ", ".join(LOG_LEVELS_STR)
 """csv of valid logging level strs"""
 
-LOG_LEVELS_INT: List[int] = [
-    getattr(logging, x.upper()) for x in LOG_LEVELS_STR]
+LOG_LEVELS_INT: List[int] = [getattr(logging, x.upper()) for x in LOG_LEVELS_STR]
 """list of valid logging level ints"""
 
 LOG_LEVELS_INT_CSV: str = ", ".join([str(x) for x in LOG_LEVELS_INT])
@@ -254,8 +252,7 @@ ALL_NAME: str = "all"
 AGG_EXPR_FIELD_TYPE: str = "axonius"
 """epxr_field_type to use in saved query expressions for aggregated fields"""
 
-AGG_ADAPTER_ALTS: List[str] = ["generic",
-                               "general", "specific", "agg", "aggregated"]
+AGG_ADAPTER_ALTS: List[str] = ["generic", "general", "specific", "agg", "aggregated"]
 """list of list of alternatives for 'generic' adapter."""
 
 GET_SCHEMAS_KEYS: List[str] = ["name", "name_qual", "name_base", "title"]

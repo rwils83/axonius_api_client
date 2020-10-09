@@ -6,7 +6,13 @@ import re
 import sys
 from typing import Generator, List, Optional, Tuple, Union
 
-from ...constants import DEFAULT_PATH, FIELD_JOINER, FIELD_TRIM_LEN, FIELD_TRIM_STR, SCHEMAS_CUSTOM
+from ...constants import (
+    DEFAULT_PATH,
+    FIELD_JOINER,
+    FIELD_TRIM_LEN,
+    FIELD_TRIM_STR,
+    SCHEMAS_CUSTOM,
+)
 from ...exceptions import ApiError
 from ...tools import (
     calc_percent,
@@ -107,7 +113,8 @@ class Base:
 
         join = "\n   - "
         schemas_pretty = self.APIOBJ.fields._prettify_schemas(
-            schemas=self.schemas_selected)
+            schemas=self.schemas_selected
+        )
         schemas_pretty = join + join.join(schemas_pretty)
         self.echo(msg=f"Selected Columns: {schemas_pretty}")
 
@@ -216,8 +223,7 @@ class Base:
                 rows = listify(rows)
             except Exception as exc:
                 msg = f"Custom callback {custom_cb} failed: {exc}"
-                self.CUSTOM_CB_EXC.append(
-                    {"cb": custom_cb, "exc": exc, "msg": msg})
+                self.CUSTOM_CB_EXC.append({"cb": custom_cb, "exc": exc, "msg": msg})
                 self.echo(msg=msg, error="exception", abort=False)
         return rows
 
@@ -257,8 +263,7 @@ class Base:
 
             for item in row[field]:
                 for sub_schema in self.get_sub_schemas(schema=schema):
-                    self._do_add_null_values(
-                        schema=sub_schema, row=item, key="name")
+                    self._do_add_null_values(schema=sub_schema, row=item, key="name")
         else:
             row[field] = row.get(field, null_value)
 
@@ -315,8 +320,7 @@ class Base:
             row: row being processed
         """
         joiner = str(self.GETARGS.get("field_join_value", FIELD_JOINER))
-        trim_len = coerce_int(self.GETARGS.get(
-            "field_join_trim", FIELD_TRIM_LEN))
+        trim_len = coerce_int(self.GETARGS.get("field_join_trim", FIELD_TRIM_LEN))
         trim_str = FIELD_TRIM_STR
 
         for field in row:
@@ -464,8 +468,7 @@ class Base:
         tags_remove = listify(self.GETARGS.get("tags_remove", []))
         rows_remove = self.TAG_ROWS_REMOVE
         if tags_remove and rows_remove:
-            self.echo(
-                msg=f"Removing tags {tags_remove} from {len(rows_remove)} assets")
+            self.echo(msg=f"Removing tags {tags_remove} from {len(rows_remove)} assets")
             self.APIOBJ.labels.remove(rows=rows_remove, labels=tags_remove)
 
     def process_tags_to_add(self, rows: Union[List[dict], dict]) -> List[dict]:
@@ -505,7 +508,9 @@ class Base:
 
         return rows
 
-    def add_report_software_whitelist(self, rows: Union[List[dict], dict]) -> List[dict]:
+    def add_report_software_whitelist(
+        self, rows: Union[List[dict], dict]
+    ) -> List[dict]:
         """Process report: Software whitelist.
 
         Args:
@@ -533,18 +538,18 @@ class Base:
             self.echo(msg=msg, error=ApiError, level="error")
 
         sws = listify(row.get(sw_field, []))
-        names = [x.get("name") for x in sws if x.get(
-            "name") and isinstance(x.get("name"), str)]
+        names = [
+            x.get("name")
+            for x in sws
+            if x.get("name") and isinstance(x.get("name"), str)
+        ]
 
         whitelists = listify(self.GETARGS.get("report_software_whitelist", []))
-        extras = [n for n in names if any(
-            [re.search(x, n, re.I)] for x in whitelists)]
-        missing = [x for x in whitelists if any(
-            [re.search(x, n, re.I) for n in names])]
+        extras = [n for n in names if any([re.search(x, n, re.I)] for x in whitelists)]
+        missing = [x for x in whitelists if any([re.search(x, n, re.I) for n in names])]
 
         schemas = SCHEMAS_CUSTOM["report_software_whitelist"]
-        row[schemas["software_missing"]["name_qual"]
-            ] = sorted(list(set(missing)))
+        row[schemas["software_missing"]["name_qual"]] = sorted(list(set(missing)))
         row[schemas["software_whitelist"]["name_qual"]] = whitelists
         row[schemas["software_extra"]["name_qual"]] = sorted(list(set(extras)))
 
@@ -776,20 +781,20 @@ class Base:
         api_fields = [x for x in self.APIOBJ.FIELDS_API if x not in fields]
 
         if include_details:  # pragma: no cover
-            api_fields += ["meta_data.client_used",
-                           "unique_adapter_names_details"]
+            api_fields += ["meta_data.client_used", "unique_adapter_names_details"]
 
         self._fields_selected = []
 
         for field in api_fields + fields:
             self._fields_selected.append(field)
-            if include_details and not field.startswith("adapters_data."):  # pragma: no cover
+            if include_details and not field.startswith(
+                "adapters_data."
+            ):  # pragma: no cover
                 field_details = f"{field}_details"
                 self._fields_selected.append(field_details)
 
         for row in self.CURRENT_ROWS:
-            self._fields_selected += [
-                x for x in row if x not in self._fields_selected]
+            self._fields_selected += [x for x in row if x not in self._fields_selected]
 
         return self._fields_selected
 
@@ -852,7 +857,8 @@ class Base:
     def adapter_map(self) -> dict:
         """Build a map of adapters that have connections."""
         self._adapters_meta = getattr(
-            self, "_adapters_meta", self.APIOBJ.adapters.get())
+            self, "_adapters_meta", self.APIOBJ.adapters.get()
+        )
         amap = {
             "has_cnx": [],
             "all": [],

@@ -60,8 +60,7 @@ class Roles(ChildMixins):  # pragma: no cover
         if not matches:
             longest = longest_str(obj=self.permissions)
             tmpl = f"{{k:<{longest}}} {{v}}"
-            valid = "\n  " + \
-                "\n  ".join(join_kv(obj=self.permissions, tmpl=tmpl))
+            valid = "\n  " + "\n  ".join(join_kv(obj=self.permissions, tmpl=tmpl))
             msg = f"Invalid permission supplied: {perm!r}"
             msg = f"{msg}\nValid permissions: {valid}\n\n{msg}"
             raise NotFoundError(msg)
@@ -99,10 +98,8 @@ class Roles(ChildMixins):  # pragma: no cover
         """Pass."""
         perms = {}
 
-        deny_perms = [y for x in split_str(obj=deny)
-                      for y in self.find_perm(perm=x)]
-        allow_perms = [y for x in split_str(
-            obj=allow) for y in self.find_perm(perm=x)]
+        deny_perms = [y for x in split_str(obj=deny) for y in self.find_perm(perm=x)]
+        allow_perms = [y for x in split_str(obj=allow) for y in self.find_perm(perm=x)]
 
         for perm in deny_perms:
             self._map_perm_role(perm=perm, value=False, perms=perms)
@@ -113,7 +110,8 @@ class Roles(ChildMixins):  # pragma: no cover
         if role:
             for perm in role["perms"]:
                 self._map_perm_role(
-                    perm=perm["permission"], value=perm["value"], perms=perms)
+                    perm=perm["permission"], value=perm["value"], perms=perms
+                )
 
         for perm in self.permissions:
             self._map_perm_role(perm=perm, value=default, perms=perms)
@@ -135,8 +133,7 @@ class Roles(ChildMixins):  # pragma: no cover
 
         if name not in valid:
             valid = "\n  " + "\n  ".join(valid)
-            raise NotFoundError(
-                f"Role name {name!r} not found, valid roles:{valid}")
+            raise NotFoundError(f"Role name {name!r} not found, valid roles:{valid}")
 
         role = [x for x in roles if x["name"] == name][0]
         return role
@@ -149,8 +146,7 @@ class Roles(ChildMixins):  # pragma: no cover
 
         if uuid not in valid:
             valid = "\n" + "\n".join(valid)
-            raise NotFoundError(
-                f"Role uuid {uuid!r} not found, valid roles:{valid}")
+            raise NotFoundError(f"Role uuid {uuid!r} not found, valid roles:{valid}")
 
         role = [x for x in roles if x["uuid"] == uuid][0]
         return role
@@ -163,8 +159,7 @@ class Roles(ChildMixins):  # pragma: no cover
         if name in names:
             raise ApiError(f"Role named {name!r} already exists")
 
-        permissions = self.map_perms_role(
-            allow=allow, deny=deny, default=default)
+        permissions = self.map_perms_role(allow=allow, deny=deny, default=default)
         self._add(name=name, permissions=permissions)
         return self.get_by_name(name=name)
 
@@ -218,7 +213,9 @@ class Roles(ChildMixins):  # pragma: no cover
         """
         data = {"name": name, "permissions": permissions, "uuid": uuid}
         path = self.router.roles_by_uuid.format(uuid=uuid)
-        return self.request(method="post", path=path, json=data, error_json_invalid=False)
+        return self.request(
+            method="post", path=path, json=data, error_json_invalid=False
+        )
 
     def _delete(self, uuid):
         """Direct API method to delete a role.

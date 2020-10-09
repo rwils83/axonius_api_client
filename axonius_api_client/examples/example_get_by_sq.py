@@ -50,6 +50,5 @@ if __name__ == "__main__":
         )
 
     else:
-        msg = "Invalid format {}, must be one of 'json' or 'csv'".format(
-            FORMAT)
+        msg = "Invalid format {}, must be one of 'json' or 'csv'".format(FORMAT)
         raise Exception(msg)

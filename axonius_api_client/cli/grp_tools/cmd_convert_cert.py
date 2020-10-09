@@ -14,8 +14,7 @@ PATH = click.option(
     "--path",
     "-p",
     "path",
-    type=click.Path(exists=True, dir_okay=False,
-                    readable=True, resolve_path=False),
+    type=click.Path(exists=True, dir_okay=False, readable=True, resolve_path=False),
     help="Path to SSL certificate to convert from binary to Base64",
     show_envvar=True,
     show_default=True,
@@ -55,8 +54,7 @@ def write_pem_path(ctx, path, pem):
     pem_name = f"{base_name}.pem"
     pem_path = parent / pem_name
     if pem_path.is_file():
-        ctx.obj.echo_error(
-            f"Base64 SSL Certificate already exists: {pem_path}")
+        ctx.obj.echo_error(f"Base64 SSL Certificate already exists: {pem_path}")
     pem_path.write_bytes(pem)
     ctx.obj.echo_ok(f"Wrote Base64 SSL Certificate to: {pem_path}")
     return pem_path

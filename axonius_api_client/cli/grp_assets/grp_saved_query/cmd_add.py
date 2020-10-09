@@ -56,7 +56,8 @@ def cmd(ctx, url, key, secret, export_format, wizard_content, overwrite, **kwarg
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
         kwargs = load_wiz(
-            apiobj=apiobj, wizard_content=wizard_content, exprs=True, kwargs=kwargs)
+            apiobj=apiobj, wizard_content=wizard_content, exprs=True, kwargs=kwargs
+        )
         row = apiobj.saved_query.add(**kwargs)
 
     ctx.obj.echo_ok(f"Successfully created saved query: {name}")

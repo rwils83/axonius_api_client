@@ -87,7 +87,9 @@ class Users(AssetMixin):
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_mail(self, value: str, **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_mail(
+        self, value: str, **kwargs
+    ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where mail == value."""
         kwargs["field"] = self.FIELD_MAIL
         kwargs["field_manual"] = True

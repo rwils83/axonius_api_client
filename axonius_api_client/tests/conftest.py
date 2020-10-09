@@ -13,7 +13,13 @@ from axonius_api_client.api.signup import Signup
 from axonius_api_client.constants import CSV_ADAPTER, DEFAULT_NODE
 
 from .meta import CSV_FILECONTENT_STR, CSV_FILENAME
-from .utils import check_apiobj, check_apiobj_children, check_apiobj_xref, get_auth, get_url
+from .utils import (
+    check_apiobj,
+    check_apiobj_children,
+    check_apiobj_xref,
+    get_auth,
+    get_url,
+)
 
 dotenv.load_dotenv()
 
@@ -50,9 +56,11 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     """Ini file additions."""
     config.addinivalue_line(
-        "filterwarnings", "error::axonius_api_client.exceptions.AxonWarning")
+        "filterwarnings", "error::axonius_api_client.exceptions.AxonWarning"
+    )
     config.addinivalue_line(
-        "filterwarnings", "ignore::urllib3.exceptions.InsecureRequestWarning")
+        "filterwarnings", "ignore::urllib3.exceptions.InsecureRequestWarning"
+    )
 
 
 @pytest.fixture(scope="session")

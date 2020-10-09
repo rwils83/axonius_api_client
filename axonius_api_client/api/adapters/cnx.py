@@ -65,7 +65,9 @@ class Cnx(ChildMixins):
 
     """
 
-    def add(self, adapter_name: str, adapter_node: str = DEFAULT_NODE, **kwargs) -> dict:
+    def add(
+        self, adapter_name: str, adapter_node: str = DEFAULT_NODE, **kwargs
+    ) -> dict:
         """Add a connection to an adapter on a node.
 
         Args:
@@ -104,8 +106,7 @@ class Cnx(ChildMixins):
 
         config_empty(schemas=cnx_schemas, new_config=new_config, source=source)
 
-        config_required(schemas=cnx_schemas,
-                        new_config=new_config, source=source)
+        config_required(schemas=cnx_schemas, new_config=new_config, source=source)
 
         result = self._add(
             adapter_name_raw=adapter_name_raw,
@@ -144,7 +145,9 @@ class Cnx(ChildMixins):
         """
         return CNX_SANE_DEFAULTS.get(adapter_name, CNX_SANE_DEFAULTS["all"])
 
-    def get_by_adapter(self, adapter_name: str, adapter_node: str = DEFAULT_NODE) -> List[dict]:
+    def get_by_adapter(
+        self, adapter_name: str, adapter_node: str = DEFAULT_NODE
+    ) -> List[dict]:
         """Get all connections of an adapter on a node.
 
         Args:
@@ -179,8 +182,7 @@ class Cnx(ChildMixins):
             sleep: seconds to sleep in between each retry
         """
         tries = 1
-        cnxs = self.get_by_adapter(
-            adapter_name=adapter_name, adapter_node=adapter_node)
+        cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
         while True:
             for cnx in cnxs:
                 if cnx[value_key] == value:
@@ -194,7 +196,8 @@ class Cnx(ChildMixins):
             time.sleep(sleep)
 
             cnxs = self.get_by_adapter(
-                adapter_name=adapter_name, adapter_node=adapter_node)
+                adapter_name=adapter_name, adapter_node=adapter_node
+            )
 
         value_key = value_key.upper()
         err = (
@@ -204,7 +207,11 @@ class Cnx(ChildMixins):
         raise NotFoundError(tablize_cnxs(cnxs=cnxs, err=err))
 
     def get_by_uuid(
-        self, cnx_uuid: str, adapter_name: str, adapter_node: str = DEFAULT_NODE, **kwargs
+        self,
+        cnx_uuid: str,
+        adapter_name: str,
+        adapter_node: str = DEFAULT_NODE,
+        **kwargs,
     ) -> dict:
         """Get a connection for an adapter on a node by UUID.
 
@@ -242,7 +249,9 @@ class Cnx(ChildMixins):
             value=cnx_id, adapter_name=adapter_name, adapter_node=adapter_node, **kwargs
         )
 
-    def get_by_label(self, value: str, adapter_name: str, adapter_node: str = DEFAULT_NODE) -> dict:
+    def get_by_label(
+        self, value: str, adapter_name: str, adapter_node: str = DEFAULT_NODE
+    ) -> dict:
         """Get a connection for an adapter on a node using a specific connection identifier key.
 
         Args:
@@ -251,8 +260,7 @@ class Cnx(ChildMixins):
             adapter_node: name of node running adapter
         """
         key = "connection_label"
-        cnxs = self.get_by_adapter(
-            adapter_name=adapter_name, adapter_node=adapter_node)
+        cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
         for cnx in cnxs:
             config = cnx.get("config") or {}
             label = config.get(key) or ""
@@ -285,7 +293,10 @@ class Cnx(ChildMixins):
         adapter_node = cnx_test["node_name"]
         old_config = cnx_test["config"]
         return self.test(
-            adapter_name=adapter_name, adapter_node=adapter_node, old_config=old_config, **kwargs
+            adapter_name=adapter_name,
+            adapter_node=adapter_node,
+            old_config=old_config,
+            **kwargs,
         )
 
     def test(
@@ -446,7 +457,9 @@ class Cnx(ChildMixins):
 
         return cnx_new
 
-    def check_if_gone(self, result: dict, cnx_id: str, adapter_name: str, adapter_node: str):
+    def check_if_gone(
+        self, result: dict, cnx_id: str, adapter_name: str, adapter_node: str
+    ):
         """Check if the result of updating a connection shows that the connection is gone.
 
         Notes:
@@ -462,7 +475,8 @@ class Cnx(ChildMixins):
         message = result.get("message", "")
         if message == CNX_GONE:
             cnxs = self.get_by_adapter(
-                adapter_name=adapter_name, adapter_node=adapter_node)
+                adapter_name=adapter_name, adapter_node=adapter_node
+            )
             err = f"Connection with ID {cnx_id!r} no longer exists!"
             raise CnxGoneError(tablize_cnxs(cnxs=cnxs, err=err))
 
@@ -587,8 +601,7 @@ class Cnx(ChildMixins):
         if isinstance(value, str):
             value = pathlib.Path(value).expanduser().resolve()
             if not value.is_file():
-                sinfo = config_info(
-                    schema=schema, value=str(value), source=source)
+                sinfo = config_info(schema=schema, value=str(value), source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nFile does not exist!")
             return self.parent.file_upload(
                 name=adapter_name,
@@ -610,8 +623,7 @@ class Cnx(ChildMixins):
         if isinstance(value, pathlib.Path):
             value = value.expanduser().resolve()
             if not value.is_file():
-                sinfo = config_info(
-                    schema=schema, value=str(value), source=source)
+                sinfo = config_info(schema=schema, value=str(value), source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nFile does not exist!")
 
             return self.parent.file_upload(
@@ -624,10 +636,13 @@ class Cnx(ChildMixins):
 
         sinfo = config_info(schema=schema, value=str(value), source=source)
         raise ConfigInvalidValue(
-            f"{sinfo}\nFile is not an existing file or a file-like object!")
+            f"{sinfo}\nFile is not an existing file or a file-like object!"
+        )
 
     # XXX failing with secondary node!!! wrong plugin name?
-    def _add(self, adapter_name_raw: str, adapter_node_id: str, new_config: dict) -> str:
+    def _add(
+        self, adapter_name_raw: str, adapter_node_id: str, new_config: dict
+    ) -> str:
         """Direct API method to add a connection to an adapter.
 
         Args:
@@ -639,8 +654,7 @@ class Cnx(ChildMixins):
         data.update(new_config)
         data["instanceName"] = adapter_node_id
 
-        path = self.parent.router.cnxs.format(
-            adapter_name_raw=adapter_name_raw)
+        path = self.parent.router.cnxs.format(adapter_name_raw=adapter_name_raw)
 
         return self.parent.request(
             method="put",
@@ -663,8 +677,7 @@ class Cnx(ChildMixins):
         data["instanceName"] = adapter_node_id
         data["oldInstanceName"] = adapter_node_id
 
-        path = self.parent.router.cnxs_test.format(
-            adapter_name_raw=adapter_name_raw)
+        path = self.parent.router.cnxs_test.format(adapter_name_raw=adapter_name_raw)
         return self.parent.request(method="post", path=path, json=data, raw=True)
 
     def _delete(

@@ -30,7 +30,8 @@ class UrlParser:
         """:obj:`urllib.parse.ParseResult`: first pass of parsing URL"""
 
         self.parsed = self.reparse(
-            parsed=self.INIT_PARSED, default_scheme=default_scheme)
+            parsed=self.INIT_PARSED, default_scheme=default_scheme
+        )
         """:obj:`urllib.parse.ParseResult`:second pass of parsing URL"""
 
         for part in ["hostname", "port", "scheme"]:
@@ -90,8 +91,7 @@ class UrlParser:
             "fragment",
         ]
         atmpl = "{a}={v!r}".format
-        attrs = [atmpl(a=a, v="{}".format(getattr(parsed, a, "")) or "")
-                 for a in attrs]
+        attrs = [atmpl(a=a, v="{}".format(getattr(parsed, a, "")) or "") for a in attrs]
         return ", ".join(attrs)
 
     def make_netloc(self, host: str, port: Union[str, int]) -> str:

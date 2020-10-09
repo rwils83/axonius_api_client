@@ -182,16 +182,14 @@ class SavedQueryPublic:
         fields = "last_seen"
         sort_field = "badwolf"
         with pytest.raises(ApiError):
-            apiobj.saved_query.add(
-                name=name, fields=fields, sort_field=sort_field)
+            apiobj.saved_query.add(name=name, fields=fields, sort_field=sort_field)
 
     def test_add_error_bad_colfilter(self, apiobj):
         name = "badwolf_ttttttttttt"
         fields = "last_seen"
         colfilters = {"badwolf": "badwolf"}
         with pytest.raises(ApiError):
-            apiobj.saved_query.add(
-                name=name, fields=fields, column_filters=colfilters)
+            apiobj.saved_query.add(name=name, fields=fields, column_filters=colfilters)
 
 
 class TestSavedQueryDevices(SavedQueryPrivate, SavedQueryPublic):

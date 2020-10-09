@@ -58,7 +58,9 @@ SEARCH_MAPS = [
         "updates": {"build": 0},
     },
     {
-        "searches": {"str": re.compile(r"cisco.* \((.*?)\), version ([\d.\w, \(\)]+)", re.I)},
+        "searches": {
+            "str": re.compile(r"cisco.* \((.*?)\), version ([\d.\w, \(\)]+)", re.I)
+        },
         "updates": {"build": 1, "dist": 0},
     },
     {
@@ -75,7 +77,9 @@ SEARCH_MAPS = [
         "overwrites": ["type"],
     },
     {
-        "searches": {"str": re.compile(r"big-ip software release (.*)", re.DOTALL | re.I)},
+        "searches": {
+            "str": re.compile(r"big-ip software release (.*)", re.DOTALL | re.I)
+        },
         "updates": {"build": 0, "dist": "Big-IP"},
     },
     {
@@ -95,11 +99,15 @@ SEARCH_MAPS = [
         "updates": {"build": 0},
     },
     {
-        "searches": {"str": re.compile(r"(japan computer.*?) (\d[\d.\w\-]+) ", re.DOTALL | re.I)},
+        "searches": {
+            "str": re.compile(r"(japan computer.*?) (\d[\d.\w\-]+) ", re.DOTALL | re.I)
+        },
         "updates": {"build": 1, "dist": 0},
     },
     {
-        "searches": {"str": re.compile(r"matsushita.*swver(\d[\d.]+)", re.DOTALL | re.I)},
+        "searches": {
+            "str": re.compile(r"matsushita.*swver(\d[\d.]+)", re.DOTALL | re.I)
+        },
         "updates": {"build": 0},
     },
     {
@@ -122,36 +130,27 @@ SEARCH_MAPS = [
         "searches": {"str": re.compile("windows_2000", re.I)},
         "updates": {"type": "Windows", "dist": "2000"},
     },
-    {"searches": {"str": re.compile("linux", re.I)}, "updates": {
-        "type": "Linux"}},
-    {"searches": {"str": re.compile("os x", re.I)}, "updates": {
-        "type": "OS X"}},
-    {"searches": {"str": re.compile("cisco", re.I)}, "updates": {
-        "type": "Cisco"}},
+    {"searches": {"str": re.compile("linux", re.I)}, "updates": {"type": "Linux"}},
+    {"searches": {"str": re.compile("os x", re.I)}, "updates": {"type": "OS X"}},
+    {"searches": {"str": re.compile("cisco", re.I)}, "updates": {"type": "Cisco"}},
     {"searches": {"str": re.compile("ios", re.I)}, "updates": {"type": "iOS"}},
-    {"searches": {"str": re.compile("airos", re.I)}, "updates": {
-        "type": "AirOS"}},
-    {"searches": {"str": re.compile("android", re.I)}, "updates": {
-        "type": "Android"}},
-    {"searches": {"str": re.compile("freebsd", re.I)}, "updates": {
-        "type": "FreeBSD"}},
-    {"searches": {"str": re.compile("vmware", re.I)}, "updates": {
-        "type": "VMWare"}},
-    {"searches": {"str": re.compile("mikrotik", re.I)}, "updates": {
-        "type": "Mikrotik"}},
-    {"searches": {"str": re.compile("vxworks", re.I)}, "updates": {
-        "type": "VxWorks"}},
-    {"searches": {"str": re.compile("panos", re.I)}, "updates": {
-        "type": "PanOS"}},
+    {"searches": {"str": re.compile("airos", re.I)}, "updates": {"type": "AirOS"}},
+    {"searches": {"str": re.compile("android", re.I)}, "updates": {"type": "Android"}},
+    {"searches": {"str": re.compile("freebsd", re.I)}, "updates": {"type": "FreeBSD"}},
+    {"searches": {"str": re.compile("vmware", re.I)}, "updates": {"type": "VMWare"}},
+    {
+        "searches": {"str": re.compile("mikrotik", re.I)},
+        "updates": {"type": "Mikrotik"},
+    },
+    {"searches": {"str": re.compile("vxworks", re.I)}, "updates": {"type": "VxWorks"}},
+    {"searches": {"str": re.compile("panos", re.I)}, "updates": {"type": "PanOS"}},
     {
         "searches": {"str": re.compile("big-ip", re.I)},
         "updates": {"type": "F5 Networks Big-IP"},
     },
-    {"searches": {"str": re.compile("solaris", re.I)}, "updates": {
-        "type": "Solaris"}},
+    {"searches": {"str": re.compile("solaris", re.I)}, "updates": {"type": "Solaris"}},
     {"searches": {"str": re.compile("aix", re.I)}, "updates": {"type": "AIX"}},
-    {"searches": {"str": re.compile("printer", re.I)}, "updates": {
-        "type": "Printer"}},
+    {"searches": {"str": re.compile("printer", re.I)}, "updates": {"type": "Printer"}},
     {
         "searches": {"str": re.compile("playstation", re.I)},
         "updates": {"type": "PlayStation"},
@@ -160,8 +159,7 @@ SEARCH_MAPS = [
         "searches": {"str": re.compile("check point", re.I)},
         "updates": {"type": "Check Point"},
     },
-    {"searches": {"str": re.compile("arista", re.I)}, "updates": {
-        "type": "Arista"}},
+    {"searches": {"str": re.compile("arista", re.I)}, "updates": {"type": "Arista"}},
     {
         "searches": {"str": re.compile("netscaler", re.I)},
         "updates": {"type": "Netscaler"},
@@ -191,7 +189,9 @@ SEARCH_MAPS = [
         "updates": {"dist": "VG3X0 Analog Voice Gateway"},
     },
     {
-        "searches": {"str": re.compile(r"network_camera_firmware.*axis", re.I | re.DOTALL)},
+        "searches": {
+            "str": re.compile(r"network_camera_firmware.*axis", re.I | re.DOTALL)
+        },
         "updates": {"dist": "Axis network camera firmware"},
     },
 ]
@@ -329,8 +329,9 @@ def write_csv(results, path="os_counts.csv", logs=True):
     if not logs:
         fields = [x for x in fields if x != "logs"]
     with path.open("w") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fields,
-                                extrasaction="ignore", quoting=csv.QUOTE_ALL)
+        writer = csv.DictWriter(
+            fh, fieldnames=fields, extrasaction="ignore", quoting=csv.QUOTE_ALL
+        )
         writer.writerow(dict(zip(fields, fields)))
         for result in results:
             for k, v in result.items():

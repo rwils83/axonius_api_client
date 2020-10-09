@@ -63,8 +63,7 @@ def cmd(ctx, url, key, secret):  # noqa: D301
         - jdump/j: Helper function to pretty print python objects
 
     """
-    client = ctx.obj.start_client(
-        url=url, key=key, secret=secret, save_history=True)
+    client = ctx.obj.start_client(url=url, key=key, secret=secret, save_history=True)
 
     client.HTTP.save_history = True
 
