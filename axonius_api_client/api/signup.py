@@ -21,11 +21,12 @@ class Signup:
         """Check if signup process has been done."""
         return self._signup_get()["signup"]
 
-    def signup(self, password: str, company_name: str, contact_email: str) -> dict:
+    def signup(self, password: str, company_name: str,
+               contact_email: str) -> dict:
         """Perform the initial signup."""
-        response = self._signup_post(
-            password=password, company_name=company_name, contact_email=contact_email
-        )
+        response = self._signup_post(password=password,
+                                     company_name=company_name,
+                                     contact_email=contact_email)
 
         status = response.get("status")
         message = response.get("message")
@@ -38,9 +39,8 @@ class Signup:
         response = self.http(method="get", path=self.router.root)
         return response.json()
 
-    def _signup_post(
-        self, password: str, company_name: str, contact_email: str
-    ) -> dict:
+    def _signup_post(self, password: str, company_name: str,
+                     contact_email: str) -> dict:
         """Do the initial signup."""
         data = {
             "companyName": company_name,

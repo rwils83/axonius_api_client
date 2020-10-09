@@ -19,7 +19,6 @@ Detailed help for authentication:
     See https://axonius-api-client.readthedocs.io/en/latest/main/axtokens.html
 """
 
-
 HELPSTR_EXPORT_ASSET = """
 Detailed help for exporting assets:
 
@@ -188,7 +187,6 @@ Detailed help for selecting fields:
     - hostname,network_interfaces - get the aggregated hostname and
       network_interfaces fields
 """
-
 
 HELPSTRS = {}
 HELPSTRS["auth"] = HELPSTR_AUTH

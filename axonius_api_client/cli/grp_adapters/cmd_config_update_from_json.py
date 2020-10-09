@@ -14,7 +14,8 @@ from .grp_common import CONFIG_TYPE
 OPTIONS = [*AUTH, CONFIG_EXPORT, CONFIG_TYPE, *NODE, INPUT_FILE]
 
 
-@click.command(name="config-update-from-json", context_settings=CONTEXT_SETTINGS)
+@click.command(name="config-update-from-json",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(ctx, url, key, secret, export_format, input_file, **kwargs):

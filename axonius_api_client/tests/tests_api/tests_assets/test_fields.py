@@ -41,7 +41,8 @@ class FieldsPrivate:
         assert isinstance(specific_schema, dict)
 
         for adapter, adapter_fields in specific.items():
-            self.val_raw_adapter_fields(adapter=adapter, adapter_fields=adapter_fields)
+            self.val_raw_adapter_fields(adapter=adapter,
+                                        adapter_fields=adapter_fields)
             adapter_schema = specific_schema.pop(adapter)
             self.val_raw_schema(adapter=adapter, schema=adapter_schema)
 
@@ -299,7 +300,8 @@ class FieldsPublic:
                 assert sub_fields
 
             for sub_field in sub_fields:
-                self.val_parsed_schema(adapter=f"{adapter}:{name}", schema=sub_field)
+                self.val_parsed_schema(adapter=f"{adapter}:{name}",
+                                       schema=sub_field)
         else:
             dynamic = items.pop("dynamic", False)
             assert isinstance(dynamic, bool)
@@ -370,8 +372,7 @@ class FieldsPublic:
         schemas = get_schemas(apiobj=apiobj)
         for i in search:
             exp += [
-                x["name_qual"]
-                for x in schemas
+                x["name_qual"] for x in schemas
                 if x["name_base"] == i or x["name_qual"] == i
             ]
         result = apiobj.fields.get_field_names_eq(value=search)
@@ -381,10 +382,8 @@ class FieldsPublic:
         # schemas = get_schemas(apiobj=apiobj)
         search = "l"
         result = [
-            x["name_qual"]
-            for x in apiobj.fields.get_field_schemas(
-                value=search, schemas=get_schemas(apiobj=apiobj)
-            )
+            x["name_qual"] for x in apiobj.fields.get_field_schemas(
+                value=search, schemas=get_schemas(apiobj=apiobj))
         ]
         assert len(result) >= 1
 
@@ -403,7 +402,8 @@ class FieldsPublic:
                 (AGG_ADAPTER_NAME, ["host", "ip", "other"]),
             ),
             ("host, ip, other", (AGG_ADAPTER_NAME, ["host", "ip", "other"])),
-            ("adapter1:host, ip, other", ("adapter1", ["host", "ip", "other"])),
+            ("adapter1:host, ip, other",
+             ("adapter1", ["host", "ip", "other"])),
             (":host", (AGG_ADAPTER_NAME, ["host"])),
         ],
         scope="class",
@@ -431,10 +431,12 @@ class FieldsPublic:
                 [(AGG_ADAPTER_NAME, ["host", "ip", "other"])],
             ),
             ("host, ip, other", [(AGG_ADAPTER_NAME, ["host", "ip", "other"])]),
-            ("adapter1:host, ip, other", [("adapter1", ["host", "ip", "other"])]),
+            ("adapter1:host, ip, other", [("adapter1", ["host", "ip", "other"])
+                                          ]),
             (
                 [f"{AGG_ADAPTER_NAME}:host", "adapter1:host, ip, other"],
-                [(AGG_ADAPTER_NAME, ["host"]), ("adapter1", ["host", "ip", "other"])],
+                [(AGG_ADAPTER_NAME, ["host"]),
+                 ("adapter1", ["host", "ip", "other"])],
             ),
         ],
         scope="class",
@@ -491,7 +493,8 @@ class FieldsPublic:
         assert exp == result
 
     def test_validate_fuzzy(self, apiobj):
-        result = apiobj.fields.validate(fields_fuzzy="last seen", fields_default=False)
+        result = apiobj.fields.validate(fields_fuzzy="last seen",
+                                        fields_default=False)
         assert "specific_data.data.last_seen" in result
 
     def test_validate_error(self, apiobj):
@@ -500,7 +503,9 @@ class FieldsPublic:
 
     def test_fuzzy_filter_contains(self, apiobj):
         schemas = apiobj.fields.get()["agg"]
-        matches = apiobj.fields.fuzzy_filter(search="last", schemas=schemas, names=True)
+        matches = apiobj.fields.fuzzy_filter(search="last",
+                                             schemas=schemas,
+                                             names=True)
         assert isinstance(matches, list) and matches
         for x in matches:
             assert isinstance(x, str)
@@ -509,9 +514,9 @@ class FieldsPublic:
 
     def test_fuzzy_filter_token(self, apiobj):
         schemas = apiobj.fields.get()["agg"]
-        matches = apiobj.fields.fuzzy_filter(
-            search="last seen", schemas=schemas, names=True
-        )
+        matches = apiobj.fields.fuzzy_filter(search="last seen",
+                                             schemas=schemas,
+                                             names=True)
         assert isinstance(matches, list) and matches
         for x in matches:
             assert isinstance(x, str)
@@ -520,7 +525,9 @@ class FieldsPublic:
 
     def test_fuzzy_filter_partial(self, apiobj):
         schemas = apiobj.fields.get()["agg"]
-        matches = apiobj.fields.fuzzy_filter(search="bd", schemas=schemas, names=True)
+        matches = apiobj.fields.fuzzy_filter(search="bd",
+                                             schemas=schemas,
+                                             names=True)
         assert isinstance(matches, list) and matches
         for x in matches:
             assert isinstance(x, str)

@@ -61,9 +61,9 @@ def cmd(ctx, url, password, company_name, contact_email, export_format):
     """Perform the initial signup to an instance."""
     entry = Signup(url=url)
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        data = entry.signup(
-            password=password, company_name=company_name, contact_email=contact_email
-        )
+        data = entry.signup(password=password,
+                            company_name=company_name,
+                            contact_email=contact_email)
 
     if export_format == "str":
         lines = [

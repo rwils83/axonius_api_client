@@ -49,17 +49,15 @@ EXPORT = click.option(
     "--export-format",
     "-xf",
     "export_format",
-    type=click.Choice(
-        [
-            "json-full",
-            "json-config",
-            "json",
-            "table",
-            "table-schemas",
-            "str",
-            "str-args",
-        ]
-    ),
+    type=click.Choice([
+        "json-full",
+        "json-config",
+        "json",
+        "table",
+        "table-schemas",
+        "str",
+        "str-args",
+    ]),
     help="Format of to export data in",
     default="json-config",
     show_envvar=True,
@@ -77,21 +75,23 @@ ID_CNX = click.option(
 
 
 def prompt_config(
-    ctx,
-    client,
-    new_config,
-    adapter_name,
-    adapter_node,
-    prompt_optional,
-    prompt_default,
-    **kwargs,
+        ctx,
+        client,
+        new_config,
+        adapter_name,
+        adapter_node,
+        prompt_optional,
+        prompt_default,
+        **kwargs,
 ):
     """Pass."""
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        adapter = client.adapters.get_by_name(name=adapter_name, node=adapter_node)
+        adapter = client.adapters.get_by_name(name=adapter_name,
+                                              node=adapter_node)
 
     schemas = list(adapter["schemas"]["cnx"].values())
-    schemas = reversed(sorted(schemas, key=lambda x: [x["required"], x["name"]]))
+    schemas = reversed(
+        sorted(schemas, key=lambda x: [x["required"], x["name"]]))
 
     for schema in schemas:
         prompt_schema(
@@ -103,7 +103,8 @@ def prompt_config(
         )
 
 
-def prompt_schema(schema, new_config, prompt_optional, prompt_default, adapter):
+def prompt_schema(schema, new_config, prompt_optional, prompt_default,
+                  adapter):
     """Pass."""
     name = schema["name"]
     required = schema["required"]
@@ -123,10 +124,12 @@ def prompt_schema(schema, new_config, prompt_optional, prompt_default, adapter):
         if new_config[name].lower().strip() == "_empty_":
             new_config[name] = None
         if stype == "file":
-            new_config[name] = pathlib.Path(new_config[name]).expanduser().resolve()
+            new_config[name] = pathlib.Path(
+                new_config[name]).expanduser().resolve()
         return
 
-    sane_defaults = CNX_SANE_DEFAULTS.get(adapter["name"], CNX_SANE_DEFAULTS["all"])
+    sane_defaults = CNX_SANE_DEFAULTS.get(adapter["name"],
+                                          CNX_SANE_DEFAULTS["all"])
     if name in sane_defaults and default is None:
         default = sane_defaults[name]
 
@@ -207,7 +210,9 @@ def show_schema(schema, err=True):
     """Pass."""
     rkw = ["{}: {}".format(k, v) for k, v in schema.items()]
     rkw = "\n  " + "\n  ".join(rkw)
-    click.secho(message=f"\n***  Configuration schema:{rkw}", fg="blue", err=err)
+    click.secho(message=f"\n***  Configuration schema:{rkw}",
+                fg="blue",
+                err=err)
 
 
 def add_cnx(ctx, client, adapter_name, adapter_node, new_config, **kwargs):
@@ -269,18 +274,15 @@ def handle_export(ctx, rows, export_format, **kwargs):
                 footer=True,
                 orig=True,
                 orig_width=20,
-            )
-        )
+            ))
         ctx.exit(0)
 
     if export_format == "str-args":
         rows = listify(rows)
-        lines = "\n".join(
-            [
-                "--node-name {node_name} --name {adapter_name} --id {id}".format(**row)
-                for row in rows
-            ]
-        )
+        lines = "\n".join([
+            "--node-name {node_name} --name {adapter_name} --id {id}".format(
+                **row) for row in rows
+        ])
         click.secho(lines)
         ctx.exit(0)
 

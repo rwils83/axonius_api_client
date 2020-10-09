@@ -32,12 +32,12 @@ class Http:
     """HTTP client wrapper around :obj:`requests.Session`."""
 
     def __init__(
-        self,
-        url: Union["UrlParser", str],
-        certpath: Optional[Union[str, pathlib.Path]] = None,
-        certwarn: bool = True,
-        certverify: bool = False,
-        **kwargs,
+            self,
+            url: Union["UrlParser", str],
+            certpath: Optional[Union[str, pathlib.Path]] = None,
+            certwarn: bool = True,
+            certverify: bool = False,
+            **kwargs,
     ):
         """HTTP client wrapper around :obj:`requests.Session`.
 
@@ -61,7 +61,8 @@ class Http:
                 - if any of cert_path, cert_client_cert, cert_client_key, or cert_client_both
                   are supplied and the file does not exist
         """
-        self.LOG_LEVEL: Union[str, int] = kwargs.get("log_level", LOG_LEVEL_HTTP)
+        self.LOG_LEVEL: Union[str, int] = kwargs.get("log_level",
+                                                     LOG_LEVEL_HTTP)
         """log level for this class ``kwargs=log_level``"""
 
         self.LOG: logging.Logger = get_obj_log(obj=self, level=self.LOG_LEVEL)
@@ -70,7 +71,8 @@ class Http:
         if isinstance(url, UrlParser):
             self.URLPARSED: UrlParser = url
         else:
-            self.URLPARSED: UrlParser = UrlParser(url=url, default_scheme="https")
+            self.URLPARSED: UrlParser = UrlParser(url=url,
+                                                  default_scheme="https")
 
         self.url: str = self.URLPARSED.url
         """URL to connect to"""
@@ -82,10 +84,12 @@ class Http:
         self.SAVEHISTORY: bool = kwargs.get("save_history", False)
         """Append all responses to :attr:`HISTORY` ``kwargs=save_history``"""
 
-        self.CONNECT_TIMEOUT: int = kwargs.get("connect_timeout", TIMEOUT_CONNECT)
+        self.CONNECT_TIMEOUT: int = kwargs.get("connect_timeout",
+                                               TIMEOUT_CONNECT)
         """seconds to wait for connections to open to :attr:`url` ``kwargs=connect_timeout``"""
 
-        self.RESPONSE_TIMEOUT: int = kwargs.get("response_timeout", TIMEOUT_RESPONSE)
+        self.RESPONSE_TIMEOUT: int = kwargs.get("response_timeout",
+                                                TIMEOUT_RESPONSE)
         """seconds to wait for responses from :attr:`url` ``kwargs=response_timeout``"""
 
         self.LOG_HIDE_HEADERS: List[str] = ["api-key", "api-secret"]
@@ -104,14 +108,12 @@ class Http:
         """HTTPS proxy to use. ``kwargs=https_proxy``"""
 
         self.LOG_REQUEST_ATTRS: Optional[List[str]] = kwargs.get(
-            "log_request_attrs", None
-        )
+            "log_request_attrs", None)
         """request attrs to log :attr:`axonius_api_client.constants.REQUEST_ATTR_MAP`
         ``kwargs=log_request_attrs``"""
 
         self.LOG_RESPONSE_ATTRS: Optional[List[str]] = kwargs.get(
-            "log_response_attrs", None
-        )
+            "log_response_attrs", None)
         """response attrs to log :attr:`axonius_api_client.constants.RESPONSE_ATTR_MAP`
         ``kwargs=log_response_attrs``"""
 
@@ -119,18 +121,15 @@ class Http:
         """logging level for low-level urllib library. ``kwargs=log_level_urllib``"""
 
         self.CERT_CLIENT_KEY: Optional[Union[str, pathlib.Path]] = kwargs.get(
-            "cert_client_key", None
-        )
+            "cert_client_key", None)
         """Private key file for cert_client_cert ``kwargs=cert_client_key``"""
 
         self.CERT_CLIENT_CERT: Optional[Union[str, pathlib.Path]] = kwargs.get(
-            "cert_client_cert", None
-        )
+            "cert_client_cert", None)
         """cert file to offer to :attr:`url` ``kwargs=cert_client_cert``"""
 
         self.CERT_CLIENT_BOTH: Optional[Union[str, pathlib.Path]] = kwargs.get(
-            "cert_client_both", None
-        )
+            "cert_client_both", None)
         """cert file with both private key and cert to offer to :attr:`url`
         ``kwargs=cert_client_both``"""
 
@@ -166,13 +165,13 @@ class Http:
             if not all([self.CERT_CLIENT_CERT, self.CERT_CLIENT_KEY]):
                 error = (
                     "You must supply both a 'cert_client_cert' and 'cert_client_key'"
-                    " or use 'cert_client_both'!"
-                )
+                    " or use 'cert_client_both'!")
                 raise HttpError(error)
 
             path_read(obj=self.CERT_CLIENT_CERT, binary=True)
             path_read(obj=self.CERT_CLIENT_KEY, binary=True)
-            self.session.cert = (str(self.CERT_CLIENT_CERT), str(self.CERT_CLIENT_KEY))
+            self.session.cert = (str(self.CERT_CLIENT_CERT),
+                                 str(self.CERT_CLIENT_KEY))
 
         if certwarn is True:
             warnings.simplefilter("once", InsecureRequestWarning)
@@ -183,18 +182,18 @@ class Http:
         set_log_level(obj=urllog, level=self.LOG_LEVEL_URLLIB)
 
     def __call__(
-        self,
-        path: Optional[str] = None,
-        route: Optional[str] = None,
-        method: str = "get",
-        data: Optional[str] = None,
-        params: Optional[dict] = None,
-        headers: Optional[dict] = None,
-        json: Optional[dict] = None,
-        files: tuple = None,
-        # fmt: off
-        **kwargs
-        # fmt: on
+            self,
+            path: Optional[str] = None,
+            route: Optional[str] = None,
+            method: str = "get",
+            data: Optional[str] = None,
+            params: Optional[dict] = None,
+            headers: Optional[dict] = None,
+            json: Optional[dict] = None,
+            files: tuple = None,
+            # fmt: off
+            **kwargs
+            # fmt: on
     ) -> requests.Response:
         """Create, prepare, and then send a request using :attr:`session`.
 
@@ -279,8 +278,7 @@ class Http:
     def __str__(self) -> str:
         """Show object info."""
         return "{c.__module__}.{c.__name__}(url={url!r})".format(
-            c=self.__class__, url=self.url
-        )
+            c=self.__class__, url=self.url)
 
     def __repr__(self) -> str:
         """Show object info."""
@@ -345,7 +343,9 @@ class Http:
         """Set the request attributes that should be logged."""
         attr_map = REQUEST_ATTR_MAP
         attr_type = "request"
-        self._set_log_attrs(attr_map=attr_map, attr_type=attr_type, value=value)
+        self._set_log_attrs(attr_map=attr_map,
+                            attr_type=attr_type,
+                            value=value)
 
     @property
     def log_response_attrs(self) -> List[str]:
@@ -357,14 +357,15 @@ class Http:
         """Set the response attributes that should be logged."""
         attr_map = RESPONSE_ATTR_MAP
         attr_type = "response"
-        self._set_log_attrs(attr_map=attr_map, attr_type=attr_type, value=value)
+        self._set_log_attrs(attr_map=attr_map,
+                            attr_type=attr_type,
+                            value=value)
 
     def _get_log_attrs(self, attr_type: str) -> List[str]:
         return getattr(self, "_LOG_ATTRS", {}).get(attr_type, [])
 
-    def _set_log_attrs(
-        self, attr_map: dict, attr_type: str, value: Union[str, List[str]]
-    ):
+    def _set_log_attrs(self, attr_map: dict, attr_type: str,
+                       value: Union[str, List[str]]):
         if not hasattr(self, "_LOG_ATTRS"):
             self._LOG_ATTRS = {"response": [], "request": []}
 

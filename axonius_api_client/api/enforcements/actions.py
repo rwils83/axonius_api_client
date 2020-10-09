@@ -37,12 +37,12 @@ class RunAction(ModelMixins):
         return self.request(method="get", path=path)
 
     def _deploy(
-        self,
-        action_name: str,
-        ids: List[str],
-        file_uuid: str,
-        file_name: str,
-        params: Optional[str] = None,
+            self,
+            action_name: str,
+            ids: List[str],
+            file_uuid: str,
+            file_name: str,
+            params: Optional[str] = None,
     ) -> dict:
         """Deploy an action.
 
@@ -82,11 +82,11 @@ class RunAction(ModelMixins):
         return self.request(method="post", path=path, json=data)
 
     def _upload_file(
-        self,
-        name: str,
-        content: IO,
-        content_type: Optional[str] = None,
-        headers: Optional[dict] = None,
+            self,
+            name: str,
+            content: IO,
+            content_type: Optional[str] = None,
+            headers: Optional[dict] = None,
     ) -> str:
         """Upload a file to the system for use in deployment and get the UUID of new file.
 

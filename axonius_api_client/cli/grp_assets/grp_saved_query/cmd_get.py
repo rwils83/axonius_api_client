@@ -49,7 +49,8 @@ OPTIONS = [
 @click.command(name="get", context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
-def cmd(ctx, url, key, secret, export_format, names, names_regex, tags, **kwargs):
+def cmd(ctx, url, key, secret, export_format, names, names_regex, tags,
+        **kwargs):
     """Get saved queries."""
     client = ctx.obj.start_client(url=url, key=key, secret=secret)
 

@@ -30,9 +30,10 @@ class SettingsChild(ChildMixins):
         """
         return parse_settings(raw=self._get(), title=self.TITLE)
 
-    def get_section(
-        self, section: str, sub_section: Optional[str] = None, full_config: bool = False
-    ) -> dict:
+    def get_section(self,
+                    section: str,
+                    sub_section: Optional[str] = None,
+                    full_config: bool = False) -> dict:
         """Pass."""
         settings = self.get()
         title = settings["settings_title"]
@@ -40,13 +41,14 @@ class SettingsChild(ChildMixins):
         valid_sections = []
 
         for name, meta in settings["sections"].items():
-            valid_sections.append(
-                {
-                    "Section Name": name,
-                    "Section Title": meta["title"],
-                    "Sub Section Names": "\n".join(list(meta["sub_sections"])),
-                }
-            )
+            valid_sections.append({
+                "Section Name":
+                name,
+                "Section Title":
+                meta["title"],
+                "Sub Section Names":
+                "\n".join(list(meta["sub_sections"])),
+            })
 
             if name == section:
                 if full_config:
@@ -56,9 +58,10 @@ class SettingsChild(ChildMixins):
         err = f"Section Name {section!r} not found in {title}"
         raise NotFoundError(tablize(value=valid_sections, err=err))
 
-    def get_sub_section(
-        self, section: str, sub_section: str, full_config: bool = False
-    ) -> dict:
+    def get_sub_section(self,
+                        section: str,
+                        sub_section: str,
+                        full_config: bool = False) -> dict:
         """Pass."""
         settings = self.get_section(section=section, full_config=full_config)
         title = settings["settings_title"]
@@ -69,24 +72,20 @@ class SettingsChild(ChildMixins):
         valids = []
 
         for name, meta in settings["sub_sections"].items():
-            valids.append(
-                {
-                    "Sub Section Name": meta["name"],
-                    "Sub Section Title": meta["title"],
-                    "Section Name": meta["parent_name"],
-                    "Section Title": meta["parent_title"],
-                }
-            )
+            valids.append({
+                "Sub Section Name": meta["name"],
+                "Sub Section Title": meta["title"],
+                "Section Name": meta["parent_name"],
+                "Section Title": meta["parent_title"],
+            })
 
             if name == sub_section:
                 if full_config:
                     meta["full_config"] = settings["full_config"]
                 return meta
 
-        err = (
-            f"Sub Section Name {sub_section!r} not found in under "
-            f"Section Name {section!r} in {title}"
-        )
+        err = (f"Sub Section Name {sub_section!r} not found in under "
+               f"Section Name {section!r} in {title}")
         raise NotFoundError(tablize(value=valids, err=err))
 
     def update_section(self, section: str, **kwargs) -> dict:
@@ -125,11 +124,12 @@ class SettingsChild(ChildMixins):
 
         return self.get_section(section=section)
 
-    def update_sub_section(self, section: str, sub_section: str, **kwargs) -> dict:
+    def update_sub_section(self, section: str, sub_section: str,
+                           **kwargs) -> dict:
         """Update the system settings."""
-        settings = self.get_sub_section(
-            section=section, sub_section=sub_section, full_config=True
-        )
+        settings = self.get_sub_section(section=section,
+                                        sub_section=sub_section,
+                                        full_config=True)
         title = settings["settings_title"]
         schemas = settings["schemas"]
         source = f"{title} Section Name {section!r} Sub Section Name {sub_section!r}"
@@ -172,7 +172,9 @@ class SettingsChild(ChildMixins):
 
     def _update(self, new_config: dict) -> dict:
         """Direct API method to update the system settings."""
-        return self.request(method="post", path=self.router_path, json=new_config)
+        return self.request(method="post",
+                            path=self.router_path,
+                            json=new_config)
 
 
 class SettingsCore(SettingsChild):

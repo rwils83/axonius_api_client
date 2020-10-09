@@ -24,14 +24,22 @@ OPTIONS = [
     get_option_fields_default(default=True),
     *QUERY,
     *WIZ,
-    get_option_help(choices=["auth", "query", "assetexport", "selectfields", "wizard"]),
+    get_option_help(
+        choices=["auth", "query", "assetexport", "selectfields", "wizard"]),
 ]
 
 
 @click.command(name="get", context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
-def cmd(ctx, url, key, secret, query_file, wizard_content, whitelist=None, **kwargs):
+def cmd(ctx,
+        url,
+        key,
+        secret,
+        query_file,
+        wizard_content,
+        whitelist=None,
+        **kwargs):
     """Get assets using a query and fields."""
     if query_file:
         kwargs["query"] = query_file.read().strip()
@@ -44,5 +52,7 @@ def cmd(ctx, url, key, secret, query_file, wizard_content, whitelist=None, **kwa
     apiobj = getattr(client, p_grp)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        kwargs = load_wiz(apiobj=apiobj, wizard_content=wizard_content, kwargs=kwargs)
+        kwargs = load_wiz(apiobj=apiobj,
+                          wizard_content=wizard_content,
+                          kwargs=kwargs)
         apiobj.get(**kwargs)

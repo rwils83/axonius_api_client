@@ -84,7 +84,8 @@ class Adapters(ModelMixins):
 
         keys = ["node_name", "node_id"]
         nodes = [
-            x for x in adapters if node.lower() in [str(x[k]).lower() for k in keys]
+            x for x in adapters
+            if node.lower() in [str(x[k]).lower() for k in keys]
         ]
 
         if not nodes:
@@ -99,9 +100,10 @@ class Adapters(ModelMixins):
         err = f"No adapter named {name!r} found on node {node!r}"
         raise NotFoundError(tablize_adapters(adapters=adapters, err=err))
 
-    def config_get(
-        self, name: str, node: str = DEFAULT_NODE, config_type: str = "generic"
-    ) -> dict:
+    def config_get(self,
+                   name: str,
+                   node: str = DEFAULT_NODE,
+                   config_type: str = "generic") -> dict:
         """Get the advanced settings for an adapter.
 
         Args:
@@ -112,7 +114,8 @@ class Adapters(ModelMixins):
         adapter = self.get_by_name(name=name, node=node)
         return self.config_refetch(adapter=adapter, config_type=config_type)
 
-    def config_refetch(self, adapter: dict, config_type: str = "generic") -> dict:
+    def config_refetch(self, adapter: dict,
+                       config_type: str = "generic") -> dict:
         """Re-fetch the advanced settings for an adapter.
 
         Args:
@@ -126,23 +129,25 @@ class Adapters(ModelMixins):
 
         if not name_config:
             name = adapter["name"]
-            valid = ", ".join([x for x in CONFIG_TYPES if f"{x}_name" in schemas])
+            valid = ", ".join(
+                [x for x in CONFIG_TYPES if f"{x}_name" in schemas])
             raise ApiError(
                 f"Adapter {name} has no config type {config_type!r}, valids: {valid}!"
             )
 
-        data = self._config_get(name_plugin=name_plugin, name_config=name_config)
+        data = self._config_get(name_plugin=name_plugin,
+                                name_config=name_config)
 
         data["schema"] = parse_schema(raw=data["schema"])
 
         return data
 
     def config_update(
-        self,
-        name: str,
-        node: str = DEFAULT_NODE,
-        config_type: str = "generic",
-        **kwargs,
+            self,
+            name: str,
+            node: str = DEFAULT_NODE,
+            config_type: str = "generic",
+            **kwargs,
     ) -> dict:
         """Update the advanced settings for an adapter.
 
@@ -156,7 +161,8 @@ class Adapters(ModelMixins):
         kwargs.update(kwargs_config)
         adapter = self.get_by_name(name=name, node=node)
 
-        config_map = self.config_refetch(adapter=adapter, config_type=config_type)
+        config_map = self.config_refetch(adapter=adapter,
+                                         config_type=config_type)
 
         name_config = f"{config_type}_name"
         name_config = adapter["schemas"][name_config]
@@ -166,12 +172,14 @@ class Adapters(ModelMixins):
 
         source = f"adapter {name!r} {config_type} advanced settings"
         config_unknown(schemas=schemas, new_config=kwargs, source=source)
-        new_config = config_build(
-            schemas=schemas, old_config=old_config, new_config=kwargs, source=source
-        )
-        config_unchanged(
-            schemas=schemas, old_config=old_config, new_config=new_config, source=source
-        )
+        new_config = config_build(schemas=schemas,
+                                  old_config=old_config,
+                                  new_config=kwargs,
+                                  source=source)
+        config_unchanged(schemas=schemas,
+                         old_config=old_config,
+                         new_config=new_config,
+                         source=source)
 
         self._config_update(
             name_raw=adapter["name_raw"],
@@ -182,13 +190,13 @@ class Adapters(ModelMixins):
         return self.config_refetch(adapter=adapter, config_type=config_type)
 
     def file_upload(
-        self,
-        name: str,
-        field_name: str,
-        file_name: str,
-        file_content: Union[str, bytes],
-        file_content_type: Optional[str] = None,
-        node: str = DEFAULT_NODE,
+            self,
+            name: str,
+            field_name: str,
+            file_name: str,
+            file_content: Union[str, bytes],
+            file_content_type: Optional[str] = None,
+            node: str = DEFAULT_NODE,
     ) -> dict:
         """Upload a file to a specific adapter on a specific node.
 
@@ -236,7 +244,8 @@ class Adapters(ModelMixins):
         path = self.router.root
         return self.request(method="get", path=path)
 
-    def _config_update(self, name_raw: str, name_config: str, new_config: dict) -> str:
+    def _config_update(self, name_raw: str, name_config: str,
+                       new_config: dict) -> str:
         """Direct API method to set advanced settings for an adapter.
 
         Args:
@@ -248,12 +257,12 @@ class Adapters(ModelMixins):
                 * ``DiscoverySchema`` for discover advanced settings
             new_config: the advanced configuration key value pairs to set
         """
-        path = self.router.config_set.format(
-            adapter_name_raw=name_raw, adapter_config_name=name_config
-        )
-        return self.request(
-            method="post", path=path, json=new_config, error_json_invalid=False
-        )
+        path = self.router.config_set.format(adapter_name_raw=name_raw,
+                                             adapter_config_name=name_config)
+        return self.request(method="post",
+                            path=path,
+                            json=new_config,
+                            error_json_invalid=False)
 
     def _config_get(self, name_plugin: str, name_config: str) -> dict:
         """Direct API method to set advanced settings for an adapter.
@@ -266,20 +275,19 @@ class Adapters(ModelMixins):
                 * ``AwsSettings`` for adapter specific advanced settings (name changes per adapter)
                 * ``DiscoverySchema`` for discover advanced settings
         """
-        path = self.router.config_get.format(
-            adapter_name_plugin=name_plugin, adapter_config_name=name_config
-        )
+        path = self.router.config_get.format(adapter_name_plugin=name_plugin,
+                                             adapter_config_name=name_config)
         return self.request(method="get", path=path)
 
     def _file_upload(
-        self,
-        name_raw: str,
-        node_id: str,
-        field_name: str,
-        file_name: str,
-        file_content: Union[bytes, str],
-        file_content_type: Optional[str] = None,
-        file_headers: Optional[dict] = None,
+            self,
+            name_raw: str,
+            node_id: str,
+            field_name: str,
+            file_name: str,
+            file_content: Union[bytes, str],
+            file_content_type: Optional[str] = None,
+            file_headers: Optional[dict] = None,
     ) -> dict:
         """Direct API method to upload a file to a specific adapter on a specifc node.
 
@@ -293,10 +301,12 @@ class Adapters(ModelMixins):
             file_headers: headers to use for file
         """
         data = {"field_name": field_name}
-        files = {"userfile": (file_name, file_content, file_content_type, file_headers)}
-        path = self.router.file_upload.format(
-            adapter_name_raw=name_raw, adapter_node_id=node_id
-        )
+        files = {
+            "userfile":
+            (file_name, file_content, file_content_type, file_headers)
+        }
+        path = self.router.file_upload.format(adapter_name_raw=name_raw,
+                                              adapter_node_id=node_id)
         ret = self.request(method="post", path=path, data=data, files=files)
         ret["filename"] = file_name
         return ret

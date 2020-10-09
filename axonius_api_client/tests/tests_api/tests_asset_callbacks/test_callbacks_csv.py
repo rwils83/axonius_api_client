@@ -22,11 +22,13 @@ class TestCallbacksCsv(Callbacks):
     def test_row_as_is(self, cbexport, apiobj):
         field_complex = apiobj.FIELD_COMPLEX
         sub_columns = [
-            x["column_title"]
-            for x in get_schema(apiobj=apiobj, field=field_complex, key="sub_fields")
+            x["column_title"] for x in get_schema(
+                apiobj=apiobj, field=field_complex, key="sub_fields")
             if x["is_root"]
         ]
-        original_rows = get_rows_exist(apiobj=apiobj, fields=field_complex, max_rows=5)
+        original_rows = get_rows_exist(apiobj=apiobj,
+                                       fields=field_complex,
+                                       max_rows=5)
 
         io_fd = io.StringIO()
 
@@ -65,7 +67,10 @@ class TestCallbacksCsv(Callbacks):
             apiobj=apiobj,
             cbexport=cbexport,
             store={"fields": apiobj.fields_default},
-            getargs={"export_fd": io_fd, "field_titles": False},
+            getargs={
+                "export_fd": io_fd,
+                "field_titles": False
+            },
         )
         cbobj.start()
         assert cbobj.GETARGS["field_titles"] is False

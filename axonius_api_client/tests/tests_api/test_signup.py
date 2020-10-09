@@ -20,7 +20,9 @@ class TestSignupPrivate(TestSignup):
         assert not data
 
     def test_signup(self, apiobj):
-        data = apiobj._signup_post(password="x", company_name="x", contact_email="x")
+        data = apiobj._signup_post(password="x",
+                                   company_name="x",
+                                   contact_email="x")
         exp = {
             "additional_data": None,
             "message": "Signup already completed",

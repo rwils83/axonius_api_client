@@ -20,7 +20,8 @@ class Enforcements(ModelMixins, PagingMixinsObject):
 
     def delete(self, rows: List[dict]) -> str:  # pragma: no cover
         """Delete an enforcement by name."""
-        return self._delete(ids=[x["uuid"] for x in listify(obj=rows, dictkeys=False)])
+        return self._delete(
+            ids=[x["uuid"] for x in listify(obj=rows, dictkeys=False)])
 
     @property
     def router(self) -> Router:
@@ -42,13 +43,13 @@ class Enforcements(ModelMixins, PagingMixinsObject):
         return self.request(method="delete", path=path, json=ids)
 
     def _create(
-        self,
-        name: str,
-        main: dict,
-        success: Optional[List[dict]] = None,
-        failure: Optional[List[dict]] = None,
-        post: Optional[List[dict]] = None,
-        triggers: Optional[List[dict]] = None,
+            self,
+            name: str,
+            main: dict,
+            success: Optional[List[dict]] = None,
+            failure: Optional[List[dict]] = None,
+            post: Optional[List[dict]] = None,
+            triggers: Optional[List[dict]] = None,
     ) -> str:  # pragma: no cover
         """Create an enforcement set.
 
@@ -80,9 +81,10 @@ class Enforcements(ModelMixins, PagingMixinsObject):
         path = self.router.root
         return self.request(method="put", path=path, json=data, is_json=False)
 
-    def _get(
-        self, query: Optional[str] = None, row_start: int = 0, page_size: int = 0
-    ) -> dict:
+    def _get(self,
+             query: Optional[str] = None,
+             row_start: int = 0,
+             page_size: int = 0) -> dict:
         """Get a page for a given query."""
         params = {}
         params["skip"] = row_start

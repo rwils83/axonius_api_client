@@ -119,7 +119,9 @@ def parse_lifecycle(raw: dict) -> dict:
     parsed["next_in_minutes"] = next_minutes
 
     parsed["is_running"] = not raw["status"] == "done"
-    parsed["phases_done"] = [x["name"] for x in raw["sub_phases"] if x["status"] == 1]
+    parsed["phases_done"] = [
+        x["name"] for x in raw["sub_phases"] if x["status"] == 1
+    ]
     parsed["phases_pending"] = [
         x["name"] for x in raw["sub_phases"] if x["status"] != 1
     ]

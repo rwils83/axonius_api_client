@@ -38,15 +38,17 @@ class Model(metaclass=abc.ABCMeta):
 class PageSizeMixin:
     """Mixins for models that utilize paging in their endpoints."""
 
-    def _get_page_size(
-        self, page_size: Optional[int] = MAX_PAGE_SIZE, max_rows: Optional[int] = None
-    ) -> int:
+    def _get_page_size(self,
+                       page_size: Optional[int] = MAX_PAGE_SIZE,
+                       max_rows: Optional[int] = None) -> int:
         if max_rows and max_rows < page_size:
-            self.LOG.debug(f"CHANGED PAGE SIZE {page_size} to max_rows {max_rows}")
+            self.LOG.debug(
+                f"CHANGED PAGE SIZE {page_size} to max_rows {max_rows}")
             page_size = max_rows
 
         if page_size > MAX_PAGE_SIZE or not page_size:
-            self.LOG.debug(f"CHANGED PAGE SIZE {page_size} to max {MAX_PAGE_SIZE}")
+            self.LOG.debug(
+                f"CHANGED PAGE SIZE {page_size} to max {MAX_PAGE_SIZE}")
             page_size = MAX_PAGE_SIZE
 
         return page_size
@@ -89,10 +91,10 @@ class ModelMixins(Model, PageSizeMixin):
         return self.__str__()
 
     def _build_err_msg(
-        self,
-        response,
-        error: Optional[str] = None,
-        exc: Optional[Exception] = None,
+            self,
+            response,
+            error: Optional[str] = None,
+            exc: Optional[Exception] = None,
     ) -> str:
         """Pass."""
         request_size = len(response.request.body or "")
@@ -101,7 +103,9 @@ class ModelMixins(Model, PageSizeMixin):
         msgs += [f"Original exception: {exc}"] if exc else []
         msgs += [
             "Request Body:",
-            json_reload(obj=response.request.body, error=False, trim=MAX_BODY_LEN),
+            json_reload(obj=response.request.body,
+                        error=False,
+                        trim=MAX_BODY_LEN),
             "",
             "Response details:",
             f"  code: {response.status_code!r}",
@@ -116,7 +120,8 @@ class ModelMixins(Model, PageSizeMixin):
 
         if isinstance(response_obj, dict):
             if "additional_data" in response_obj:
-                msg = json_reload(obj=response_obj.pop("additional_data"), error=False)
+                msg = json_reload(obj=response_obj.pop("additional_data"),
+                                  error=False)
                 msgs += ["  ** Additional Data:", msg]
 
             if "status" in response_obj:
@@ -135,15 +140,15 @@ class ModelMixins(Model, PageSizeMixin):
         return "\n" + "\n".join(msgs)
 
     def request(
-        self,
-        path: str,
-        method: Optional[str] = "get",
-        raw: Optional[bool] = False,
-        is_json: Optional[bool] = True,
-        error_status: Optional[bool] = True,
-        error_json_bad_status: Optional[bool] = True,
-        error_json_invalid: Optional[bool] = True,
-        **kwargs,
+            self,
+            path: str,
+            method: Optional[str] = "get",
+            raw: Optional[bool] = False,
+            is_json: Optional[bool] = True,
+            error_status: Optional[bool] = True,
+            error_json_bad_status: Optional[bool] = True,
+            error_json_invalid: Optional[bool] = True,
+            **kwargs,
     ) -> Any:
         """Send a REST API request.
 
@@ -202,18 +207,17 @@ class ModelMixins(Model, PageSizeMixin):
                         response=response,
                         error="Response has a bad status code!",
                         exc=exc,
-                    )
-                )
+                    ))
                 respexc.response = response
                 respexc.exc = exc
                 raise respexc
 
     def _check_response_json(
-        self,
-        response,
-        error_json_bad_status: Optional[bool] = True,
-        error_json_invalid: Optional[bool] = True,
-        uses_api_response: Optional[bool] = False,
+            self,
+            response,
+            error_json_bad_status: Optional[bool] = True,
+            error_json_invalid: Optional[bool] = True,
+            uses_api_response: Optional[bool] = False,
     ) -> Any:
         """Check the text body of a response is JSON.
 
@@ -239,8 +243,7 @@ class ModelMixins(Model, PageSizeMixin):
                         response=response,
                         error="JSON is not valid in response",
                         exc=exc,
-                    )
-                )
+                    ))
                 respexc.exc = exc
                 respexc.response = response
                 raise respexc
@@ -295,9 +298,8 @@ class PagingMixinsObject(PageSizeMixin):
         valid = "\n  " + "\n  ".join(sorted(valid))
         raise NotFoundError(f"name {value!r} not found, valid:{valid}")
 
-    def get(
-        self, generator: bool = False, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get(self, generator: bool = False,
+            **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Get objects for a given query using paging.
 
         Args:
@@ -308,14 +310,14 @@ class PagingMixinsObject(PageSizeMixin):
         return gen if generator else list(gen)
 
     def get_generator(
-        self,
-        query: Optional[str] = None,
-        max_rows: Optional[int] = None,
-        max_pages: Optional[int] = None,
-        page_size: int = MAX_PAGE_SIZE,
-        page_start: int = 0,
-        page_sleep: int = 0,
-        **kwargs,
+            self,
+            query: Optional[str] = None,
+            max_rows: Optional[int] = None,
+            max_pages: Optional[int] = None,
+            page_size: int = MAX_PAGE_SIZE,
+            page_start: int = 0,
+            page_sleep: int = 0,
+            **kwargs,
     ) -> Generator[dict, None, None]:
         """Get saved queries using paging.
 
@@ -382,10 +384,8 @@ class PagingMixinsObject(PageSizeMixin):
 
                 state["rows_processed_total"] += 1
 
-                if (
-                    state["max_rows"]
-                    and state["rows_processed_total"] >= state["max_rows"]
-                ):
+                if (state["max_rows"] and
+                        state["rows_processed_total"] >= state["max_rows"]):
                     stop_msg = "'rows_processed_total' greater than 'max_rows'"
                     state["stop_msg"] = stop_msg
                     state["stop_fetch"] = True
@@ -396,7 +396,8 @@ class PagingMixinsObject(PageSizeMixin):
                 self.LOG.debug(f"STOPPED FETCH: {stop_msg}")
                 break
 
-            if state["max_pages"] and state["page_number"] >= state["max_pages"]:
+            if state["max_pages"] and state["page_number"] >= state[
+                    "max_pages"]:
                 stop_msg = "'page_number' greater than 'max_pages'"
                 state["stop_fetch"] = True
                 state["stop_msg"] = stop_msg

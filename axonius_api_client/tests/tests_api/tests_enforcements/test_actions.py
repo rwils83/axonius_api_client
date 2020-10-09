@@ -42,7 +42,8 @@ class TestRunActionPrivate(TestRunActionBase):
 
     @pytest.fixture(scope="class")
     def uploaded_file(self, apiobj):
-        data = apiobj._upload_file(name=DEPLOY_FILE_NAME, content=DEPLOY_FILE_CONTENTS)
+        data = apiobj._upload_file(name=DEPLOY_FILE_NAME,
+                                   content=DEPLOY_FILE_CONTENTS)
         assert isinstance(data, dict)
         assert isinstance(data["uuid"], str)
         assert data["filename"] == DEPLOY_FILE_NAME

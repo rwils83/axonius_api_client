@@ -9,7 +9,10 @@ class TestExpr:
     def test_get_query(self):
         exprs = [
             Expr.build(
-                entry={Entry.FLAGS: ["(", "!"], Entry.WEIGHT: -1},
+                entry={
+                    Entry.FLAGS: ["(", "!"],
+                    Entry.WEIGHT: -1
+                },
                 query="badwolf equals abc",
                 field=schema_custom(name="badwolf"),
                 idx=0,
@@ -17,7 +20,10 @@ class TestExpr:
                 op_comp="equals",
             ),
             Expr.build(
-                entry={Entry.FLAGS: ["|", "!", ")"], Entry.WEIGHT: 1},
+                entry={
+                    Entry.FLAGS: ["|", "!", ")"],
+                    Entry.WEIGHT: 1
+                },
                 query="badwolf equals def",
                 field=schema_custom(name="badwolf"),
                 idx=1,
@@ -25,7 +31,10 @@ class TestExpr:
                 op_comp="equals",
             ),
             Expr.build(
-                entry={Entry.FLAGS: [], Entry.WEIGHT: 0},
+                entry={
+                    Entry.FLAGS: [],
+                    Entry.WEIGHT: 0
+                },
                 query="another exists",
                 field=schema_custom(name="another"),
                 idx=2,

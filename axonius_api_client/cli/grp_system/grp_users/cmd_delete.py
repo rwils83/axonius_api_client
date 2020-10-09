@@ -15,7 +15,6 @@ USER_NAME = click.option(
     show_default=True,
 )
 
-
 OPTIONS = [*AUTH, USER_NAME]
 
 

@@ -18,7 +18,8 @@ USER_NAME = click.option(
 OPTIONS = [*AUTH, USER_NAME]
 
 
-@click.command(name="get-password-reset-link", context_settings=CONTEXT_SETTINGS)
+@click.command(name="get-password-reset-link",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(ctx, url, key, secret, name, **kwargs):

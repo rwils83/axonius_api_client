@@ -39,11 +39,11 @@ class ValueParser:
         use when validating fields/adapters/connection labels/etc."""
 
     def __call__(
-        self,
-        value: Any,
-        parser: str,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            parser: str,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, Any]:
         """Parse a value and return the AQL and raw expression values.
 
@@ -65,10 +65,10 @@ class ValueParser:
             raise WizardError(str(exc))
 
     def value_to_csv_adapters(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of valid adapter names."""
         return self.parse_csv(
@@ -80,10 +80,10 @@ class ValueParser:
         )
 
     def value_to_csv_cnx_label(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of valid connection labels."""
         aql_value = self.parse_csv(
@@ -96,10 +96,10 @@ class ValueParser:
         return aql_value
 
     def value_to_csv_int(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of integers."""
         return self.parse_csv(
@@ -111,41 +111,43 @@ class ValueParser:
         )
 
     def value_to_csv_ip(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of IP addresses."""
-        return self.parse_csv(
-            value=value, enum=enum, enum_items=enum_items, converter=parse_ip_address
-        )
+        return self.parse_csv(value=value,
+                              enum=enum,
+                              enum_items=enum_items,
+                              converter=parse_ip_address)
 
     def value_to_csv_str(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of strings."""
         return self.parse_csv(value=value, enum=enum, enum_items=enum_items)
 
     def value_to_csv_subnet(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of subnets."""
-        return self.parse_csv(
-            value=value, enum=enum, enum_items=enum_items, converter=parse_ip_network
-        )
+        return self.parse_csv(value=value,
+                              enum=enum,
+                              enum_items=enum_items,
+                              converter=parse_ip_network)
 
     def value_to_csv_tags(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a comma separated list of valid asset tags (labels)."""
         return self.parse_csv(
@@ -157,20 +159,20 @@ class ValueParser:
         )
 
     def value_to_dt(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a datetime string."""
         aql_value = dt_parse_tmpl(obj=value)
         return aql_value, aql_value
 
     def value_to_in_subnet(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[List[str], str]:
         """Parse a value into the start and end of a subnet."""
         ip_network = parse_ip_network(value=value)
@@ -181,10 +183,10 @@ class ValueParser:
         return aql_value, str(ip_network)
 
     def value_to_int(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, Union[int, float]]:
         """Parse a value as an integer."""
         value = coerce_int_float(value=value)
@@ -192,51 +194,53 @@ class ValueParser:
         return str(value), value
 
     def value_to_ip(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as an IP address."""
         aql_value = str(parse_ip_address(value=value))
         return aql_value, aql_value
 
     def value_to_none(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, None]:
         """Parse a value as none."""
         return "", None
 
     def value_to_raw_version(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a raw version string."""
         aql_value = get_raw_version(value=value)
         return aql_value, value
 
     def value_to_str(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a string."""
         check_type(value=value, exp=str)
         check_empty(value=value)
-        aql_value = self.check_enum(value=value, enum=enum, enum_items=enum_items)
+        aql_value = self.check_enum(value=value,
+                                    enum=enum,
+                                    enum_items=enum_items)
         return aql_value, aql_value
 
     def value_to_str_adapters(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a valid adapter name."""
         check_type(value=value, exp=str)
@@ -251,10 +255,10 @@ class ValueParser:
         return aql_value, aql_value
 
     def value_to_str_cnx_label(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a valid connection label."""
         check_type(value=value, exp=str)
@@ -269,10 +273,10 @@ class ValueParser:
         return aql_value, aql_value
 
     def value_to_str_escaped_regex(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as an escaped regular expression."""
         check_type(value=value, exp=str)
@@ -281,10 +285,10 @@ class ValueParser:
         return aql_value, value
 
     def value_to_str_tags(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a valid asset tag (label)."""
         check_type(value=value, exp=str)
@@ -299,24 +303,24 @@ class ValueParser:
         return aql_value, aql_value
 
     def value_to_str_subnet(
-        self,
-        value: Any,
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
+            self,
+            value: Any,
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
     ) -> Tuple[str, str]:
         """Parse a value as a subnet."""
         aql_value = str(parse_ip_network(value=value))
         return aql_value, aql_value
 
     def parse_csv(
-        self,
-        value: Any,
-        converter: Optional[Any] = None,
-        join_tmpl: str = '"{}"',
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
-        enum_custom: Optional[List[Union[int, str]]] = None,
-        custom_id: Optional[str] = None,
+            self,
+            value: Any,
+            converter: Optional[Any] = None,
+            join_tmpl: str = '"{}"',
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
+            enum_custom: Optional[List[Union[int, str]]] = None,
+            custom_id: Optional[str] = None,
     ) -> Tuple[str, str]:
         """Parse a comma separated string.
 
@@ -342,22 +346,22 @@ class ValueParser:
                         enum_items=enum_items,
                         enum_custom=enum_custom,
                         custom_id=custom_id,
-                    )
-                )
+                    ))
             except Exception as exc:
-                raise WizardError(f"Error in item #{item_num} of {len(items)}: {exc}")
+                raise WizardError(
+                    f"Error in item #{item_num} of {len(items)}: {exc}")
 
         aql_value = ", ".join([join_tmpl.format(x) for x in new_items])
         value = ",".join([str(x) for x in new_items])
         return aql_value, value
 
     def check_enum(
-        self,
-        value: Union[int, str],
-        enum: Optional[List[str]] = None,
-        enum_items: Optional[List[str]] = None,
-        enum_custom: Optional[Union[List[str], Dict[str, str]]] = None,
-        custom_id: Optional[str] = None,
+            self,
+            value: Union[int, str],
+            enum: Optional[List[str]] = None,
+            enum_items: Optional[List[str]] = None,
+            enum_custom: Optional[Union[List[str], Dict[str, str]]] = None,
+            custom_id: Optional[str] = None,
     ) -> Union[int, str]:
         """Check that the value is a valid option of enums.
 
@@ -381,22 +385,26 @@ class ValueParser:
         if isinstance(enum, (list, tuple)):
             for item in enum:
                 item_check = item.lower() if isinstance(item, str) else item
-                value_check = value.lower() if isinstance(value, str) else value
+                value_check = value.lower() if isinstance(value,
+                                                          str) else value
                 if item_check == value_check:
                     return item
 
             valid = "\n - " + "\n - ".join([str(x) for x in enum])
-            raise WizardError(f"invalid choice {value!r}, valid choices:{valid}")
+            raise WizardError(
+                f"invalid choice {value!r}, valid choices:{valid}")
 
         elif isinstance(enum, dict):
             for item, item_value in enum.items():
                 item_check = item.lower() if isinstance(item, str) else item
-                value_check = value.lower() if isinstance(value, str) else value
+                value_check = value.lower() if isinstance(value,
+                                                          str) else value
                 if item_check == value_check:
                     return item_value
 
             valid = "\n - " + "\n - ".join([str(x) for x in enum])
-            raise WizardError(f"invalid choice {value!r}, valid choices:{valid}")
+            raise WizardError(
+                f"invalid choice {value!r}, valid choices:{valid}")
 
     def _tags(self) -> List[str]:
         """Get all known tags (labels) of this asset type."""

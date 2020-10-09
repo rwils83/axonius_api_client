@@ -14,13 +14,11 @@ from ...constants import KEY_MAP_SCHEMA
 from ...tools import json_dump
 
 
-def tablize(
-    value: List[dict],
-    err: Optional[str] = None,
-    fmt: str = "simple",
-    footer: bool = True,
-    **kwargs
-) -> str:
+def tablize(value: List[dict],
+            err: Optional[str] = None,
+            fmt: str = "simple",
+            footer: bool = True,
+            **kwargs) -> str:
     """Pass."""
     # value = wrapper(value=value, **kwargs)
 
@@ -42,13 +40,13 @@ def tablize(
 
 
 def tablize_schemas(
-    schemas: List[dict],
-    config: Optional[dict] = None,
-    err: Optional[str] = None,
-    fmt: str = "simple",
-    footer: bool = True,
-    orig: bool = True,
-    orig_width: int = 20,
+        schemas: List[dict],
+        config: Optional[dict] = None,
+        err: Optional[str] = None,
+        fmt: str = "simple",
+        footer: bool = True,
+        orig: bool = True,
+        orig_width: int = 20,
 ) -> str:
     """Pass."""
     values = []
@@ -58,9 +56,10 @@ def tablize_schemas(
 
     # TBD TRANSLATE ENUM DICTS!!
     for schema in sorted(schemas, key=lambda x: [x["required"], x["name"]]):
-        value = tab_map(
-            value=schema, key_map=KEY_MAP_SCHEMA, orig=orig, orig_width=orig_width
-        )
+        value = tab_map(value=schema,
+                        key_map=KEY_MAP_SCHEMA,
+                        orig=orig,
+                        orig_width=orig_width)
         if config:
             config_value = config.get(schema["name"], None)
             if isinstance(config_value, dict):  # pragma: no cover
@@ -72,10 +71,10 @@ def tablize_schemas(
 
 
 def tablize_adapters(
-    adapters: List[dict],
-    err: Optional[str] = None,
-    fmt: str = "simple",
-    footer: bool = True,
+        adapters: List[dict],
+        err: Optional[str] = None,
+        fmt: str = "simple",
+        footer: bool = True,
 ) -> str:
     """Pass."""
     values = []
@@ -89,10 +88,10 @@ def tablize_adapters(
 
 
 def tablize_cnxs(
-    cnxs: List[dict],
-    err: Optional[str] = None,
-    fmt: str = "simple",
-    footer: bool = True,
+        cnxs: List[dict],
+        err: Optional[str] = None,
+        fmt: str = "simple",
+        footer: bool = True,
 ) -> str:
     """Pass."""
     values = []
@@ -105,10 +104,10 @@ def tablize_cnxs(
 
 
 def tab_map(
-    value: dict,
-    key_map: List[List[Union[str, str, int]]],
-    orig: bool = False,
-    orig_width: int = 20,
+        value: dict,
+        key_map: List[List[Union[str, str, int]]],
+        orig: bool = False,
+        orig_width: int = 20,
 ) -> str:
     """Pass."""
     orig_value = copy.deepcopy(value)
@@ -138,7 +137,8 @@ def tab_map(
             if isinstance(orig_key_value, list):
                 new_key_value = "\n".join([str(x) for x in orig_key_value])
 
-            if isinstance(orig_key_value, str) and orig_key_value and orig_width:
+            if isinstance(orig_key_value,
+                          str) and orig_key_value and orig_width:
                 new_key_value = textwrap.fill(orig_key_value, width=orig_width)
 
             new_value[orig_key] = new_key_value

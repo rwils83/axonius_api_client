@@ -72,9 +72,9 @@ class WizardCsv(Wizard):
         sqs = self._process_sqs(entries=entries)
         return sqs
 
-    def parse_path(
-        self, path: Union[str, pathlib.Path], source: str = Sources.CSV_PATH
-    ) -> List[dict]:
+    def parse_path(self,
+                   path: Union[str, pathlib.Path],
+                   source: str = Sources.CSV_PATH) -> List[dict]:
         """Parse a CSV file into a set of saved queries.
 
         Args:
@@ -104,9 +104,8 @@ class WizardCsv(Wizard):
         entries = self._process_csv(rows=rows, columns=columns, source=source)
         return entries
 
-    def _process_csv(
-        self, rows: List[dict], columns: List[str], source: str
-    ) -> List[dict]:
+    def _process_csv(self, rows: List[dict], columns: List[str],
+                     source: str) -> List[dict]:
         """Process and validate the rows and columns from a CSV into entries.
 
         Args:
@@ -172,14 +171,17 @@ class WizardCsv(Wizard):
         etype = self._check_entry_type(etype=etype, types=Types.SQ)
 
         if not isinstance(value, str) or not value.strip():
-            raise WizardError(f"Empty value for column {Entry.VALUE!r}: {value!r}")
+            raise WizardError(
+                f"Empty value for column {Entry.VALUE!r}: {value!r}")
 
         entry = {}
         entry[Entry.TYPE] = etype
         entry[Entry.VALUE] = value.lstrip()
         entry[Entry.SRC] = src
         if entry[Entry.TYPE] == Types.SAVED_QUERY:
-            entry.update({k: str(row.get(k, v) or v) for k, v in EntrySq.OPT.items()})
+            entry.update(
+                {k: str(row.get(k, v) or v)
+                 for k, v in EntrySq.OPT.items()})
         return entry
 
     def _process_sqs(self, entries: List[dict]) -> List[dict]:
@@ -237,7 +239,8 @@ class WizardCsv(Wizard):
         """Process the entries for the current saved query."""
         if self.SQ_ENTRIES and self.SQ and self.SQ not in self.SQS_DONE:
             cnt = len(self.SQ_ENTRIES)
-            self.LOG.debug(f"processing {cnt} entries in for SQ {kv_dump(self.SQ)}")
+            self.LOG.debug(
+                f"processing {cnt} entries in for SQ {kv_dump(self.SQ)}")
             parsed = super().parse(entries=self.SQ_ENTRIES)
             self.SQ.update(parsed)
         self.SQS_DONE.append(self.SQ)
@@ -294,7 +297,8 @@ class WizardCsv(Wizard):
             fields = [x for x in fields if x != EntrySq.DEFAULT]
 
         if fields != [EntrySq.DEFAULT]:
-            fields = self.APIOBJ.fields.validate(fields=fields, fields_default=False)
+            fields = self.APIOBJ.fields.validate(fields=fields,
+                                                 fields_default=False)
         return fields
 
     def _init(self):

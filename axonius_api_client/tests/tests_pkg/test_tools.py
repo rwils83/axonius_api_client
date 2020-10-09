@@ -638,7 +638,8 @@ class TestIsInt:
         assert not is_int(obj=bad, digit=False)
 
     @pytest.mark.parametrize("ok", [0, 4, "1", b"1"], scope="class")
-    @pytest.mark.parametrize("bad", [False, True, {}, "x", b"x"], scope="class")
+    @pytest.mark.parametrize("bad", [False, True, {}, "x", b"x"],
+                             scope="class")
     def test_int_digit_true(self, ok, bad):
         """Simple test."""
         assert is_int(obj=ok, digit=True)
@@ -754,7 +755,8 @@ class TestDtParseTmpl:
 class TestSplitStr:
     def test_valid(self):
         assert split_str("x, y, z") == ["x", "y", "z"]
-        assert split_str(["x, y, z", "a, b, c"]) == ["x", "y", "z", "a", "b", "c"]
+        assert split_str(["x, y, z",
+                          "a, b, c"]) == ["x", "y", "z", "a", "b", "c"]
         assert split_str(None) == []
         assert split_str(["x,,y,,z"]) == ["x", "y", "z"]
 
@@ -785,7 +787,11 @@ class TestCalc:
 class TestJoinKv:
     def test_valid(self):
         assert join_kv({"k1": "v1", "k2": "v2"}) == ["k1: 'v1'", "k2: 'v2'"]
-        assert join_kv([{"k1": "v1"}, {"k2": "v2"}]) == [["k1: 'v1'"], ["k2: 'v2'"]]
+        assert join_kv([{
+            "k1": "v1"
+        }, {
+            "k2": "v2"
+        }]) == [["k1: 'v1'"], ["k2: 'v2'"]]
         assert join_kv({"k1": ["v1", "v2"]}) == ["k1: 'v1, v2'"]
 
     def test_invalid(self):
@@ -821,7 +827,8 @@ class TestGetRawVersion:
     def test_valid(self):
         assert get_raw_version("3.1.0") == "0000000030000000100000000"
         assert get_raw_version("boo:2.1.0") == "boo000000020000000100000000"
-        assert get_raw_version("123456789123456789.1.0") == "0123456780000000100000000"
+        assert get_raw_version(
+            "123456789123456789.1.0") == "0123456780000000100000000"
 
     def test_invalid(self):
         with pytest.raises(ToolsError):
@@ -948,7 +955,8 @@ class TestDtParse:
 
     @pytest.mark.parametrize(
         "val",
-        [format(dt_now()), dt_now(), timedelta(minutes=1)],
+        [format(dt_now()), dt_now(),
+         timedelta(minutes=1)],
         scope="class",
     )
     def test_val(self, val):
@@ -965,9 +973,9 @@ class TestDtParse:
 class TestDtWithinMin:
     """Test dt_*."""
 
-    @pytest.mark.parametrize(
-        "val", [None, "x", False, True, {}, [], 6, "8", b"9"], scope="class"
-    )
+    @pytest.mark.parametrize("val",
+                             [None, "x", False, True, {}, [], 6, "8", b"9"],
+                             scope="class")
     def test_bad(self, val):
         then = dt_now(delta=timedelta(minutes=5))
         assert dt_within_min(obj=then, n=val) is False

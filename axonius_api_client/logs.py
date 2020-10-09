@@ -42,9 +42,8 @@ def localtime():
     logging.Formatter.converter = time.localtime
 
 
-def get_obj_log(
-    obj: object, level: Optional[Union[int, str]] = None, **kwargs
-) -> logging.Logger:
+def get_obj_log(obj: object, level: Optional[Union[int, str]] = None,
+                **kwargs) -> logging.Logger:
     """Get a child logger for an object.
 
     Args:
@@ -61,9 +60,8 @@ def get_obj_log(
     return log
 
 
-def set_log_level(
-    obj: Union[logging.Logger, logging.Handler], level: Optional[Union[int, str]] = None
-):
+def set_log_level(obj: Union[logging.Logger, logging.Handler],
+                  level: Optional[Union[int, str]] = None):
     """Set a logger or handler to a log level.
 
     Args:
@@ -92,19 +90,17 @@ def str_level(level: Union[int, str]) -> str:
         if hasattr(logging, level.upper()):
             return level.upper()
 
-    error = (
-        f"Invalid logging level {level!r}, must be one of "
-        f"{LOG_LEVELS_STR_CSV} or {LOG_LEVELS_INT_CSV}"
-    )
+    error = (f"Invalid logging level {level!r}, must be one of "
+             f"{LOG_LEVELS_STR_CSV} or {LOG_LEVELS_INT_CSV}")
     raise ToolsError(error)
 
 
 def add_stderr(
-    obj: logging.Logger,
-    level: Union[int, str] = LOG_LEVEL_CONSOLE,
-    hname: str = LOG_NAME_STDERR,
-    fmt: str = LOG_FMT_CONSOLE,
-    datefmt: str = LOG_DATEFMT_CONSOLE,
+        obj: logging.Logger,
+        level: Union[int, str] = LOG_LEVEL_CONSOLE,
+        hname: str = LOG_NAME_STDERR,
+        fmt: str = LOG_FMT_CONSOLE,
+        datefmt: str = LOG_DATEFMT_CONSOLE,
 ) -> logging.StreamHandler:
     """Add a StreamHandler to a logger object that outputs to STDERR.
 
@@ -126,11 +122,11 @@ def add_stderr(
 
 
 def add_stdout(
-    obj: logging.Logger,
-    level: Union[int, str] = LOG_LEVEL_CONSOLE,
-    hname: str = LOG_NAME_STDOUT,
-    fmt: str = LOG_FMT_CONSOLE,
-    datefmt: str = LOG_DATEFMT_CONSOLE,
+        obj: logging.Logger,
+        level: Union[int, str] = LOG_LEVEL_CONSOLE,
+        hname: str = LOG_NAME_STDOUT,
+        fmt: str = LOG_FMT_CONSOLE,
+        datefmt: str = LOG_DATEFMT_CONSOLE,
 ) -> logging.StreamHandler:
     """Add a StreamHandler to a logger object that outputs to STDOUT.
 
@@ -152,16 +148,16 @@ def add_stdout(
 
 
 def add_file(
-    obj: logging.Logger,
-    level: Union[int, str] = LOG_LEVEL_FILE,
-    hname: str = LOG_NAME_FILE,
-    file_path: Union[pathlib.Path, str] = LOG_FILE_PATH,
-    file_name: Union[pathlib.Path, str] = LOG_FILE_NAME,
-    file_path_mode=LOG_FILE_PATH_MODE,
-    max_mb: int = LOG_FILE_MAX_MB,
-    max_files: int = LOG_FILE_MAX_FILES,
-    fmt: str = LOG_FMT_FILE,
-    datefmt: str = LOG_DATEFMT_FILE,
+        obj: logging.Logger,
+        level: Union[int, str] = LOG_LEVEL_FILE,
+        hname: str = LOG_NAME_FILE,
+        file_path: Union[pathlib.Path, str] = LOG_FILE_PATH,
+        file_name: Union[pathlib.Path, str] = LOG_FILE_NAME,
+        file_path_mode=LOG_FILE_PATH_MODE,
+        max_mb: int = LOG_FILE_MAX_MB,
+        max_files: int = LOG_FILE_MAX_FILES,
+        fmt: str = LOG_FMT_FILE,
+        datefmt: str = LOG_DATEFMT_FILE,
 ) -> logging.handlers.RotatingFileHandler:
     """Add a RotatingFileHandler to a logger object.
 
@@ -195,9 +191,8 @@ def add_file(
     return handler
 
 
-def add_null(
-    obj: logging.Logger, traverse: bool = True, hname="NULL"
-) -> Optional[logging.NullHandler]:
+def add_null(obj: logging.Logger, traverse: bool = True,
+             hname="NULL") -> Optional[logging.NullHandler]:
     """Add a NullHandler to a logger if it has no handlers.
 
     Args:
@@ -208,19 +203,22 @@ def add_null(
     found = find_handlers(obj=obj, hname=hname, traverse=traverse)
     if found:
         return None
-    return add_handler(
-        obj=obj, htype=logging.NullHandler, hname=hname, fmt="", datefmt="", level=""
-    )
+    return add_handler(obj=obj,
+                       htype=logging.NullHandler,
+                       hname=hname,
+                       fmt="",
+                       datefmt="",
+                       level="")
 
 
 def add_handler(
-    obj: logging.Logger,
-    htype: logging.Handler,
-    level: Union[str, int],
-    hname: str,
-    fmt: str,
-    datefmt: str,
-    **kwargs,
+        obj: logging.Logger,
+        htype: logging.Handler,
+        level: Union[str, int],
+        hname: str,
+        fmt: str,
+        datefmt: str,
+        **kwargs,
 ) -> logging.Handler:
     """Add a handler to a logger obj.
 
@@ -248,9 +246,10 @@ def add_handler(
     return handler
 
 
-def del_stderr(
-    obj: logging.Logger, traverse: bool = True, hname: str = LOG_NAME_STDERR
-) -> Dict[str, List[logging.Handler]]:
+def del_stderr(obj: logging.Logger,
+               traverse: bool = True,
+               hname: str = LOG_NAME_STDERR
+               ) -> Dict[str, List[logging.Handler]]:
     """Remove the STDERR StreamHandler from a logger if found.
 
     Args:
@@ -258,14 +257,16 @@ def del_stderr(
         traverse: traverse the logger obj supplied up to the root logger
         hname: name of handler to search for and remove
     """
-    return del_handler(
-        obj=obj, hname=hname, htype=logging.StreamHandler, traverse=traverse
-    )
+    return del_handler(obj=obj,
+                       hname=hname,
+                       htype=logging.StreamHandler,
+                       traverse=traverse)
 
 
-def del_stdout(
-    obj: logging.Logger, traverse: bool = True, hname: str = LOG_NAME_STDOUT
-) -> Dict[str, List[logging.Handler]]:
+def del_stdout(obj: logging.Logger,
+               traverse: bool = True,
+               hname: str = LOG_NAME_STDOUT
+               ) -> Dict[str, List[logging.Handler]]:
     """Remove the STDOUT StreamHandler from a logger if found.
 
     Args:
@@ -273,14 +274,14 @@ def del_stdout(
         traverse: traverse the logger obj supplied up to the root logger
         hname: name of handler to search for and remove
     """
-    return del_handler(
-        obj=obj, hname=hname, htype=logging.StreamHandler, traverse=traverse
-    )
+    return del_handler(obj=obj,
+                       hname=hname,
+                       htype=logging.StreamHandler,
+                       traverse=traverse)
 
 
-def del_file(
-    obj: logging.Logger, traverse: bool = True, hname=LOG_NAME_FILE
-) -> Dict[str, List[logging.Handler]]:
+def del_file(obj: logging.Logger, traverse: bool = True,
+             hname=LOG_NAME_FILE) -> Dict[str, List[logging.Handler]]:
     """Remove the RotatingFileHandler from a logger if found.
 
     Args:
@@ -296,9 +297,8 @@ def del_file(
     )
 
 
-def del_null(
-    obj: logging.Logger, traverse: bool = True, hname: str = "NULL"
-) -> Dict[str, List[logging.Handler]]:
+def del_null(obj: logging.Logger, traverse: bool = True,
+             hname: str = "NULL") -> Dict[str, List[logging.Handler]]:
     """Remove the NullHandler from a logger if found.
 
     Args:
@@ -306,16 +306,17 @@ def del_null(
         traverse: traverse the logger obj supplied up to the root logger
         hname: name of handler to search for and remove
     """
-    return del_handler(
-        obj=obj, hname=hname, htype=logging.NullHandler, traverse=traverse
-    )
+    return del_handler(obj=obj,
+                       hname=hname,
+                       htype=logging.NullHandler,
+                       traverse=traverse)
 
 
 def del_handler(
-    obj: logging.Logger,
-    hname: str = "",
-    htype: logging.Handler = None,
-    traverse: bool = True,
+        obj: logging.Logger,
+        hname: str = "",
+        htype: logging.Handler = None,
+        traverse: bool = True,
 ) -> Dict[str, List[logging.Handler]]:
     """Remove the NullHandler from a logger if found.
 
@@ -333,10 +334,10 @@ def del_handler(
 
 
 def find_handlers(
-    obj: logging.Logger,
-    hname: str = "",
-    htype: logging.Handler = None,
-    traverse: bool = True,
+        obj: logging.Logger,
+        hname: str = "",
+        htype: logging.Handler = None,
+        traverse: bool = True,
 ) -> Dict[str, List[logging.Handler]]:
     """Remove the NullHandler from a logger if found.
 
@@ -363,9 +364,10 @@ def find_handlers(
                 handlers[obj.name].append(handler)
 
     if obj.parent and traverse:
-        found = find_handlers(
-            obj=obj.parent, hname=hname, htype=htype, traverse=traverse
-        )
+        found = find_handlers(obj=obj.parent,
+                              hname=hname,
+                              htype=htype,
+                              traverse=traverse)
         handlers.update(found)
 
     return handlers
@@ -379,10 +381,12 @@ gmtime()
 set_log_level(obj=LOG, level=LOG_LEVEL_PACKAGE)
 
 
-def handle_unhandled_exception(exc_type, exc_value, exc_traceback):  # pragma: no cover
+def handle_unhandled_exception(exc_type, exc_value,
+                               exc_traceback):  # pragma: no cover
     """Log unhandled exceptions."""
     sys.__excepthook__(exc_type, exc_value, exc_traceback)
-    LOG.critical("Unhandled exception", exc_info=(exc_type, exc_value, exc_traceback))
+    LOG.critical("Unhandled exception",
+                 exc_info=(exc_type, exc_value, exc_traceback))
 
 
 sys.excepthook = handle_unhandled_exception

@@ -55,9 +55,9 @@ class ModelMixinsBase:
     def test_model_json_error(self, apiobj):
         """Test exc thrown when json has error status."""
         with pytest.raises(JsonError):
-            apiobj.request(
-                path=apiobj.router.root + "/badwolf", method="get", error_status=False
-            )
+            apiobj.request(path=apiobj.router.root + "/badwolf",
+                           method="get",
+                           error_status=False)
 
     def test_model_no_json_error(self, apiobj):
         """Test exc thrown when status code != 200."""
@@ -76,7 +76,9 @@ class ModelMixinsBase:
 
     def test_model_json_invalid_text(self, apiobj):
         """Test that str is returned when is_json=True and error_json_invalid=False."""
-        response = apiobj.request(path="", method="get", error_json_invalid=False)
+        response = apiobj.request(path="",
+                                  method="get",
+                                  error_json_invalid=False)
         assert isinstance(response, str)
 
     def test_model_child(self, apiobj):
@@ -150,7 +152,10 @@ class AssetsPrivate:
         query = apiobj._build_query(inner=inner, pre=pre, post=post)
         assert query == f"{pre} ({inner}) {post}"
 
-        query = apiobj._build_query(inner=inner, pre=pre, post=post, not_flag=True)
+        query = apiobj._build_query(inner=inner,
+                                    pre=pre,
+                                    post=post,
+                                    not_flag=True)
         assert query == f"{pre} (not ({inner})) {post}"
 
 
@@ -276,7 +281,12 @@ class AssetsPublic:
             use_field=apiobj.FIELD_MAIN,
         )
 
-    def _get_by_value(self, apiobj, method, field, not_flag=False, use_field=None):
+    def _get_by_value(self,
+                      apiobj,
+                      method,
+                      field,
+                      not_flag=False,
+                      use_field=None):
         field = getattr(apiobj, field)
         row_with_val = get_rows_exist(apiobj=apiobj, fields=field)
         value = get_field_vals(rows=row_with_val, field=field)[0]
@@ -297,7 +307,12 @@ class AssetsPublic:
             assert len(rows) == 1
             assert value in rows_values
 
-    def _get_by_values(self, apiobj, method, field, not_flag=False, use_field=None):
+    def _get_by_values(self,
+                       apiobj,
+                       method,
+                       field,
+                       not_flag=False,
+                       use_field=None):
         field = getattr(apiobj, field)
         rows_with_val = get_rows_exist(apiobj=apiobj, fields=field, max_rows=2)
         values = get_field_vals(rows=rows_with_val, field=field)
@@ -318,14 +333,23 @@ class AssetsPublic:
                 assert value in rows_values
                 assert len(rows) >= 1
 
-    def _get_by_value_re(self, apiobj, method, field, not_flag=False, use_field=None):
+    def _get_by_value_re(self,
+                         apiobj,
+                         method,
+                         field,
+                         not_flag=False,
+                         use_field=None):
         field = getattr(apiobj, field)
         row_with_val = get_rows_exist(apiobj=apiobj, fields=field)
         value = get_field_vals(rows=row_with_val, field=field)[0]
         regex_value = value[0:5]
 
         method = getattr(apiobj, f"get_by_{method}_regex")
-        method_args = {"value": regex_value, "not_flag": not_flag, "max_rows": 5}
+        method_args = {
+            "value": regex_value,
+            "not_flag": not_flag,
+            "max_rows": 5
+        }
         if use_field:
             method_args["field"] = use_field
 

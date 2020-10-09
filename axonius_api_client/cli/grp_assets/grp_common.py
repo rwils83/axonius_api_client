@@ -56,7 +56,8 @@ WIZ = [
         "--wiz",
         "-wz",
         "wizard_content",
-        help="Build a query using an expression (multiples, will override --query)",
+        help=
+        "Build a query using an expression (multiples, will override --query)",
         nargs=2,
         multiple=True,
         default=[],
@@ -208,7 +209,8 @@ GET_EXPORT = [
         "--flatten/--no-flatten",
         "field_flatten",
         default=None,
-        help="Remove complex fields and re-add their sub-field values to the row",
+        help=
+        "Remove complex fields and re-add their sub-field values to the row",
         show_envvar=True,
         show_default=True,
         is_flag=True,
@@ -259,7 +261,8 @@ GET_EXPORT = [
         "--software-whitelist-file",
         "whitelist",
         default=None,
-        help="Read in a file of software names to add missing and delta sw columns",
+        help=
+        "Read in a file of software names to add missing and delta sw columns",
         show_envvar=True,
         show_default=True,
         type=click.File(),
@@ -432,7 +435,8 @@ def gen_get_by_cmd(options, doc, cmd_name, method):
     @click.command(name=cmd_name, context_settings=CONTEXT_SETTINGS, help=doc)
     @add_options(options)
     @click.pass_context
-    def cmd(ctx, url, key, secret, whitelist=None, get_method=method, **kwargs):
+    def cmd(ctx, url, key, secret, whitelist=None, get_method=method,
+            **kwargs):
         client = ctx.obj.start_client(url=url, key=key, secret=secret)
         kwargs["report_software_whitelist"] = load_whitelist(whitelist)
 

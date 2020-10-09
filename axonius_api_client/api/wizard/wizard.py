@@ -88,7 +88,8 @@ class Wizard:
 
         self._init()
 
-    def parse(self, entries: List[dict], source: str = Sources.LOD) -> List[dict]:
+    def parse(self, entries: List[dict],
+              source: str = Sources.LOD) -> List[dict]:
         """Parse a list of entries into a query and the associated GUI query wizard expressions.
 
         Args:
@@ -121,9 +122,8 @@ class Wizard:
             try:
                 self._check_entry_keys(entry=entry, keys=Entry.REQ)
                 etype = entry[Entry.TYPE]
-                entry[Entry.TYPE] = self._check_entry_type(
-                    etype=etype, types=Types.DICT
-                )
+                entry[Entry.TYPE] = self._check_entry_type(etype=etype,
+                                                           types=Types.DICT)
                 entry, is_open, tracker = self._parse_flags(
                     entry=entry,
                     idx=idx,
@@ -136,9 +136,8 @@ class Wizard:
                 raise WizardError("\n".join([err, self.DOCS, err]))
         return entries
 
-    def _parse_flags(
-        self, entry: dict, idx: int, entries: List[dict], tracker: int, is_open: bool
-    ) -> dict:
+    def _parse_flags(self, entry: dict, idx: int, entries: List[dict],
+                     tracker: int, is_open: bool) -> dict:
         """Parse flags from an entry.
 
         Args:
@@ -246,16 +245,17 @@ class Wizard:
         value_raw = entry[Entry.VALUE]
         field, operator, value = self._split_simple(value_raw=value_raw)
         field = self._get_field(value=field, value_raw=value_raw)
-        operator = self._get_operator(
-            operator=operator, field=field, value_raw=value_raw
-        )
+        operator = self._get_operator(operator=operator,
+                                      field=field,
+                                      value_raw=value_raw)
         aql_value, expr_value = self.VALUE_PARSER(
             enum=field.get("enum", []),
             enum_items=field.get("items", {}).get("enum"),
             parser=operator.parser.name,
             value=value,
         )
-        query = operator.template.format(field=field[Fields.NAME], aql_value=aql_value)
+        query = operator.template.format(field=field[Fields.NAME],
+                                         aql_value=aql_value)
         expr = Expr.build(
             entry=entry,
             field=field,
@@ -284,15 +284,17 @@ class Wizard:
         sub_exprs = []
         for sub_idx, sub_raw in enumerate(subs_raw):
             try:
-                sub_expr = self._parse_sub(field=field, idx=sub_idx, value_raw=sub_raw)
+                sub_expr = self._parse_sub(field=field,
+                                           idx=sub_idx,
+                                           value_raw=sub_raw)
                 sub_exprs.append(sub_expr)
             except Exception as exc:
-                raise WizardError(f"Error parsing sub field from '{value_raw}'\n{exc}")
+                raise WizardError(
+                    f"Error parsing sub field from '{value_raw}'\n{exc}")
 
         sub_queries = Expr.get_subs_query(sub_exprs=sub_exprs)
-        query = Templates.COMPLEX.format(
-            field=field[Fields.NAME], sub_queries=sub_queries
-        )
+        query = Templates.COMPLEX.format(field=field[Fields.NAME],
+                                         sub_queries=sub_queries)
         expr = Expr.build(
             entry=entry,
             field=field,
@@ -317,7 +319,8 @@ class Wizard:
             :exc:`axonius_api_client.exceptions.WizardError`:
                 if sub field supplied is not a valid sub field of the complex field
         """
-        sub_field, operator, sub_value = self._split_simple(value_raw=value_raw)
+        sub_field, operator, sub_value = self._split_simple(
+            value_raw=value_raw)
 
         field_subs = {x[Fields.NAME]: x for x in field[Fields.SUBS]}
 
@@ -326,24 +329,22 @@ class Wizard:
             valid = ", ".join(list(field_subs))
             err = (
                 f"Unable to find SUB-FIELD named {sub_field!r} of COMPLEX field {fname}"
-                f" from value '{value_raw}'\n\nValid sub_fields: {valid}"
-            )
+                f" from value '{value_raw}'\n\nValid sub_fields: {valid}")
             raise WizardError(err)
 
         sub_field = field_subs[sub_field]
 
-        operator = self._get_operator(
-            operator=operator, field=sub_field, value_raw=value_raw
-        )
+        operator = self._get_operator(operator=operator,
+                                      field=sub_field,
+                                      value_raw=value_raw)
         aql_value, expr_value = self.VALUE_PARSER(
             enum=sub_field.get("enum", []),
             enum_items=sub_field.get("items", {}).get("enum"),
             parser=operator.parser.name,
             value=sub_value,
         )
-        query = operator.template.format(
-            field=sub_field[Fields.NAME], aql_value=aql_value
-        )
+        query = operator.template.format(field=sub_field[Fields.NAME],
+                                         aql_value=aql_value)
         expr = Expr.build_child(
             field=sub_field[Fields.NAME],
             idx=idx,
@@ -353,9 +354,8 @@ class Wizard:
         )
         return expr
 
-    def _split_flags(
-        self, value_raw: str, flags: Optional[List[str]] = None
-    ) -> Tuple[List[str], str]:
+    def _split_flags(self, value_raw: str, flags: Optional[List[str]] = None
+                     ) -> Tuple[List[str], str]:
         """Parse an expression and get the flags from the beginning and end.
 
         Args:
@@ -372,8 +372,7 @@ class Wizard:
         pattern = Patterns.FLAGS.pattern
         match = Patterns.FLAGS.search(value_raw)
         self.LOG.debug(
-            f"Value {value_raw!r} regex match {match} using pattern {pattern}"
-        )
+            f"Value {value_raw!r} regex match {match} using pattern {pattern}")
         check_right = [f" {Flags.RIGHTB}", Flags.RIGHTB]
 
         if match:
@@ -382,13 +381,13 @@ class Wizard:
 
             if not groups.get("value"):
                 raise WizardError(
-                    f"Empty value after parsing {value_raw!r} into {groups}"
-                )
+                    f"Empty value after parsing {value_raw!r} into {groups}")
 
             value = groups.get("value")
 
             flags += [
-                x.strip() for x in list(groups.get("flags", []) or []) if x.strip()
+                x.strip() for x in list(groups.get("flags", []) or [])
+                if x.strip()
             ]
 
             for check in check_right:
@@ -414,15 +413,18 @@ class Wizard:
 
         if split:
             field = split.pop(0).strip()
-            self.LOG.debug(f"Got field {field!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got field {field!r} from {split} from '{value_raw}'")
 
         if split:
             operator = split.pop(0).lower().strip()
-            self.LOG.debug(f"Got operator {operator!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got operator {operator!r} from {split} from '{value_raw}'")
 
         if split:
             value = split.pop(0).lstrip()
-            self.LOG.debug(f"Got value {value!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got value {value!r} from {split} from '{value_raw}'")
 
         self._check_patterns(
             value_raw=value_raw,
@@ -456,14 +458,12 @@ class Wizard:
         if split:
             field = split.pop(0).strip()
             self.LOG.debug(
-                f"Got complex field {field!r} from {split} from '{value_raw}'"
-            )
+                f"Got complex field {field!r} from {split} from '{value_raw}'")
 
         if split:
             subs_raw = [x.lstrip() for x in split if x.lstrip()]
             self.LOG.debug(
-                f"Got sub fields {subs_raw!r} from {split} from '{value_raw}'"
-            )
+                f"Got sub fields {subs_raw!r} from {split} from '{value_raw}'")
 
         self._check_patterns(
             value_raw=value_raw,
@@ -471,13 +471,15 @@ class Wizard:
             src="FIELD",
             patterns=Patterns.FIELD,
         )
-        self._check_patterns(
-            value_raw=value_raw, value=subs_raw, src="SUB-FIELD(s)", patterns=[]
-        )
+        self._check_patterns(value_raw=value_raw,
+                             value=subs_raw,
+                             src="SUB-FIELD(s)",
+                             patterns=[])
 
         return field, subs_raw
 
-    def _get_operator(self, operator: str, field: dict, value_raw: str) -> Operator:
+    def _get_operator(self, operator: str, field: dict,
+                      value_raw: str) -> Operator:
         """Validate the supplied operator for an expression for the type of field.
 
         Args:
@@ -486,7 +488,9 @@ class Wizard:
             value_raw: raw unparsed value where operator and field came from
         """
         err = f"Invalid OPERATOR name {operator!r} from value '{value_raw}'\n\n"
-        return OperatorTypeMaps.get_operator(operator=operator, field=field, err=err)
+        return OperatorTypeMaps.get_operator(operator=operator,
+                                             field=field,
+                                             err=err)
 
     def _get_field(self, value: str, value_raw: str) -> dict:
         """Find a field schema for the supplied field name.
@@ -546,11 +550,8 @@ class Wizard:
             fname = field[Fields.NAME]
             afields = self.APIOBJ.fields.get()[aname]
             schemas = [
-                x
-                for x in afields
-                if x[Fields.IS_COMPLEX]
-                and not x[Fields.IS_ALL]
-                and not x[Fields.IS_DETAILS]
+                x for x in afields if x[Fields.IS_COMPLEX]
+                and not x[Fields.IS_ALL] and not x[Fields.IS_DETAILS]
             ]
             msg = [
                 f"Invalid COMPLEX-FIELD {fname!r} for adapter {aname!r}, valids:",
@@ -591,11 +592,13 @@ class Wizard:
         for key in keys:
             if key not in entry:
                 found = ", ".join(list(entry))
-                raise WizardError(f"Missing required key {key!r}, found keys: {found}")
+                raise WizardError(
+                    f"Missing required key {key!r}, found keys: {found}")
 
             value = entry[key]
             if not value:
-                raise WizardError(f"Empty required key {key!r} with value {value}")
+                raise WizardError(
+                    f"Empty required key {key!r} with value {value}")
 
             if not isinstance(value, str):
                 vtype = type(value).__name__
@@ -604,9 +607,8 @@ class Wizard:
                 )
         return entry
 
-    def _check_patterns(
-        self, value_raw: str, value: str, src: str, patterns: List[str]
-    ):
+    def _check_patterns(self, value_raw: str, value: str, src: str,
+                        patterns: List[str]):
         """Check that a value matches a list of regex patterns.
 
         Args:
@@ -621,8 +623,7 @@ class Wizard:
         """
         if not value:
             raise WizardError(
-                f"Empty required {src} as {value!r} from value '{value_raw}'"
-            )
+                f"Empty required {src} as {value!r} from value '{value_raw}'")
 
         for check in patterns:
             match = check.search(value)
@@ -633,8 +634,7 @@ class Wizard:
             raise WizardError(
                 f"Using regex: {check.pattern}\n"
                 f"Found invalid characters '{chars}' in {src} from value '{value}' "
-                f"from '{value_raw}'"
-            )
+                f"from '{value_raw}'")
 
     def _init(self):
         """Post init setup."""

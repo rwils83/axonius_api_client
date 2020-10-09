@@ -24,7 +24,6 @@ IS_WINDOWS = sys.platform == "win32"
 IS_LINUX = sys.platform == "linux"
 IS_MAC = sys.platform == "darwin"
 
-
 CACHE: TTLCache = TTLCache(maxsize=1024, ttl=600)
 
 
@@ -59,7 +58,10 @@ def exists_query(apiobj, fields=None, not_exist=False):
         pytest.skip(f"Fields {fields} not known for {apiobj}: {exc}")
 
     if not_exist:
-        entries = [{"type": "simple", "value": f"! {x} exists"} for x in fields]
+        entries = [{
+            "type": "simple",
+            "value": f"! {x} exists"
+        } for x in fields]
     else:
         entries = [{"type": "simple", "value": f"{x} exists"} for x in fields]
 

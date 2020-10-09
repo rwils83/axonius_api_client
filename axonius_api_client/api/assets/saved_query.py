@@ -68,7 +68,8 @@ class SavedQuery(ChildMixins, PagingMixinsObject):
 
     # XXX need update saved query, doc the other methods (get tags, get_by_tags, etc)
 
-    def get_by_tags(self, value: Union[str, List[str]], **kwargs) -> List[dict]:
+    def get_by_tags(self, value: Union[str, List[str]],
+                    **kwargs) -> List[dict]:
         """Get saved queries by tags.
 
         Args:
@@ -103,24 +104,24 @@ class SavedQuery(ChildMixins, PagingMixinsObject):
         return sorted(list(set(tags)))
 
     def add(
-        self,
-        name: str,
-        query: Optional[str] = None,
-        tags: Optional[List[str]] = None,
-        description: Optional[str] = None,
-        expressions: Optional[List[str]] = None,
-        fields: Optional[Union[List[str], str]] = None,
-        fields_manual: Optional[Union[List[str], str]] = None,
-        fields_regex: Optional[Union[List[str], str]] = None,
-        fields_fuzzy: Optional[Union[List[str], str]] = None,
-        fields_default: bool = True,
-        fields_root: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_descending: bool = True,
-        column_filters: Optional[dict] = None,
-        gui_page_size: Optional[int] = None,
-        private: bool = False,
-        **kwargs,
+            self,
+            name: str,
+            query: Optional[str] = None,
+            tags: Optional[List[str]] = None,
+            description: Optional[str] = None,
+            expressions: Optional[List[str]] = None,
+            fields: Optional[Union[List[str], str]] = None,
+            fields_manual: Optional[Union[List[str], str]] = None,
+            fields_regex: Optional[Union[List[str], str]] = None,
+            fields_fuzzy: Optional[Union[List[str], str]] = None,
+            fields_default: bool = True,
+            fields_root: Optional[str] = None,
+            sort_field: Optional[str] = None,
+            sort_descending: bool = True,
+            column_filters: Optional[dict] = None,
+            gui_page_size: Optional[int] = None,
+            private: bool = False,
+            **kwargs,
     ) -> dict:
         """Create a saved query.
 
@@ -245,10 +246,10 @@ class SavedQuery(ChildMixins, PagingMixinsObject):
         return self.request(method="delete", path=path, json=data)
 
     def _get(
-        self,
-        query: Optional[str] = None,
-        row_start: int = 0,
-        page_size: int = PAGE_SIZE,
+            self,
+            query: Optional[str] = None,
+            row_start: int = 0,
+            page_size: int = PAGE_SIZE,
     ) -> List[dict]:
         """Direct API method to get saved queries.
 

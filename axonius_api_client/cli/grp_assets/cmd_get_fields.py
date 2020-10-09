@@ -39,8 +39,7 @@ OPTIONS = [
         default="name_qual",
         help="Which field key to match against for --field-re",
         type=click.Choice(
-            ["name_qual", "name", "name_base", "column_title", "column_name"]
-        ),
+            ["name_qual", "name", "name_base", "column_title", "column_name"]),
         show_envvar=True,
         show_default=True,
     ),
@@ -100,22 +99,20 @@ OPTIONS = [
 @click.command(name="get-fields", context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
-def cmd(
-    ctx,
-    url,
-    key,
-    secret,
-    adapter_re,
-    field_re,
-    field_key,
-    export_format,
-    root_only,
-    include_simple,
-    include_complex,
-    include_agg,
-    help_detailed=None,
-    **kwargs
-):
+def cmd(ctx,
+        url,
+        key,
+        secret,
+        adapter_re,
+        field_re,
+        field_key,
+        export_format,
+        root_only,
+        include_simple,
+        include_complex,
+        include_agg,
+        help_detailed=None,
+        **kwargs):
     """Get the available fields (columns) for assets."""
     p_grp = ctx.parent.command.name
 
@@ -138,11 +135,8 @@ def cmd(
             if root_only and not schema["is_root"]:
                 continue
 
-            if (
-                not include_agg
-                and schema["is_agg"]
-                and not schema["adapter_name"] == AGG_ADAPTER_NAME
-            ):
+            if (not include_agg and schema["is_agg"]
+                    and not schema["adapter_name"] == AGG_ADAPTER_NAME):
                 continue
 
             if not include_complex and schema["is_complex"]:
@@ -189,6 +183,8 @@ def cmd(
             "column_title": "Title",
             "type_norm": "Normalized Type",
         }
-        matches = [{keys[k]: v for k, v in x.items() if k in keys} for x in matches]
-        click.secho(tablize(value=matches, err=None, fmt="simple", footer=True))
+        matches = [{keys[k]: v
+                    for k, v in x.items() if k in keys} for x in matches]
+        click.secho(tablize(value=matches, err=None, fmt="simple",
+                            footer=True))
         ctx.exit(0)

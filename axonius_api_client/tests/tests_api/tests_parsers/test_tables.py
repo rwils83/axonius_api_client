@@ -62,7 +62,12 @@ def test_tab_map_orig_true():
         "required": False,
         "other": "bloop",
     }
-    exp = {"Name": "schema_str", "Type": "string", "Required": False, "other": "bloop"}
+    exp = {
+        "Name": "schema_str",
+        "Type": "string",
+        "Required": False,
+        "other": "bloop"
+    }
     result = tab_map(value=value, key_map=KEY_MAP_SCHEMA, orig=True)
     assert result == exp
 
@@ -86,18 +91,16 @@ def test_tab_map_list():
 
 def test_tab_map_long_str():
     long_str = "badwolf " * 30
-    long_str_exp = (
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf"
-    )
+    long_str_exp = ("badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf")
     value = {
         "title": long_str,
         "type": "string",

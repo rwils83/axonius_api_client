@@ -68,13 +68,14 @@ class AssetMixin(ModelMixins):
         """Fields to add to all get calls for this asset type."""
         raise NotImplementedError  # pragma: no cover
 
-    def destroy(self, destroy: bool, history: bool) -> dict:  # pragma: no cover
+    def destroy(self, destroy: bool,
+                history: bool) -> dict:  # pragma: no cover
         """Destroy ALL assets."""
         return self._destroy(destroy=destroy, history=history)
 
-    def count(
-        self, query: Optional[str] = None, history_date: Optional[str] = None
-    ) -> int:
+    def count(self,
+              query: Optional[str] = None,
+              history_date: Optional[str] = None) -> int:
         """Get the count of assets.
 
         Args:
@@ -84,9 +85,9 @@ class AssetMixin(ModelMixins):
         history_date = self.validate_history_date(value=history_date)
         return self._count(query=query, history_date=history_date)
 
-    def count_by_saved_query(
-        self, name: str, history_date: Optional[str] = None
-    ) -> int:
+    def count_by_saved_query(self,
+                             name: str,
+                             history_date: Optional[str] = None) -> int:
         """Get the count of assets that would be returned by a saved query.
 
         Args:
@@ -98,9 +99,8 @@ class AssetMixin(ModelMixins):
         query = sq["view"]["query"]["filter"]
         return self._count(query=query, history_date=history_date)
 
-    def get(
-        self, generator: bool = False, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get(self, generator: bool = False,
+            **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Get objects for a given query using paging.
 
         Args:
@@ -111,27 +111,27 @@ class AssetMixin(ModelMixins):
         return gen if generator else list(gen)
 
     def get_generator(
-        self,
-        query: Optional[str] = None,
-        fields: Optional[Union[List[str], str]] = None,
-        fields_manual: Optional[Union[List[str], str]] = None,
-        fields_regex: Optional[Union[List[str], str]] = None,
-        fields_fuzzy: Optional[Union[List[str], str]] = None,
-        fields_default: bool = True,
-        fields_root: Optional[str] = None,
-        max_rows: Optional[int] = None,
-        max_pages: Optional[int] = None,
-        row_start: int = 0,
-        page_size: int = MAX_PAGE_SIZE,
-        page_start: int = 0,
-        page_sleep: int = 0,
-        use_cursor: bool = True,
-        export: Optional[str] = None,
-        include_details: bool = False,
-        sort_field: Optional[str] = None,
-        sort_descending: bool = False,
-        history_date: Optional[Union[str, datetime.datetime]] = None,
-        **kwargs,
+            self,
+            query: Optional[str] = None,
+            fields: Optional[Union[List[str], str]] = None,
+            fields_manual: Optional[Union[List[str], str]] = None,
+            fields_regex: Optional[Union[List[str], str]] = None,
+            fields_fuzzy: Optional[Union[List[str], str]] = None,
+            fields_default: bool = True,
+            fields_root: Optional[str] = None,
+            max_rows: Optional[int] = None,
+            max_pages: Optional[int] = None,
+            row_start: int = 0,
+            page_size: int = MAX_PAGE_SIZE,
+            page_start: int = 0,
+            page_sleep: int = 0,
+            use_cursor: bool = True,
+            export: Optional[str] = None,
+            include_details: bool = False,
+            sort_field: Optional[str] = None,
+            sort_descending: bool = False,
+            history_date: Optional[Union[str, datetime.datetime]] = None,
+            **kwargs,
     ) -> Generator[dict, None, None]:
         """Get an iterator of objects for a given query using paging.
 
@@ -196,7 +196,8 @@ class AssetMixin(ModelMixins):
             "rows_to_fetch_left": None,
             "rows_to_fetch_total": None,
             "rows_fetched_this_page": None,
-            "rows_fetched_total": page_start * page_size if page_start else row_start,
+            "rows_fetched_total":
+            page_start * page_size if page_start else row_start,
             "rows_processed_total": 0,
             "fetch_seconds_total": 0,
             "fetch_seconds_this_page": None,
@@ -205,7 +206,10 @@ class AssetMixin(ModelMixins):
         }
 
         callbacks_cls = get_callbacks_cls(export=export)
-        callbacks = callbacks_cls(apiobj=self, getargs=kwargs, state=state, store=store)
+        callbacks = callbacks_cls(apiobj=self,
+                                  getargs=kwargs,
+                                  state=state,
+                                  store=store)
         self.LAST_CALLBACKS: Base = callbacks
 
         callbacks.start()
@@ -240,10 +244,8 @@ class AssetMixin(ModelMixins):
                 if state["stop_fetch"]:  # pragma: no cover
                     break
 
-                if (
-                    state["max_rows"]
-                    and state["rows_processed_total"] >= state["max_rows"]
-                ):
+                if (state["max_rows"] and
+                        state["rows_processed_total"] >= state["max_rows"]):
                     stop_msg = "'rows_processed_total' greater than 'max_rows'"
                     state["stop_msg"] = stop_msg
                     state["stop_fetch"] = True
@@ -254,7 +256,8 @@ class AssetMixin(ModelMixins):
                 self.LOG.debug(f"STOPPED FETCH: {stop_msg}")
                 break
 
-            if state["max_pages"] and state["page_number"] >= state["max_pages"]:
+            if state["max_pages"] and state["page_number"] >= state[
+                    "max_pages"]:
                 stop_msg = "'page_number' greater than 'max_pages'"
                 state["stop_msg"] = stop_msg
                 state["stop_fetch"] = True
@@ -286,7 +289,8 @@ class AssetMixin(ModelMixins):
             history_date=store["history_date"],
         )
 
-        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt, exact=True)
+        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt,
+                                                      exact=True)
         state["fetch_seconds_total"] += state["fetch_seconds_this_page"]
 
         # only first page has totalResources with integer when cursor paging!!
@@ -297,15 +301,12 @@ class AssetMixin(ModelMixins):
 
         state["rows_fetched_this_page"] = len(page["assets"])
         state["rows_fetched_total"] += state["rows_fetched_this_page"]
-        state["rows_to_fetch_left"] = (
-            state["rows_to_fetch_total"] - state["rows_fetched_total"]
-        )
+        state["rows_to_fetch_left"] = (state["rows_to_fetch_total"] -
+                                       state["rows_fetched_total"])
         state["pages_to_fetch_total"] = math.ceil(
-            state["rows_to_fetch_total"] / state["page_size"]
-        )
-        state["pages_to_fetch_left"] = math.ceil(
-            state["rows_to_fetch_left"] / state["page_size"]
-        )
+            state["rows_to_fetch_total"] / state["page_size"])
+        state["pages_to_fetch_left"] = math.ceil(state["rows_to_fetch_left"] /
+                                                 state["page_size"])
 
         state["page_cursor"] = page.get("cursor")
         return page
@@ -324,20 +325,19 @@ class AssetMixin(ModelMixins):
             history_date=store["history_date"],
         )
 
-        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt, exact=True)
+        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt,
+                                                      exact=True)
         state["fetch_seconds_total"] += state["fetch_seconds_this_page"]
 
         state["rows_to_fetch_total"] = page["page"]["totalResources"]
         state["rows_fetched_this_page"] = len(page["assets"])
         state["rows_fetched_total"] += state["rows_fetched_this_page"]
-        state["rows_to_fetch_left"] = (
-            state["rows_to_fetch_total"] - state["rows_fetched_total"]
-        )
+        state["rows_to_fetch_left"] = (state["rows_to_fetch_total"] -
+                                       state["rows_fetched_total"])
         state["page_number"] = page["page"]["number"]
         state["pages_to_fetch_total"] = page["page"]["totalPages"]
-        state["pages_to_fetch_left"] = (
-            state["pages_to_fetch_total"] - state["page_number"]
-        )
+        state["pages_to_fetch_left"] = (state["pages_to_fetch_total"] -
+                                        state["page_number"])
         return page
 
     def get_by_id(self, id: str) -> dict:
@@ -356,9 +356,8 @@ class AssetMixin(ModelMixins):
             msg = f"Failed to find internal_axon_id {id!r} for {otype}"
             raise NotFoundError(msg)
 
-    def get_by_saved_query(
-        self, name: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_saved_query(self, name: str, **kwargs
+                           ) -> Union[Generator[dict, None, None], List[dict]]:
         """Get assets that would be returned by a saved query.
 
         Args:
@@ -372,17 +371,18 @@ class AssetMixin(ModelMixins):
         return self.get(**kwargs)
 
     def get_by_values(
-        self,
-        values: List[str],
-        field: str,
-        not_flag: bool = False,
-        pre: str = "",
-        post: str = "",
-        field_manual: bool = False,
-        **kwargs,
+            self,
+            values: List[str],
+            field: str,
+            not_flag: bool = False,
+            pre: str = "",
+            post: str = "",
+            field_manual: bool = False,
+            **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Pass."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(value=field,
+                                           field_manual=field_manual)
 
         match = listify(values)
         match = [f"'{x.strip()}'" for x in match]
@@ -400,18 +400,19 @@ class AssetMixin(ModelMixins):
         return self.get(**kwargs)
 
     def get_by_value_regex(
-        self,
-        value: str,
-        field: str,
-        cast_insensitive: bool = True,
-        not_flag: bool = False,
-        pre: str = "",
-        post: str = "",
-        field_manual: bool = False,
-        **kwargs,
+            self,
+            value: str,
+            field: str,
+            cast_insensitive: bool = True,
+            not_flag: bool = False,
+            pre: str = "",
+            post: str = "",
+            field_manual: bool = False,
+            **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Pass."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(value=field,
+                                           field_manual=field_manual)
         flags = ', "i"' if cast_insensitive else ""
         inner = f'{field} == regex("{value}"{flags})'
         kwargs["query"] = self._build_query(
@@ -423,17 +424,18 @@ class AssetMixin(ModelMixins):
         return self.get(**kwargs)
 
     def get_by_value(
-        self,
-        value: str,
-        field: str,
-        not_flag: bool = False,
-        pre: str = "",
-        post: str = "",
-        field_manual: bool = False,
-        **kwargs,
+            self,
+            value: str,
+            field: str,
+            not_flag: bool = False,
+            pre: str = "",
+            post: str = "",
+            field_manual: bool = False,
+            **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build query to get an asset by field value."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(value=field,
+                                           field_manual=field_manual)
 
         inner = f'{field} == "{value}"'
 
@@ -467,9 +469,11 @@ class AssetMixin(ModelMixins):
 
         return known_dates[dt]
 
-    def _build_query(
-        self, inner: str, not_flag: bool = False, pre: str = "", post: str = ""
-    ) -> str:
+    def _build_query(self,
+                     inner: str,
+                     not_flag: bool = False,
+                     pre: str = "",
+                     post: str = "") -> str:
         """Pass."""
         if not_flag:
             inner = f"(not ({inner}))"
@@ -515,9 +519,9 @@ class AssetMixin(ModelMixins):
         super(AssetMixin, self)._init(**kwargs)
 
     def _count(
-        self,
-        query: Optional[str] = None,
-        history_date: Optional[str] = None,
+            self,
+            query: Optional[str] = None,
+            history_date: Optional[str] = None,
     ) -> int:
         """Direct API method to get the count of assets.
 
@@ -531,15 +535,15 @@ class AssetMixin(ModelMixins):
         return self.request(method="post", path=self.router.count, json=params)
 
     def _get(
-        self,
-        query: Optional[str] = None,
-        fields: Optional[Union[List[str], str]] = None,
-        row_start: int = 0,
-        page_size: int = PAGE_SIZE,
-        include_details: bool = False,
-        history_date: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_descending: bool = False,
+            self,
+            query: Optional[str] = None,
+            fields: Optional[Union[List[str], str]] = None,
+            row_start: int = 0,
+            page_size: int = PAGE_SIZE,
+            include_details: bool = False,
+            history_date: Optional[str] = None,
+            sort_field: Optional[str] = None,
+            sort_descending: bool = False,
     ) -> dict:
         """Direct API method to get a page of assets.
 
@@ -575,16 +579,16 @@ class AssetMixin(ModelMixins):
         return self.request(method="post", path=self.router.root, json=params)
 
     def _get_cursor(
-        self,
-        query: Optional[str] = None,
-        fields: Optional[Union[List[str], str]] = None,
-        row_start: int = 0,
-        page_size: int = PAGE_SIZE,
-        cursor: Optional[str] = None,
-        include_details: bool = False,
-        history_date: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_descending: bool = False,
+            self,
+            query: Optional[str] = None,
+            fields: Optional[Union[List[str], str]] = None,
+            row_start: int = 0,
+            page_size: int = PAGE_SIZE,
+            cursor: Optional[str] = None,
+            include_details: bool = False,
+            history_date: Optional[str] = None,
+            sort_field: Optional[str] = None,
+            sort_descending: bool = False,
     ) -> dict:
         """Get a page for a given query.
 
@@ -618,7 +622,9 @@ class AssetMixin(ModelMixins):
             params["fields"] = fields
 
         self.LAST_GET: dict = params
-        return self.request(method="post", path=self.router.cached, json=params)
+        return self.request(method="post",
+                            path=self.router.cached,
+                            json=params)
 
     def _get_by_id(self, id: str) -> dict:
         """Direct API method to get the full metadata of all adapters for a single asset.
@@ -629,7 +635,8 @@ class AssetMixin(ModelMixins):
         path = self.router.by_id.format(id=id)
         return self.request(method="get", path=path)
 
-    def _destroy(self, destroy: bool, history: bool) -> dict:  # pragma: no cover
+    def _destroy(self, destroy: bool,
+                 history: bool) -> dict:  # pragma: no cover
         """Destroy ALL assets."""
         data = {"destroy": destroy, "history": history}
         path = self.router.destroy

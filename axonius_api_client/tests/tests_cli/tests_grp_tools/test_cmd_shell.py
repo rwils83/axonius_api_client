@@ -117,10 +117,8 @@ class TestCliRegisterReadline:
 
         captured = capsys.readouterr()
 
-        assert (
-            captured.err.splitlines()[0]
-            == "** ERROR: Unable to register history and autocomplete:"
-        )
+        assert (captured.err.splitlines()[0] ==
+                "** ERROR: Unable to register history and autocomplete:")
 
 
 class TestCliJdump:

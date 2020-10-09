@@ -29,24 +29,41 @@ class TestWizardCsv:
 class TestRowsToEntry(TestWizardCsv):
     def test_valid(self, wizard):
         rows = [
-            {Entry.TYPE: "", Entry.VALUE: "xx"},
-            {Entry.TYPE: Types.SAVED_QUERY, Entry.VALUE: "xx"},
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx"},
-            {Entry.TYPE: "# ", Entry.VALUE: "xx"},
-        ]
-        exp = [
+            {
+                Entry.TYPE: "",
+                Entry.VALUE: "xx"
+            },
             {
                 Entry.TYPE: Types.SAVED_QUERY,
-                Entry.VALUE: "xx",
-                Entry.SRC: (
-                    f"{SRC} row #2:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  {Entry.VALUE}: xx"
-                ),
-                **EntrySq.OPT,
+                Entry.VALUE: "xx"
             },
             {
                 Entry.TYPE: Types.SIMPLE,
-                Entry.VALUE: "xx",
-                Entry.SRC: f"{SRC} row #3:\n  {Entry.TYPE}: {Types.SIMPLE}\n  {Entry.VALUE}: xx",
+                Entry.VALUE: "xx"
+            },
+            {
+                Entry.TYPE: "# ",
+                Entry.VALUE: "xx"
+            },
+        ]
+        exp = [
+            {
+                Entry.TYPE:
+                Types.SAVED_QUERY,
+                Entry.VALUE:
+                "xx",
+                Entry.SRC:
+                (f"{SRC} row #2:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  {Entry.VALUE}: xx"
+                 ),
+                **EntrySq.OPT,
+            },
+            {
+                Entry.TYPE:
+                Types.SIMPLE,
+                Entry.VALUE:
+                "xx",
+                Entry.SRC:
+                f"{SRC} row #3:\n  {Entry.TYPE}: {Types.SIMPLE}\n  {Entry.VALUE}: xx",
             },
         ]
         ret = wizard._rows_to_entries(rows=rows, source=SRC)
@@ -54,7 +71,10 @@ class TestRowsToEntry(TestWizardCsv):
 
     def test_invalid_type(self, wizard):
         rows = [
-            {Entry.TYPE: "badwolf", Entry.VALUE: "xx"},
+            {
+                Entry.TYPE: "badwolf",
+                Entry.VALUE: "xx"
+            },
         ]
         with pytest.raises(WizardError) as exc:
             wizard._rows_to_entries(rows=rows, source=SRC)
@@ -63,7 +83,10 @@ class TestRowsToEntry(TestWizardCsv):
 
     def test_empty_value(self, wizard):
         rows = [
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: "  "},
+            {
+                Entry.TYPE: Types.SIMPLE,
+                Entry.VALUE: "  "
+            },
         ]
         with pytest.raises(WizardError) as exc:
             wizard._rows_to_entries(rows=rows, source=SRC)
@@ -76,23 +99,50 @@ class TestRowToEntry(TestWizardCsv):
         "row, exp",
         [
             [
-                {Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx", "EXTRA": "b"},
-                {Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx"},
+                {
+                    Entry.TYPE: Types.SIMPLE,
+                    Entry.VALUE: "xx",
+                    "EXTRA": "b"
+                },
+                {
+                    Entry.TYPE: Types.SIMPLE,
+                    Entry.VALUE: "xx"
+                },
             ],
             [
-                {Entry.TYPE: Types.COMPLEX, Entry.VALUE: "xx", "EXTRA": "b"},
-                {Entry.TYPE: Types.COMPLEX, Entry.VALUE: "xx"},
+                {
+                    Entry.TYPE: Types.COMPLEX,
+                    Entry.VALUE: "xx",
+                    "EXTRA": "b"
+                },
+                {
+                    Entry.TYPE: Types.COMPLEX,
+                    Entry.VALUE: "xx"
+                },
             ],
             [
-                {Entry.TYPE: Types.SAVED_QUERY, Entry.VALUE: "xx", "EXTRA": "b"},
-                {Entry.TYPE: Types.SAVED_QUERY, Entry.VALUE: "xx"},
+                {
+                    Entry.TYPE: Types.SAVED_QUERY,
+                    Entry.VALUE: "xx",
+                    "EXTRA": "b"
+                },
+                {
+                    Entry.TYPE: Types.SAVED_QUERY,
+                    Entry.VALUE: "xx"
+                },
             ],
             [
-                {Entry.TYPE: "", Entry.VALUE: "xx"},
+                {
+                    Entry.TYPE: "",
+                    Entry.VALUE: "xx"
+                },
                 {},
             ],
             [
-                {Entry.TYPE: "# abc", Entry.VALUE: "xx"},
+                {
+                    Entry.TYPE: "# abc",
+                    Entry.VALUE: "xx"
+                },
                 {},
             ],
         ],
@@ -108,10 +158,22 @@ class TestRowToEntry(TestWizardCsv):
     @pytest.mark.parametrize(
         "row",
         [
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: ""},
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: None},
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: 2},
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: True},
+            {
+                Entry.TYPE: Types.SIMPLE,
+                Entry.VALUE: ""
+            },
+            {
+                Entry.TYPE: Types.SIMPLE,
+                Entry.VALUE: None
+            },
+            {
+                Entry.TYPE: Types.SIMPLE,
+                Entry.VALUE: 2
+            },
+            {
+                Entry.TYPE: Types.SIMPLE,
+                Entry.VALUE: True
+            },
         ],
     )
     def test_invalid(self, wizard, row):
@@ -126,10 +188,18 @@ class TestProcessDesc(TestWizardCsv):
         "entry, exp",
         [
             [{}, None],
-            [{EntrySq.DESC: ""}, None],
-            [{EntrySq.DESC: None}, None],
-            [{EntrySq.DESC: 2}, "2"],
-            [{EntrySq.DESC: "boom"}, "boom"],
+            [{
+                EntrySq.DESC: ""
+            }, None],
+            [{
+                EntrySq.DESC: None
+            }, None],
+            [{
+                EntrySq.DESC: 2
+            }, "2"],
+            [{
+                EntrySq.DESC: "boom"
+            }, "boom"],
         ],
     )
     def test_valid(self, wizard, entry, exp):
@@ -142,10 +212,18 @@ class TestProcessTags(TestWizardCsv):
         "entry, exp",
         [
             [{}, None],
-            [{EntrySq.TAGS: ""}, None],
-            [{EntrySq.TAGS: None}, None],
-            [{EntrySq.TAGS: 2}, ["2"]],
-            [{EntrySq.TAGS: "boom,foo,boo"}, ["boom", "foo", "boo"]],
+            [{
+                EntrySq.TAGS: ""
+            }, None],
+            [{
+                EntrySq.TAGS: None
+            }, None],
+            [{
+                EntrySq.TAGS: 2
+            }, ["2"]],
+            [{
+                EntrySq.TAGS: "boom,foo,boo"
+            }, ["boom", "foo", "boo"]],
         ],
     )
     def test_valid(self, wizard, entry, exp):
@@ -158,8 +236,12 @@ class TestProcessFields(TestWizardCsv):
         "entry",
         [
             {},
-            {EntrySq.FIELDS: ""},
-            {EntrySq.FIELDS: None},
+            {
+                EntrySq.FIELDS: ""
+            },
+            {
+                EntrySq.FIELDS: None
+            },
         ],
     )
     def test_default(self, wizard, entry):
@@ -186,7 +268,11 @@ class TestProcessFields(TestWizardCsv):
 
 class TestProcessSqNewSq(TestWizardCsv, TestData):
     def test_no_entries(self, wizard):
-        entry = {Entry.VALUE: "badwolf", EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
+        entry = {
+            Entry.VALUE: "badwolf",
+            EntrySq.TAGS: "tag1,tag2",
+            EntrySq.DESC: SRC
+        }
         exp = {
             EntrySq.NAME: "badwolf",
             EntrySq.FDEF: False,
@@ -203,7 +289,11 @@ class TestProcessSqNewSq(TestWizardCsv, TestData):
         assert exp in wizard.SQS_DONE
 
     def test_with_entries(self, wizard, test_data1):
-        entry = {Entry.VALUE: "badwolf", EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
+        entry = {
+            Entry.VALUE: "badwolf",
+            EntrySq.TAGS: "tag1,tag2",
+            EntrySq.DESC: SRC
+        }
         exp = {
             EntrySq.NAME: "badwolf",
             EntrySq.FDEF: False,
@@ -285,44 +375,49 @@ class TestProcessSq(TestWizardCsv):
             Entry.SRC: SRC,
         }
         exp2_sq = exp1_sq
-        exp2_sq[Results.EXPRS] = [
-            {
-                "bracketWeight": 0,
-                "children": [
-                    {
-                        "condition": "",
-                        "expression": {
-                            "compOp": "",
-                            "field": "",
-                            "filteredAdapters": None,
-                            "value": None,
-                        },
-                        "i": 0,
-                    }
-                ],
-                "compOp": "equals",
-                "field": f"{simple}",
-                "fieldType": "axonius",
-                "filter": f'({simple} == "boom")',
-                "filteredAdapters": None,
-                "leftBracket": False,
-                "logicOp": "",
-                "not": False,
-                "rightBracket": False,
-                "value": "boom",
-            }
-        ]
+        exp2_sq[Results.EXPRS] = [{
+            "bracketWeight":
+            0,
+            "children": [{
+                "condition": "",
+                "expression": {
+                    "compOp": "",
+                    "field": "",
+                    "filteredAdapters": None,
+                    "value": None,
+                },
+                "i": 0,
+            }],
+            "compOp":
+            "equals",
+            "field":
+            f"{simple}",
+            "fieldType":
+            "axonius",
+            "filter":
+            f'({simple} == "boom")',
+            "filteredAdapters":
+            None,
+            "leftBracket":
+            False,
+            "logicOp":
+            "",
+            "not":
+            False,
+            "rightBracket":
+            False,
+            "value":
+            "boom",
+        }]
         exp2_sq[Results.QUERY] = f'({simple} == "boom")'
 
-        exp2_entries = [
-            {
-                Entry.TYPE: Types.SIMPLE,
-                Entry.VALUE: f"{simple} equals boom",
-                Entry.SRC: SRC,
-                Entry.FLAGS: [],
-                Entry.WEIGHT: 0,
-            }
-        ]
+        exp2_entries = [{
+            Entry.TYPE: Types.SIMPLE,
+            Entry.VALUE: f"{simple} equals boom",
+            Entry.SRC: SRC,
+            Entry.FLAGS: [],
+            Entry.WEIGHT: 0,
+        }]
         exp2_ret = 2
         ret2 = wizard._process_sq(entry=entry2, is_last=True)
         assert ret2 == exp2_ret
@@ -359,13 +454,11 @@ class TestProcessSq(TestWizardCsv):
             Entry.SRC: SRC,
         }
         exp2_sq = exp1_sq
-        exp2_entries = [
-            {
-                Entry.TYPE: Types.SIMPLE,
-                Entry.VALUE: f"{simple} equals boom",
-                Entry.SRC: SRC,
-            }
-        ]
+        exp2_entries = [{
+            Entry.TYPE: Types.SIMPLE,
+            Entry.VALUE: f"{simple} equals boom",
+            Entry.SRC: SRC,
+        }]
         exp2_ret = 3
         ret2 = wizard._process_sq(entry=entry2, is_last=False)
         assert ret2 == exp2_ret
@@ -396,7 +489,11 @@ class TestProcessSq(TestWizardCsv):
 
 class TestProcessSqs(TestWizardCsv):
     def test_sq_not_first(self, wizard):
-        entries = [{Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx", Entry.SRC: SRC}]
+        entries = [{
+            Entry.TYPE: Types.SIMPLE,
+            Entry.VALUE: "xx",
+            Entry.SRC: SRC
+        }]
         with pytest.raises(WizardError) as exc:
             wizard._process_sqs(entries=entries)
         assert "First row must be type" in str(exc.value)
@@ -427,39 +524,51 @@ class TestProcessSqs(TestWizardCsv):
         ]
         exp = [
             {
-                EntrySq.NAME: "badwolf",
-                EntrySq.FDEF: False,
-                EntrySq.FMAN: wizard.APIOBJ.fields_default,
+                EntrySq.NAME:
+                "badwolf",
+                EntrySq.FDEF:
+                False,
+                EntrySq.FMAN:
+                wizard.APIOBJ.fields_default,
                 EntrySq.TAGS: ["tag1", "tag2"],
-                EntrySq.DESC: SRC,
-                Results.EXPRS: [
-                    {
-                        "bracketWeight": 0,
-                        "children": [
-                            {
-                                "condition": "",
-                                "expression": {
-                                    "compOp": "",
-                                    "field": "",
-                                    "filteredAdapters": None,
-                                    "value": None,
-                                },
-                                "i": 0,
-                            }
-                        ],
-                        "compOp": "equals",
-                        "field": f"{simple}",
-                        "fieldType": "axonius",
-                        "filter": f'({simple} == "boom")',
-                        "filteredAdapters": None,
-                        "leftBracket": False,
-                        "logicOp": "",
-                        "not": False,
-                        "rightBracket": False,
-                        "value": "boom",
-                    }
-                ],
-                Results.QUERY: f'({simple} == "boom")',
+                EntrySq.DESC:
+                SRC,
+                Results.EXPRS: [{
+                    "bracketWeight":
+                    0,
+                    "children": [{
+                        "condition": "",
+                        "expression": {
+                            "compOp": "",
+                            "field": "",
+                            "filteredAdapters": None,
+                            "value": None,
+                        },
+                        "i": 0,
+                    }],
+                    "compOp":
+                    "equals",
+                    "field":
+                    f"{simple}",
+                    "fieldType":
+                    "axonius",
+                    "filter":
+                    f'({simple} == "boom")',
+                    "filteredAdapters":
+                    None,
+                    "leftBracket":
+                    False,
+                    "logicOp":
+                    "",
+                    "not":
+                    False,
+                    "rightBracket":
+                    False,
+                    "value":
+                    "boom",
+                }],
+                Results.QUERY:
+                f'({simple} == "boom")',
             },
             {
                 EntrySq.NAME: "badwolf3",
@@ -498,25 +607,41 @@ class TestProcessCsv(TestWizardCsv):
     def test_valid(self, wizard):
         columns = EntrySq.REQ
         rows = [
-            {Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx"},
-            {Entry.TYPE: Types.COMPLEX, Entry.VALUE: "xx"},
-            {Entry.TYPE: Types.SAVED_QUERY, Entry.VALUE: "xx"},
-        ]
-        exp = [
             {
                 Entry.TYPE: Types.SIMPLE,
-                Entry.VALUE: "xx",
-                Entry.SRC: f"{SRC} row #1:\n  {Entry.TYPE}: {Types.SIMPLE}\n  value: xx",
+                Entry.VALUE: "xx"
             },
             {
                 Entry.TYPE: Types.COMPLEX,
-                Entry.VALUE: "xx",
-                Entry.SRC: f"{SRC} row #2:\n  {Entry.TYPE}: {Types.COMPLEX}\n  value: xx",
+                Entry.VALUE: "xx"
+            },
+            {
+                Entry.TYPE: Types.SAVED_QUERY,
+                Entry.VALUE: "xx"
+            },
+        ]
+        exp = [
+            {
+                Entry.TYPE:
+                Types.SIMPLE,
+                Entry.VALUE:
+                "xx",
+                Entry.SRC:
+                f"{SRC} row #1:\n  {Entry.TYPE}: {Types.SIMPLE}\n  value: xx",
+            },
+            {
+                Entry.TYPE:
+                Types.COMPLEX,
+                Entry.VALUE:
+                "xx",
+                Entry.SRC:
+                f"{SRC} row #2:\n  {Entry.TYPE}: {Types.COMPLEX}\n  value: xx",
             },
             {
                 Entry.TYPE: Types.SAVED_QUERY,
                 Entry.VALUE: "xx",
-                Entry.SRC: f"{SRC} row #3:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  value: xx",
+                Entry.SRC:
+                f"{SRC} row #3:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  value: xx",
                 **EntrySq.OPT,
             },
         ]
@@ -536,24 +661,30 @@ class TestLoadCsv(TestWizardCsv):
 """
         exp = [
             {
-                Entry.TYPE: Types.SAVED_QUERY,
-                Entry.VALUE: "badwolf",
-                Entry.SRC: (
-                    f"{SRC} row #1:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  "
-                    f"{Entry.VALUE}: badwolf\n  {EntrySq.DESC}: it is bad\n  "
-                    f"{EntrySq.TAGS}: tag1,tag2\n  {EntrySq.FIELDS}: "
-                ),
-                EntrySq.DESC: "it is bad",
-                EntrySq.TAGS: "tag1,tag2",
-                EntrySq.FIELDS: EntrySq.OPT[EntrySq.FIELDS],
+                Entry.TYPE:
+                Types.SAVED_QUERY,
+                Entry.VALUE:
+                "badwolf",
+                Entry.SRC:
+                (f"{SRC} row #1:\n  {Entry.TYPE}: {Types.SAVED_QUERY}\n  "
+                 f"{Entry.VALUE}: badwolf\n  {EntrySq.DESC}: it is bad\n  "
+                 f"{EntrySq.TAGS}: tag1,tag2\n  {EntrySq.FIELDS}: "),
+                EntrySq.DESC:
+                "it is bad",
+                EntrySq.TAGS:
+                "tag1,tag2",
+                EntrySq.FIELDS:
+                EntrySq.OPT[EntrySq.FIELDS],
             },
             {
-                Entry.TYPE: Types.SIMPLE,
-                Entry.VALUE: f"{simple} contains boom",
-                Entry.SRC: (
-                    f"{SRC} row #2:\n  {Entry.TYPE}: {Types.SIMPLE}\n  {Entry.VALUE}: {simple} "
-                    f"contains boom\n  {EntrySq.DESC}: \n  {EntrySq.TAGS}: \n  {EntrySq.FIELDS}: "
-                ),
+                Entry.TYPE:
+                Types.SIMPLE,
+                Entry.VALUE:
+                f"{simple} contains boom",
+                Entry.SRC:
+                (f"{SRC} row #2:\n  {Entry.TYPE}: {Types.SIMPLE}\n  {Entry.VALUE}: {simple} "
+                 f"contains boom\n  {EntrySq.DESC}: \n  {EntrySq.TAGS}: \n  {EntrySq.FIELDS}: "
+                 ),
             },
         ]
         ret = wizard._load_csv(content=content, source=SRC)
@@ -573,43 +704,53 @@ class TestParse(TestWizardCsv):
         path = tmp_path / "test.csv"
         path.write_text(content)
 
-        exp = [
-            {
-                EntrySq.NAME: "badwolf",
-                EntrySq.FDEF: False,
-                EntrySq.FMAN: wizard.APIOBJ.fields_default,
-                EntrySq.TAGS: ["tag1", "tag2"],
-                EntrySq.DESC: "it is bad",
-                Results.EXPRS: [
-                    {
-                        "bracketWeight": 0,
-                        "children": [
-                            {
-                                "condition": "",
-                                "expression": {
-                                    "compOp": "",
-                                    "field": "",
-                                    "filteredAdapters": None,
-                                    "value": None,
-                                },
-                                "i": 0,
-                            }
-                        ],
-                        "compOp": "contains",
-                        "field": f"{simple}",
-                        "fieldType": "axonius",
-                        "filter": f'({simple} == regex("boom", "i"))',
+        exp = [{
+            EntrySq.NAME:
+            "badwolf",
+            EntrySq.FDEF:
+            False,
+            EntrySq.FMAN:
+            wizard.APIOBJ.fields_default,
+            EntrySq.TAGS: ["tag1", "tag2"],
+            EntrySq.DESC:
+            "it is bad",
+            Results.EXPRS: [{
+                "bracketWeight":
+                0,
+                "children": [{
+                    "condition": "",
+                    "expression": {
+                        "compOp": "",
+                        "field": "",
                         "filteredAdapters": None,
-                        "leftBracket": False,
-                        "logicOp": "",
-                        "not": False,
-                        "rightBracket": False,
-                        "value": "boom",
-                    }
-                ],
-                Results.QUERY: f'({simple} == regex("boom", "i"))',
-            }
-        ]
+                        "value": None,
+                    },
+                    "i": 0,
+                }],
+                "compOp":
+                "contains",
+                "field":
+                f"{simple}",
+                "fieldType":
+                "axonius",
+                "filter":
+                f'({simple} == regex("boom", "i"))',
+                "filteredAdapters":
+                None,
+                "leftBracket":
+                False,
+                "logicOp":
+                "",
+                "not":
+                False,
+                "rightBracket":
+                False,
+                "value":
+                "boom",
+            }],
+            Results.QUERY:
+            f'({simple} == regex("boom", "i"))',
+        }]
         ret_str = wizard.parse(content=content, source=SRC)
         assert exp == ret_str
 

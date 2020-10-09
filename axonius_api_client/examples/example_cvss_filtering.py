@@ -25,7 +25,8 @@ def filter_cvss(dvcs, cvss_min, cvss_max):
         new_dvc["found_vuln"] = []
         for vuln_sw in vuln_sws:
             cvss = vuln_sw.get("cvss", 0.0)
-            if cvss_min <= cvss <= cvss_max and vuln_sw not in new_dvc["found_vuln"]:
+            if cvss_min <= cvss <= cvss_max and vuln_sw not in new_dvc[
+                    "found_vuln"]:
                 new_dvc["found_vuln"].append(vuln_sw)
         if new_dvc["found_vuln"]:
             yield new_dvc
@@ -100,7 +101,8 @@ if __name__ == "__main__":
     dvcs_with_cves = get_dvcs_with_cves(dvcs=dvcs)
 
     dvcs_cvss_minmax = list(
-        filter_cvss(dvcs=dvcs_with_cves, cvss_min=CVSS_MIN, cvss_max=CVSS_MAX)
-    )
+        filter_cvss(dvcs=dvcs_with_cves, cvss_min=CVSS_MIN, cvss_max=CVSS_MAX))
 
-    dump_cves(dvcs=dvcs_cvss_minmax, dvc_keys=DUMP_DVC_KEYS, sw_keys=DUMP_SW_KEYS)
+    dump_cves(dvcs=dvcs_cvss_minmax,
+              dvc_keys=DUMP_DVC_KEYS,
+              sw_keys=DUMP_SW_KEYS)

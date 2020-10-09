@@ -53,9 +53,8 @@ class Devices(AssetMixin):
         """Router for this API model."""
         return API_VERSION.devices
 
-    def get_by_hostnames(
-        self, values: List[str], **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_hostnames(self, values: List[str], **kwargs
+                         ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where hostname in values."""
         kwargs["field"] = self.FIELD_HOSTNAME
         kwargs["field_manual"] = True
@@ -63,71 +62,64 @@ class Devices(AssetMixin):
         return self.get_by_values(**kwargs)
 
     def get_by_hostname_regex(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+            self, value: str,
+            **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where hostname regex matches value."""
         kwargs["field"] = self.FIELD_HOSTNAME
         kwargs["field_manual"] = True
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_hostname(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_hostname(self, value: str, **kwargs
+                        ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where hostname == value."""
         kwargs["field"] = self.FIELD_HOSTNAME
         kwargs["field_manual"] = True
         kwargs["value"] = value
         return self.get_by_value(**kwargs)
 
-    def get_by_macs(
-        self, values: List[str], **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_macs(self, values: List[str], **kwargs
+                    ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where mac in values."""
         kwargs["field"] = self.FIELD_MAC
         kwargs["field_manual"] = True
         kwargs["values"] = values
         return self.get_by_values(**kwargs)
 
-    def get_by_mac_regex(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_mac_regex(self, value: str, **kwargs
+                         ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where mac regex matches value."""
         kwargs["field"] = self.FIELD_MAC
         kwargs["field_manual"] = True
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_mac(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_mac(self, value: str,
+                   **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where mac == value."""
         kwargs["field"] = self.FIELD_MAC
         kwargs["field_manual"] = True
         kwargs["value"] = value
         return self.get_by_value(**kwargs)
 
-    def get_by_ips(
-        self, values: List[str], **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_ips(self, values: List[str],
+                   **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip in values."""
         kwargs["field"] = self.FIELD_IP
         kwargs["field_manual"] = True
         kwargs["values"] = values
         return self.get_by_values(**kwargs)
 
-    def get_by_ip_regex(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_ip_regex(self, value: str, **kwargs
+                        ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip regex matches value."""
         kwargs["field"] = self.FIELD_IP
         kwargs["field_manual"] = True
         kwargs["value"] = value
         return self.get_by_value_regex(**kwargs)
 
-    def get_by_ip(
-        self, value: str, **kwargs
-    ) -> Union[Generator[dict, None, None], List[dict]]:
+    def get_by_ip(self, value: str,
+                  **kwargs) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip == value."""
         kwargs["field"] = self.FIELD_IP
         kwargs["field_manual"] = True
@@ -135,12 +127,12 @@ class Devices(AssetMixin):
         return self.get_by_value(**kwargs)
 
     def get_by_subnet(
-        self,
-        value: str,
-        not_flag: bool = False,
-        pre: str = "",
-        post: str = "",
-        **kwargs,
+            self,
+            value: str,
+            not_flag: bool = False,
+            pre: str = "",
+            post: str = "",
+            **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build a query to get assets where ip in subnet."""
         field = self.FIELD_IP_RAW
@@ -148,7 +140,10 @@ class Devices(AssetMixin):
         network = ipaddress.ip_network(value)
         gte = int(network.network_address)
         lte = int(network.broadcast_address)
-        match = "".join(['match({"$gte": ', str(gte), ', "$lte": ', str(lte), "})"])
+        match = "".join(
+            ['match({"$gte": ',
+             str(gte), ', "$lte": ',
+             str(lte), "})"])
 
         inner = f"{field} == {match}"
 

@@ -17,7 +17,8 @@ class TestDevices(AssetsPrivate, AssetsPublic, ModelMixinsBase):
 
     @pytest.mark.parametrize(
         "method, field",
-        [["hostname", "FIELD_HOSTNAME"], ["mac", "FIELD_MAC"], ["ip", "FIELD_IP"]],
+        [["hostname", "FIELD_HOSTNAME"], ["mac", "FIELD_MAC"],
+         ["ip", "FIELD_IP"]],
     )
     def test_get_bys(self, apiobj, method, field):
         self._all_get_by(apiobj=apiobj, method=method, field=field)

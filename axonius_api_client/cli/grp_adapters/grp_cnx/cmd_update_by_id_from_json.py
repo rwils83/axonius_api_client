@@ -20,19 +20,20 @@ OPTIONS = [
 ]
 
 
-@click.command(name="update-by-id-from-json", context_settings=CONTEXT_SETTINGS)
+@click.command(name="update-by-id-from-json",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(
-    ctx,
-    url,
-    key,
-    secret,
-    input_file,
-    adapter_node,
-    adapter_name,
-    cnx_id,
-    **kwargs,
+        ctx,
+        url,
+        key,
+        secret,
+        input_file,
+        adapter_node,
+        adapter_name,
+        cnx_id,
+        **kwargs,
 ):
     """Update a connection from a JSON file."""
     client = ctx.obj.start_client(url=url, key=key, secret=secret)

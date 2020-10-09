@@ -123,44 +123,42 @@ def parse_complex(field: dict):
 
 
 def parse_schemas(
-    adapter_name_raw: str,
-    adapter_name: str,
-    adapter_prefix: str,
-    adapter_title: str,
-    all_field: str,
-    raw_fields: List[dict],
-    agg_base_names: Optional[List[str]] = None,
+        adapter_name_raw: str,
+        adapter_name: str,
+        adapter_prefix: str,
+        adapter_title: str,
+        all_field: str,
+        raw_fields: List[dict],
+        agg_base_names: Optional[List[str]] = None,
 ) -> List[dict]:
     """Parse field schemas for an adapter."""
     agg_base_names = agg_base_names or []
     fields = []
 
-    fields.append(
-        {
-            "adapter_name_raw": adapter_name_raw,
-            "adapter_name": adapter_name,
-            "adapter_title": adapter_title,
-            "adapter_prefix": adapter_prefix,
-            "column_name": f"{adapter_name}:{ALL_NAME}",
-            "column_title": f"All {adapter_title} Data",
-            "sub_fields": [],
-            "is_complex": True,
-            "is_list": True,
-            "is_root": False,
-            "parent": "root",
-            "name": ALL_NAME,
-            "name_base": ALL_NAME,
-            "name_qual": all_field,
-            "title": "All Adapter Specific Data",
-            "type": "array",
-            "type_norm": "array_object_object",
-            "selectable": True,
-            "is_agg": adapter_name == AGG_ADAPTER_NAME,
-            "expr_field_type": AGG_EXPR_FIELD_TYPE,
-            "is_details": False,
-            "is_all": True,
-        }
-    )
+    fields.append({
+        "adapter_name_raw": adapter_name_raw,
+        "adapter_name": adapter_name,
+        "adapter_title": adapter_title,
+        "adapter_prefix": adapter_prefix,
+        "column_name": f"{adapter_name}:{ALL_NAME}",
+        "column_title": f"All {adapter_title} Data",
+        "sub_fields": [],
+        "is_complex": True,
+        "is_list": True,
+        "is_root": False,
+        "parent": "root",
+        "name": ALL_NAME,
+        "name_base": ALL_NAME,
+        "name_qual": all_field,
+        "title": "All Adapter Specific Data",
+        "type": "array",
+        "type_norm": "array_object_object",
+        "selectable": True,
+        "is_agg": adapter_name == AGG_ADAPTER_NAME,
+        "expr_field_type": AGG_EXPR_FIELD_TYPE,
+        "is_details": False,
+        "is_all": True,
+    })
 
     if adapter_name == AGG_ADAPTER_NAME:
         fields += [
@@ -215,12 +213,14 @@ def parse_schemas(
         ]
 
     field_names = [
-        strip_left(obj=f["name"], fix=adapter_prefix).strip(".") for f in raw_fields
+        strip_left(obj=f["name"], fix=adapter_prefix).strip(".")
+        for f in raw_fields
     ]
 
     for field in raw_fields:
         title = field["title"]
-        name_base = strip_left(obj=field["name"], fix=adapter_prefix).strip(".")
+        name_base = strip_left(obj=field["name"],
+                               fix=adapter_prefix).strip(".")
         field["adapter_name"] = adapter_name
         field["adapter_title"] = adapter_title
         field["adapter_prefix"] = adapter_prefix

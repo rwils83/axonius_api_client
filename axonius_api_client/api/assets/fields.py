@@ -25,7 +25,8 @@ from ..parsers import parse_fields
 try:
     import warnings
 
-    warnings.filterwarnings("ignore", message="Using slow pure-python SequenceMatcher")
+    warnings.filterwarnings("ignore",
+                            message="Using slow pure-python SequenceMatcher")
     from fuzzywuzzy import fuzz
 except Exception:
     raise
@@ -38,14 +39,14 @@ class Fields(ChildMixins):
 
     @staticmethod
     def fuzzy_filter(
-        search: str,
-        schemas: List[dict],
-        root_only: bool = True,
-        do_contains: bool = True,
-        token_score: int = 70,
-        partial_score: int = 50,
-        names: bool = False,
-        **kwargs,
+            search: str,
+            schemas: List[dict],
+            root_only: bool = True,
+            do_contains: bool = True,
+            token_score: int = 70,
+            partial_score: int = 50,
+            names: bool = False,
+            **kwargs,
     ) -> List[dict]:
         def do_skip():
             if schema in matches:
@@ -143,9 +144,8 @@ class Fields(ChildMixins):
         msg = msg.format(value, "\n  ".join(list(fields)))
         raise NotFoundError(msg)
 
-    def get_field_schemas(
-        self, value: str, schemas: List[dict], **kwargs
-    ) -> List[dict]:
+    def get_field_schemas(self, value: str, schemas: List[dict],
+                          **kwargs) -> List[dict]:
         """Find a schema for a field by regex of name."""
         keys = kwargs.get("keys", GET_SCHEMAS_KEYS)
         search = re.compile(value.lower().strip(), re.I)
@@ -161,7 +161,8 @@ class Fields(ChildMixins):
                     matches.append(schema)
         return matches
 
-    def get_field_schema(self, value: str, schemas: List[dict], **kwargs) -> dict:
+    def get_field_schema(self, value: str, schemas: List[dict],
+                         **kwargs) -> dict:
         """Find a schema for a field by name."""
         keys = kwargs.get("keys", GET_SCHEMA_KEYS)
         keys_fuzzy = kwargs.get("keys_fuzzy", FUZZY_SCHEMAS_KEYS)
@@ -186,15 +187,17 @@ class Fields(ChildMixins):
 
         ktxt = " or ".join(keys)
         pre = f"No field found where {ktxt} equals {value!r}"
-        errs = [pre, err, "", *self._prettify_schemas(schemas=fuzzy or schemas)]
+        errs = [
+            pre, err, "", *self._prettify_schemas(schemas=fuzzy or schemas)
+        ]
         raise NotFoundError("\n".join(errs))
 
     def get_field_name(
-        self,
-        value: str,
-        field_manual: bool = False,
-        fields_custom: Optional[dict] = None,
-        key: str = "name_qual",
+            self,
+            value: str,
+            field_manual: bool = False,
+            fields_custom: Optional[dict] = None,
+            key: str = "name_qual",
     ) -> str:
         """Pass."""
         if field_manual:
@@ -227,9 +230,8 @@ class Fields(ChildMixins):
 
             for adapter in adapters:
                 for field_re in fields_re:
-                    fschemas = self.get_field_schemas(
-                        value=field_re, schemas=fields[adapter]
-                    )
+                    fschemas = self.get_field_schemas(value=field_re,
+                                                      schemas=fields[adapter])
                     names = [x["name_qual"] for x in fschemas]
                     matches += [x for x in names if x not in matches]
         return matches
@@ -262,7 +264,9 @@ class Fields(ChildMixins):
             adapter = self.get_adapter_name(value=adapter_name)
             for name in names:
                 schemas = fields[adapter]
-                amatches = self.fuzzy_filter(search=name, schemas=schemas, names=True)
+                amatches = self.fuzzy_filter(search=name,
+                                             schemas=schemas,
+                                             names=True)
                 matches += [x for x in amatches if x not in matches]
 
         return matches
@@ -273,7 +277,9 @@ class Fields(ChildMixins):
         adapter = self.get_adapter_name(value=adapter)
         schemas = fields[adapter]
 
-        matches = [x for x in schemas if x.get("selectable") and x.get("is_root")]
+        matches = [
+            x for x in schemas if x.get("selectable") and x.get("is_root")
+        ]
         return matches
 
     def get_field_names_root(self, adapter: str) -> List[str]:
@@ -283,13 +289,13 @@ class Fields(ChildMixins):
         return names
 
     def validate(
-        self,
-        fields: Optional[Union[List[str], str]] = None,
-        fields_regex: Optional[Union[List[str], str]] = None,
-        fields_manual: Optional[Union[List[str], str]] = None,
-        fields_fuzzy: Optional[Union[List[str], str]] = None,
-        fields_default: bool = True,
-        fields_root: Optional[str] = None,
+            self,
+            fields: Optional[Union[List[str], str]] = None,
+            fields_regex: Optional[Union[List[str], str]] = None,
+            fields_manual: Optional[Union[List[str], str]] = None,
+            fields_fuzzy: Optional[Union[List[str], str]] = None,
+            fields_default: bool = True,
+            fields_root: Optional[str] = None,
     ) -> List[dict]:
         """Validate provided fields."""
 
@@ -316,19 +322,18 @@ class Fields(ChildMixins):
         add(self.get_field_names_fuzzy(value=fields_fuzzy))
 
         if not selected:
-            raise ApiError("No fields supplied, must supply at least one field")
+            raise ApiError(
+                "No fields supplied, must supply at least one field")
 
         return selected
 
-    def split_searches(
-        self, value: Union[List[str], str]
-    ) -> List[Tuple[str, List[str]]]:
+    def split_searches(self, value: Union[List[str], str]
+                       ) -> List[Tuple[str, List[str]]]:
         """Pass."""
         return [self.split_search(value=x) for x in listify(obj=value)]
 
-    def split_search(
-        self, value: str, adapter: str = AGG_ADAPTER_NAME
-    ) -> Tuple[str, List[str]]:
+    def split_search(self, value: str,
+                     adapter: str = AGG_ADAPTER_NAME) -> Tuple[str, List[str]]:
         """Pass."""
         search = value.strip().lower()
 
@@ -344,7 +349,8 @@ class Fields(ChildMixins):
         if qual_check and len(qual_check.groups()) == 1:
             adapter_split = qual_check.groups()[0]
 
-        adapter_split = strip_right(obj=adapter_split.lower().strip(), fix="_adapter")
+        adapter_split = strip_right(obj=adapter_split.lower().strip(),
+                                    fix="_adapter")
 
         fields = split_str(
             obj=field,

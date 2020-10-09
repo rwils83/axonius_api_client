@@ -72,7 +72,6 @@ URL = click.option(
     show_default=True,
 )
 
-
 AUTH = [
     URL,
     click.option(
@@ -193,7 +192,8 @@ EXPORT = [
         "-xp",
         "export_path",
         default=DEFAULT_PATH,
-        help="If --export-file supplied, the directory to write --export_file to",
+        help=
+        "If --export-file supplied, the directory to write --export_file to",
         type=click.Path(exists=False, resolve_path=True),
         show_envvar=True,
         show_default=True,
@@ -321,7 +321,6 @@ NODE = [
         help="Adapter name",
     ),
 ]
-
 
 NODE_CNX = [
     click.option(

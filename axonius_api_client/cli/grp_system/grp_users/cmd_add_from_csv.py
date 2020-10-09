@@ -56,15 +56,20 @@ provided, 'email' must be supplied.
 """
 
 
-@click.command(name="add-from-csv", context_settings=CONTEXT_SETTINGS, epilog=HELP)
+@click.command(name="add-from-csv",
+               context_settings=CONTEXT_SETTINGS,
+               epilog=HELP)
 @add_options(OPTIONS)
 @click.pass_context
-def cmd(ctx, url, key, secret, export_format, input_file, continue_on_error, **kwargs):
+def cmd(ctx, url, key, secret, export_format, input_file, continue_on_error,
+        **kwargs):
     """Add users from a CSV file."""
     reader = csv.DictReader(input_file)
     echo = ctx.obj.echo_warn if continue_on_error else ctx.obj.echo_error
 
-    missing_columns = [x for x in REQUIRED_COLUMNS if x not in reader.fieldnames]
+    missing_columns = [
+        x for x in REQUIRED_COLUMNS if x not in reader.fieldnames
+    ]
     if missing_columns:
         miss = ", ".join(missing_columns)
         ctx.obj.echo_error(f"CSV is missing required columns: {miss}")
