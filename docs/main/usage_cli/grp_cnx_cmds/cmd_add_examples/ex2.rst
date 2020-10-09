@@ -27,4 +27,3 @@ We also supply "-npo / --no-prompt-opt" to not be prompted for all of the other 
 .. raw:: html
 
     <script id="asciicast-270379" src="https://asciinema.org/a/270379.js" async></script>
-

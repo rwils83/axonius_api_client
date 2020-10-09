@@ -15,4 +15,3 @@ This does the following:
 .. raw:: html
 
    <script id="asciicast-271741" src="https://asciinema.org/a/271741.js" async></script>
-

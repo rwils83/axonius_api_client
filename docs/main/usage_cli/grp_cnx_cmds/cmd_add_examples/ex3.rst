@@ -18,4 +18,3 @@ that contains all the necessary settings using ``--config setting_name=setting_v
 .. raw:: html
 
     <script id="asciicast-293198" src="https://asciinema.org/a/293198.js" async></script>
-
