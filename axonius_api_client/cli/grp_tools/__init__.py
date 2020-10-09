@@ -3,7 +3,8 @@
 import click
 
 from ..context import AliasedGroup
-from . import cmd_convert_cert, cmd_shell, cmd_signup, cmd_sysinfo, cmd_write_config
+from . import (cmd_convert_cert, cmd_shell, cmd_signup, cmd_sysinfo,
+               cmd_write_config)
 
 
 @click.group(cls=AliasedGroup)

@@ -6,24 +6,11 @@ import re
 import sys
 from typing import Generator, List, Optional, Tuple, Union
 
-from ...constants import (
-    DEFAULT_PATH,
-    FIELD_JOINER,
-    FIELD_TRIM_LEN,
-    FIELD_TRIM_STR,
-    SCHEMAS_CUSTOM,
-)
+from ...constants import (DEFAULT_PATH, FIELD_JOINER, FIELD_TRIM_LEN,
+                          FIELD_TRIM_STR, SCHEMAS_CUSTOM)
 from ...exceptions import ApiError
-from ...tools import (
-    calc_percent,
-    coerce_int,
-    echo_error,
-    echo_ok,
-    echo_warn,
-    get_path,
-    join_kv,
-    listify,
-)
+from ...tools import (calc_percent, coerce_int, echo_error, echo_ok, echo_warn,
+                      get_path, join_kv, listify)
 from ..parsers import schema_custom
 
 

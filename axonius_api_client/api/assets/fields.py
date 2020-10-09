@@ -5,13 +5,9 @@ from typing import List, Optional, Tuple, Union
 
 from cachetools import TTLCache, cached
 
-from ...constants import (
-    AGG_ADAPTER_ALTS,
-    AGG_ADAPTER_NAME,
-    FUZZY_SCHEMAS_KEYS,
-    GET_SCHEMA_KEYS,
-    GET_SCHEMAS_KEYS,
-)
+from ...constants import (AGG_ADAPTER_ALTS, AGG_ADAPTER_NAME,
+                          FUZZY_SCHEMAS_KEYS, GET_SCHEMA_KEYS,
+                          GET_SCHEMAS_KEYS)
 from ...exceptions import ApiError, NotFoundError
 from ...tools import listify, split_str, strip_right
 from ..mixins import ChildMixins

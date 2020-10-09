@@ -4,7 +4,8 @@ import dataclasses
 import enum
 from typing import Dict, List, Optional
 
-from ...constants import AGG_ADAPTER_NAME, AGG_ADAPTER_TITLE, AGG_EXPR_FIELD_TYPE
+from ...constants import (AGG_ADAPTER_NAME, AGG_ADAPTER_TITLE,
+                          AGG_EXPR_FIELD_TYPE)
 from ...data import BaseData, BaseEnum
 from ...exceptions import NotFoundError
 

@@ -11,12 +11,8 @@ from axonius_api_client.http import Http
 from axonius_api_client.url_parser import UrlParser
 from axonius_api_client.version import __version__
 
-from ..meta import (
-    TEST_CLIENT_CERT,
-    TEST_CLIENT_CERT_NAME,
-    TEST_CLIENT_KEY,
-    TEST_CLIENT_KEY_NAME,
-)
+from ..meta import (TEST_CLIENT_CERT, TEST_CLIENT_CERT_NAME, TEST_CLIENT_KEY,
+                    TEST_CLIENT_KEY_NAME)
 from ..utils import get_url, log_check
 
 InsecureRequestWarning = requests.urllib3.exceptions.InsecureRequestWarning

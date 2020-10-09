@@ -4,12 +4,8 @@ import pytest
 
 # from axonius_api_client.api.routers import API_VERSION
 from axonius_api_client.auth import ApiKey
-from axonius_api_client.exceptions import (
-    AlreadyLoggedIn,
-    AuthError,
-    InvalidCredentials,
-    NotLoggedIn,
-)
+from axonius_api_client.exceptions import (AlreadyLoggedIn, AuthError,
+                                           InvalidCredentials, NotLoggedIn)
 from axonius_api_client.http import Http
 
 from ..utils import get_key_creds, get_url

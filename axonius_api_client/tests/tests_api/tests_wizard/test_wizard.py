@@ -4,7 +4,8 @@ import pytest
 
 from axonius_api_client.api.parsers.constants import Operators
 from axonius_api_client.api.wizard import ValueParser, Wizard
-from axonius_api_client.api.wizard.constants import Entry, Flags, Results, Types
+from axonius_api_client.api.wizard.constants import (Entry, Flags, Results,
+                                                     Types)
 from axonius_api_client.constants import ALL_NAME
 from axonius_api_client.exceptions import NotFoundError, WizardError
 

@@ -2,14 +2,9 @@
 """Test suite for axonapi.api.enforcements."""
 import pytest
 
-from ...meta import (
-    DEPLOY_ACTION_NAME,
-    DEPLOY_FILE_CONTENTS,
-    DEPLOY_FILE_NAME,
-    LINUX_QUERY,
-    SHELL_ACTION_CMD,
-    SHELL_ACTION_NAME,
-)
+from ...meta import (DEPLOY_ACTION_NAME, DEPLOY_FILE_CONTENTS,
+                     DEPLOY_FILE_NAME, LINUX_QUERY, SHELL_ACTION_CMD,
+                     SHELL_ACTION_NAME)
 
 
 class TestRunActionBase:

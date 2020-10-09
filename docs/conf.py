@@ -2,9 +2,10 @@
 """Sphinx config."""
 import logging as pylogging
 
-import axonius_api_client as pkg
 import sphinx_rtd_theme
 from sphinx.util import logging
+
+import axonius_api_client as pkg
 
 
 class FilterForIssue123(pylogging.Filter):
