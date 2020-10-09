@@ -22,4 +22,3 @@ Help Page
 
 .. click:: axonius_api_client.cli.grp_adapters.grp_cnx:cnx
    :prog: axonshell adapters cnx
-

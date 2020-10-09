@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client.query_wizard."""
-
 import pytest
 
-from axonius_api_client.api.wizard import ValueParser, WizardText
-from axonius_api_client.api.wizard.constants import Entry, Results, Types
-from axonius_api_client.exceptions import WizardError
-
 from .test_wizard import TestData
+from axonius_api_client.api.wizard import ValueParser
+from axonius_api_client.api.wizard import WizardText
+from axonius_api_client.api.wizard.constants import Entry
+from axonius_api_client.api.wizard.constants import Results
+from axonius_api_client.api.wizard.constants import Types
+from axonius_api_client.exceptions import WizardError
 
 
 class TestWizardText:
@@ -95,7 +96,10 @@ class TestParse(TestWizardText, TestData):
         line5_value = f"!{cplex} // {sub} contains boom"
         line5 = f"{Types.COMPLEX} {line5_value}"
 
-        lines = [line1, line2, line3, line4, line5, "", "   # another boom", "# BOOM"]
+        lines = [
+            line1, line2, line3, line4, line5, "", "   # another boom",
+            "# BOOM"
+        ]
         content = "\n".join(lines)
         _, exp_exprs, exp_query = test_data1
 
@@ -124,7 +128,10 @@ class TestParsePath(TestWizardText, TestData):
         line5_value = f"!{cplex} // {sub} contains boom"
         line5 = f"{Types.COMPLEX} {line5_value}"
 
-        lines = [line1, line2, line3, line4, line5, "", "   # another boom", "# BOOM"]
+        lines = [
+            line1, line2, line3, line4, line5, "", "   # another boom",
+            "# BOOM"
+        ]
         content = "\n".join(lines)
         path.write_text(content)
         _, exp_exprs, exp_query = test_data1

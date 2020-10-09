@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, add_options
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
 
 USER_NAME = click.option(
     "--name",
@@ -16,7 +18,8 @@ USER_NAME = click.option(
 OPTIONS = [*AUTH, USER_NAME]
 
 
-@click.command(name="get-password-reset-link", context_settings=CONTEXT_SETTINGS)
+@click.command(name="get-password-reset-link",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(ctx, url, key, secret, name, **kwargs):

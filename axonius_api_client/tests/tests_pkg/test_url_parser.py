@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client.http."""
-
 import pytest
 
 from axonius_api_client.exceptions import HttpError

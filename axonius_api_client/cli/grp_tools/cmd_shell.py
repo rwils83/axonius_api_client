@@ -6,11 +6,13 @@ import os
 import click
 
 import axonius_api_client as axonapi
-
 from ...constants import PY36
-from ...tools import echo_error, json_reload, pathlib
+from ...tools import echo_error
+from ...tools import json_reload
+from ...tools import pathlib
 from ..context import CONTEXT_SETTINGS
-from ..options import AUTH, add_options
+from ..options import add_options
+from ..options import AUTH
 
 SHELL_BANNER = """Welcome human. We have some refreshments available for you:
 
@@ -63,7 +65,10 @@ def cmd(ctx, url, key, secret):  # noqa: D301
         - jdump/j: Helper function to pretty print python objects
 
     """
-    client = ctx.obj.start_client(url=url, key=key, secret=secret, save_history=True)
+    client = ctx.obj.start_client(url=url,
+                                  key=key,
+                                  secret=secret,
+                                  save_history=True)
 
     client.HTTP.save_history = True
 

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ....constants import GUI_PAGE_SIZES
-from ....tools import json_dump, listify
-from ...context import SplitEquals, click
+from ....tools import json_dump
+from ....tools import listify
+from ...context import click
+from ...context import SplitEquals
 from ...options import int_callback
 
 EXPORT_FORMAT = click.option(
@@ -138,6 +140,8 @@ def check_sq_exist(ctx, apiobj, name, overwrite):
         ctx.obj.echo_ok(f"Saved query {name!r} does not exist, will add")
     else:
         if not overwrite:
-            ctx.obj.echo_error(f"Saved Query named {name!r} exists and overwrite is False")
+            ctx.obj.echo_error(
+                f"Saved Query named {name!r} exists and overwrite is False")
         else:
-            ctx.obj.echo_ok(f"Saved query {name!r} exists and overwrite is True, will add")
+            ctx.obj.echo_ok(
+                f"Saved query {name!r} exists and overwrite is True, will add")

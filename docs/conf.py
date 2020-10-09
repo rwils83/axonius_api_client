@@ -2,9 +2,10 @@
 """Sphinx config."""
 import logging as pylogging
 
-import axonius_api_client as pkg
 import sphinx_rtd_theme
 from sphinx.util import logging
+
+import axonius_api_client as pkg
 
 
 class FilterForIssue123(pylogging.Filter):
@@ -22,7 +23,8 @@ class FilterForIssue123(pylogging.Filter):
         return not record.getMessage().startswith("Cannot treat a function")
 
 
-logging.getLogger("sphinx_autodoc_typehints").logger.addFilter(FilterForIssue123())
+logging.getLogger("sphinx_autodoc_typehints").logger.addFilter(
+    FilterForIssue123())
 
 # -- Project information -------------------------------------------
 project = pkg.version.__project__
@@ -95,17 +97,15 @@ man_pages = [(master_doc, pkg_title_strip, man_title, [author], 1)]
 texinfo_title = "{} Documentation".format(pkg_project)
 texinfo_desc = pkg.version.__description__
 texinfo_other = "Miscellaneous"
-texinfo_documents = [
-    (
-        master_doc,
-        pkg_project_strip,
-        texinfo_title,
-        author,
-        pkg_project_strip,
-        texinfo_desc,
-        texinfo_other,
-    )
-]
+texinfo_documents = [(
+    master_doc,
+    pkg_project_strip,
+    texinfo_title,
+    author,
+    pkg_project_strip,
+    texinfo_desc,
+    texinfo_other,
+)]
 
 # -- Options for epub ----------------------------------------------
 epub_title = project

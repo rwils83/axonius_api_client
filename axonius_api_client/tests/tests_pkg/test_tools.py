@@ -4,46 +4,43 @@ import tempfile
 
 import pytest
 
-from axonius_api_client.exceptions import ToolsError
-from axonius_api_client.tools import (
-    calc_percent,
-    check_empty,
-    check_type,
-    coerce_bool,
-    coerce_int,
-    coerce_int_float,
-    coerce_str_to_csv,
-    datetime,
-    dt_min_ago,
-    dt_now,
-    dt_parse,
-    dt_parse_tmpl,
-    dt_within_min,
-    get_path,
-    get_raw_version,
-    get_type_str,
-    grouper,
-    is_int,
-    join_kv,
-    join_url,
-    json_dump,
-    json_load,
-    json_reload,
-    listify,
-    longest_str,
-    parse_ip_address,
-    parse_ip_network,
-    path_read,
-    path_write,
-    pathlib,
-    split_str,
-    strip_left,
-    strip_right,
-    sysinfo,
-    timedelta,
-)
-
 from ..utils import IS_WINDOWS
+from axonius_api_client.exceptions import ToolsError
+from axonius_api_client.tools import calc_percent
+from axonius_api_client.tools import check_empty
+from axonius_api_client.tools import check_type
+from axonius_api_client.tools import coerce_bool
+from axonius_api_client.tools import coerce_int
+from axonius_api_client.tools import coerce_int_float
+from axonius_api_client.tools import coerce_str_to_csv
+from axonius_api_client.tools import datetime
+from axonius_api_client.tools import dt_min_ago
+from axonius_api_client.tools import dt_now
+from axonius_api_client.tools import dt_parse
+from axonius_api_client.tools import dt_parse_tmpl
+from axonius_api_client.tools import dt_within_min
+from axonius_api_client.tools import get_path
+from axonius_api_client.tools import get_raw_version
+from axonius_api_client.tools import get_type_str
+from axonius_api_client.tools import grouper
+from axonius_api_client.tools import is_int
+from axonius_api_client.tools import join_kv
+from axonius_api_client.tools import join_url
+from axonius_api_client.tools import json_dump
+from axonius_api_client.tools import json_load
+from axonius_api_client.tools import json_reload
+from axonius_api_client.tools import listify
+from axonius_api_client.tools import longest_str
+from axonius_api_client.tools import parse_ip_address
+from axonius_api_client.tools import parse_ip_network
+from axonius_api_client.tools import path_read
+from axonius_api_client.tools import path_write
+from axonius_api_client.tools import pathlib
+from axonius_api_client.tools import split_str
+from axonius_api_client.tools import strip_left
+from axonius_api_client.tools import strip_right
+from axonius_api_client.tools import sysinfo
+from axonius_api_client.tools import timedelta
 
 
 class TestCoerce:
@@ -641,7 +638,8 @@ class TestIsInt:
         assert not is_int(obj=bad, digit=False)
 
     @pytest.mark.parametrize("ok", [0, 4, "1", b"1"], scope="class")
-    @pytest.mark.parametrize("bad", [False, True, {}, "x", b"x"], scope="class")
+    @pytest.mark.parametrize("bad", [False, True, {}, "x", b"x"],
+                             scope="class")
     def test_int_digit_true(self, ok, bad):
         """Simple test."""
         assert is_int(obj=ok, digit=True)
@@ -757,7 +755,8 @@ class TestDtParseTmpl:
 class TestSplitStr:
     def test_valid(self):
         assert split_str("x, y, z") == ["x", "y", "z"]
-        assert split_str(["x, y, z", "a, b, c"]) == ["x", "y", "z", "a", "b", "c"]
+        assert split_str(["x, y, z",
+                          "a, b, c"]) == ["x", "y", "z", "a", "b", "c"]
         assert split_str(None) == []
         assert split_str(["x,,y,,z"]) == ["x", "y", "z"]
 
@@ -788,7 +787,11 @@ class TestCalc:
 class TestJoinKv:
     def test_valid(self):
         assert join_kv({"k1": "v1", "k2": "v2"}) == ["k1: 'v1'", "k2: 'v2'"]
-        assert join_kv([{"k1": "v1"}, {"k2": "v2"}]) == [["k1: 'v1'"], ["k2: 'v2'"]]
+        assert join_kv([{
+            "k1": "v1"
+        }, {
+            "k2": "v2"
+        }]) == [["k1: 'v1'"], ["k2: 'v2'"]]
         assert join_kv({"k1": ["v1", "v2"]}) == ["k1: 'v1, v2'"]
 
     def test_invalid(self):
@@ -824,7 +827,8 @@ class TestGetRawVersion:
     def test_valid(self):
         assert get_raw_version("3.1.0") == "0000000030000000100000000"
         assert get_raw_version("boo:2.1.0") == "boo000000020000000100000000"
-        assert get_raw_version("123456789123456789.1.0") == "0123456780000000100000000"
+        assert get_raw_version(
+            "123456789123456789.1.0") == "0123456780000000100000000"
 
     def test_invalid(self):
         with pytest.raises(ToolsError):
@@ -951,7 +955,8 @@ class TestDtParse:
 
     @pytest.mark.parametrize(
         "val",
-        [format(dt_now()), dt_now(), timedelta(minutes=1)],
+        [format(dt_now()), dt_now(),
+         timedelta(minutes=1)],
         scope="class",
     )
     def test_val(self, val):
@@ -968,7 +973,9 @@ class TestDtParse:
 class TestDtWithinMin:
     """Test dt_*."""
 
-    @pytest.mark.parametrize("val", [None, "x", False, True, {}, [], 6, "8", b"9"], scope="class")
+    @pytest.mark.parametrize("val",
+                             [None, "x", False, True, {}, [], 6, "8", b"9"],
+                             scope="class")
     def test_bad(self, val):
         then = dt_now(delta=timedelta(minutes=5))
         assert dt_within_min(obj=then, n=val) is False

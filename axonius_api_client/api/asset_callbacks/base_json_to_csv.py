@@ -2,7 +2,8 @@
 """JSON to CSV export callbacks class."""
 import json
 import tempfile
-from typing import List, Union
+from typing import List
+from typing import Union
 
 from ...tools import listify
 from .base_csv import Csv
@@ -22,8 +23,10 @@ class JsonToCsv(Csv):
         """Start this callbacks object."""
         super(Csv, self).start(**kwargs)
         self.open_fd()
-        self._temp_file = tempfile.NamedTemporaryFile(mode="w+", encoding="utf-8")
-        self.echo(msg=f"Writing JSON to temporary file {self._temp_file.name!r}")
+        self._temp_file = tempfile.NamedTemporaryFile(mode="w+",
+                                                      encoding="utf-8")
+        self.echo(
+            msg=f"Writing JSON to temporary file {self._temp_file.name!r}")
 
     def stop(self, **kwargs):
         """Stop this callbacks object."""
@@ -41,7 +44,9 @@ class JsonToCsv(Csv):
             self.write_rows(rows=rows)
             del rows, row, line
 
-        self.echo(msg=f"Closing and deleting temporary file {self._temp_file.name!r}")
+        self.echo(
+            msg=f"Closing and deleting temporary file {self._temp_file.name!r}"
+        )
         self._temp_file.file.close()
         super(JsonToCsv, self).stop(**kwargs)
 
@@ -53,7 +58,9 @@ class JsonToCsv(Csv):
         """
         rows = listify(row)
 
-        row_return = [{"internal_axon_id": row["internal_axon_id"]} for row in rows]
+        row_return = [{
+            "internal_axon_id": row["internal_axon_id"]
+        } for row in rows]
         rows = self.do_pre_row(rows=rows)
         for row in rows:
             value = json.dumps(row)

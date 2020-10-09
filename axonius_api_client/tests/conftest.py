@@ -5,15 +5,27 @@ import os
 import dotenv
 import pytest
 
-from axonius_api_client.api import dashboard, enforcements, instances, system
+from .meta import CSV_FILECONTENT_STR
+from .meta import CSV_FILENAME
+from .utils import check_apiobj
+from .utils import check_apiobj_children
+from .utils import check_apiobj_xref
+from .utils import get_auth
+from .utils import get_url
+from axonius_api_client.api import dashboard
+from axonius_api_client.api import enforcements
+from axonius_api_client.api import instances
+from axonius_api_client.api import system
 from axonius_api_client.api.adapters import Adapters
 from axonius_api_client.api.adapters.cnx import Cnx
-from axonius_api_client.api.assets import Devices, Users, fields, labels, saved_query
+from axonius_api_client.api.assets import Devices
+from axonius_api_client.api.assets import fields
+from axonius_api_client.api.assets import labels
+from axonius_api_client.api.assets import saved_query
+from axonius_api_client.api.assets import Users
 from axonius_api_client.api.signup import Signup
-from axonius_api_client.constants import CSV_ADAPTER, DEFAULT_NODE
-
-from .meta import CSV_FILECONTENT_STR, CSV_FILENAME
-from .utils import check_apiobj, check_apiobj_children, check_apiobj_xref, get_auth, get_url
+from axonius_api_client.constants import CSV_ADAPTER
+from axonius_api_client.constants import DEFAULT_NODE
 
 dotenv.load_dotenv()
 
@@ -49,8 +61,10 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     """Ini file additions."""
-    config.addinivalue_line("filterwarnings", "error::axonius_api_client.exceptions.AxonWarning")
-    config.addinivalue_line("filterwarnings", "ignore::urllib3.exceptions.InsecureRequestWarning")
+    config.addinivalue_line(
+        "filterwarnings", "error::axonius_api_client.exceptions.AxonWarning")
+    config.addinivalue_line(
+        "filterwarnings", "ignore::urllib3.exceptions.InsecureRequestWarning")
 
 
 @pytest.fixture(scope="session")

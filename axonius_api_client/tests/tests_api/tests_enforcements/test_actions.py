@@ -2,14 +2,12 @@
 """Test suite for axonapi.api.enforcements."""
 import pytest
 
-from ...meta import (
-    DEPLOY_ACTION_NAME,
-    DEPLOY_FILE_CONTENTS,
-    DEPLOY_FILE_NAME,
-    LINUX_QUERY,
-    SHELL_ACTION_CMD,
-    SHELL_ACTION_NAME,
-)
+from ...meta import DEPLOY_ACTION_NAME
+from ...meta import DEPLOY_FILE_CONTENTS
+from ...meta import DEPLOY_FILE_NAME
+from ...meta import LINUX_QUERY
+from ...meta import SHELL_ACTION_CMD
+from ...meta import SHELL_ACTION_NAME
 
 
 class TestRunActionBase:
@@ -44,7 +42,8 @@ class TestRunActionPrivate(TestRunActionBase):
 
     @pytest.fixture(scope="class")
     def uploaded_file(self, apiobj):
-        data = apiobj._upload_file(name=DEPLOY_FILE_NAME, content=DEPLOY_FILE_CONTENTS)
+        data = apiobj._upload_file(name=DEPLOY_FILE_NAME,
+                                   content=DEPLOY_FILE_CONTENTS)
         assert isinstance(data, dict)
         assert isinstance(data["uuid"], str)
         assert data["filename"] == DEPLOY_FILE_NAME

@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ....tools import json_dump
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, INPUT_FILE, add_options
-from .grp_common import EXPORT, SECTION, SUB_SECTION, str_section
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import INPUT_FILE
+from .grp_common import EXPORT
+from .grp_common import SECTION
+from .grp_common import str_section
+from .grp_common import SUB_SECTION
 
 OPTIONS = [*AUTH, EXPORT, SECTION, SUB_SECTION, INPUT_FILE]
 
 
-@click.command(name="update-sub-section-from-json", context_settings=CONTEXT_SETTINGS)
+@click.command(name="update-sub-section-from-json",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(
-    ctx,
-    url,
-    key,
-    secret,
-    input_file,
-    section,
-    sub_section,
-    export_format,
-    **kwargs,
+        ctx,
+        url,
+        key,
+        secret,
+        input_file,
+        section,
+        sub_section,
+        export_format,
+        **kwargs,
 ):
     """Update a sub-section from a JSON file."""
     client = ctx.obj.start_client(url=url, key=key, secret=secret)
@@ -30,8 +37,11 @@ def cmd(
     apiobj = getattr(client.system, apiname)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        settings = apiobj.update_sub_section(section=section, sub_section=sub_section, **new_config)
-        ctx.obj.echo_ok(f"Updated {sub_section!r} with configuration {new_config}")
+        settings = apiobj.update_sub_section(section=section,
+                                             sub_section=sub_section,
+                                             **new_config)
+        ctx.obj.echo_ok(
+            f"Updated {sub_section!r} with configuration {new_config}")
 
     if export_format == "str":
         str_section(meta=settings)

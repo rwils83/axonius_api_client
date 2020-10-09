@@ -17,4 +17,3 @@ This does the following:
 .. raw:: html
 
    <script id="asciicast-271732" src="https://asciinema.org/a/271732.js" async></script>
-

@@ -6,7 +6,8 @@ import click
 import dotenv
 
 from ...tools import get_path
-from ..options import AUTH, add_options
+from ..options import add_options
+from ..options import AUTH
 
 
 @click.command(name="write-config")
@@ -34,4 +35,6 @@ def cmd(ctx, url, key, secret):
     click.secho(message=msg, err=True, fg="green")
     dotenv.set_key(dotenv_path=path, key_to_set="AX_URL", value_to_set=url)
     dotenv.set_key(dotenv_path=path, key_to_set="AX_KEY", value_to_set=key)
-    dotenv.set_key(dotenv_path=path, key_to_set="AX_SECRET", value_to_set=secret)
+    dotenv.set_key(dotenv_path=path,
+                   key_to_set="AX_SECRET",
+                   value_to_set=secret)

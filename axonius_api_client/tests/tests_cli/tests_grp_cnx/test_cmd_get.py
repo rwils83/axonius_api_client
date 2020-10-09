@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client.tools."""
 from ....cli import cli
-from ....constants import CSV_ADAPTER, DEFAULT_NODE
+from ....constants import CSV_ADAPTER
+from ....constants import DEFAULT_NODE
 from ....tools import json_load
 from ...utils import load_clirunner
 

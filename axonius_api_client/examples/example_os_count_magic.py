@@ -10,7 +10,8 @@ import re
 import axonius_api_client as axonapi  # noqa: F401
 from axonius_api_client.connect import Connect
 from axonius_api_client.constants import load_dotenv
-from axonius_api_client.tools import json_reload, listify
+from axonius_api_client.tools import json_reload
+from axonius_api_client.tools import listify
 
 FIELDS = [
     "os.type",
@@ -26,160 +27,418 @@ BITS_MAPS = {
     "os.build_preferred": "build",
 }
 
-
 SEARCH_MAPS = [
     {
-        "searches": {"str": re.compile(r"cisco.*unified communications manager", re.I)},
-        "updates": {"dist": "Unified Communications Manager"},
+        "searches": {
+            "str": re.compile(r"cisco.*unified communications manager", re.I)
+        },
+        "updates": {
+            "dist": "Unified Communications Manager"
+        },
     },
     {
-        "searches": {"str": re.compile(r"cisco.*catalyst", re.I)},
-        "updates": {"dist": "Catalyst"},
+        "searches": {
+            "str": re.compile(r"cisco.*catalyst", re.I)
+        },
+        "updates": {
+            "dist": "Catalyst"
+        },
     },
     {
-        "searches": {"str": re.compile(r"^catalyst", re.I)},
-        "updates": {"dist": "Catalyst"},
+        "searches": {
+            "str": re.compile(r"^catalyst", re.I)
+        },
+        "updates": {
+            "dist": "Catalyst"
+        },
     },
     {
-        "searches": {"dist": re.compile(r"vmware esxi (.*)", re.DOTALL | re.I)},
-        "updates": {"dist": "ESXi", "build": 0},
+        "searches": {
+            "dist": re.compile(r"vmware esxi (.*)", re.DOTALL | re.I)
+        },
+        "updates": {
+            "dist": "ESXi",
+            "build": 0
+        },
         "overwrites": ["dist", "build"],
     },
     {
-        "searches": {"str": re.compile(r"cisco.*linux release:([\d.\-]+)", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"cisco.*linux release:([\d.\-]+)", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"other ([\d.x]+) linux", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"other ([\d.x]+) linux", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"software:ucos ([\d.\-di]+)", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"software:ucos ([\d.\-di]+)", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"cisco.* \((.*?)\), version ([\d.\w, \(\)]+)", re.I)},
-        "updates": {"build": 1, "dist": 0},
+        "searches": {
+            "str": re.compile(r"cisco.* \((.*?)\), version ([\d.\w, \(\)]+)",
+                              re.I)
+        },
+        "updates": {
+            "build": 1,
+            "dist": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"cisco.*\nsoftw: ([\w\d.]+)", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"cisco.*\nsoftw: ([\w\d.]+)", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"check point.*linux.*? (\d[\d.\w\-]+) ", re.I)},
-        "updates": {"build": 0, "dist": "Check Point"},
+        "searches": {
+            "str": re.compile(r"check point.*linux.*? (\d[\d.\w\-]+) ", re.I)
+        },
+        "updates": {
+            "build": 0,
+            "dist": "Check Point"
+        },
     },
     {
-        "searches": {"str": re.compile(r"net-snmp.*? (\d[\d.\-\w]+) ", re.I)},
-        "updates": {"build": 0, "dist": "net-snmp", "type": "Linux"},
+        "searches": {
+            "str": re.compile(r"net-snmp.*? (\d[\d.\-\w]+) ", re.I)
+        },
+        "updates": {
+            "build": 0,
+            "dist": "net-snmp",
+            "type": "Linux"
+        },
         "overwrites": ["type"],
     },
     {
-        "searches": {"str": re.compile(r"big-ip software release (.*)", re.DOTALL | re.I)},
-        "updates": {"build": 0, "dist": "Big-IP"},
+        "searches": {
+            "str": re.compile(r"big-ip software release (.*)",
+                              re.DOTALL | re.I)
+        },
+        "updates": {
+            "build": 0,
+            "dist": "Big-IP"
+        },
     },
     {
-        "searches": {"str": re.compile(r"eaton.*v(.*)", re.DOTALL | re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"eaton.*v(.*)", re.DOTALL | re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"cisco (airct.*) cisco controller", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"cisco (airct.*) cisco controller", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"adtran.*version: ([\d.\w]+), ", re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"adtran.*version: ([\d.\w]+), ", re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"adtran.*rev. ([\d.\w]+)", re.DOTALL | re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"adtran.*rev. ([\d.\w]+)", re.DOTALL | re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"(japan computer.*?) (\d[\d.\w\-]+) ", re.DOTALL | re.I)},
-        "updates": {"build": 1, "dist": 0},
+        "searches": {
+            "str":
+            re.compile(r"(japan computer.*?) (\d[\d.\w\-]+) ",
+                       re.DOTALL | re.I)
+        },
+        "updates": {
+            "build": 1,
+            "dist": 0
+        },
     },
     {
-        "searches": {"str": re.compile(r"matsushita.*swver(\d[\d.]+)", re.DOTALL | re.I)},
-        "updates": {"build": 0},
+        "searches": {
+            "str": re.compile(r"matsushita.*swver(\d[\d.]+)", re.DOTALL | re.I)
+        },
+        "updates": {
+            "build": 0
+        },
     },
     {
-        "searches": {"str": re.compile("sles", re.I)},
-        "updates": {"type": "Linux", "dist": "SuSe Linux"},
+        "searches": {
+            "str": re.compile("sles", re.I)
+        },
+        "updates": {
+            "type": "Linux",
+            "dist": "SuSe Linux"
+        },
     },
     {
-        "searches": {"str": re.compile("windows_10", re.I)},
-        "updates": {"type": "Windows", "dist": "10"},
+        "searches": {
+            "str": re.compile("windows_10", re.I)
+        },
+        "updates": {
+            "type": "Windows",
+            "dist": "10"
+        },
     },
     {
-        "searches": {"str": re.compile("windows_7", re.I)},
-        "updates": {"type": "Windows", "dist": "7"},
+        "searches": {
+            "str": re.compile("windows_7", re.I)
+        },
+        "updates": {
+            "type": "Windows",
+            "dist": "7"
+        },
     },
     {
-        "searches": {"str": re.compile("windows_98", re.I)},
-        "updates": {"type": "Windows", "dist": "98"},
+        "searches": {
+            "str": re.compile("windows_98", re.I)
+        },
+        "updates": {
+            "type": "Windows",
+            "dist": "98"
+        },
     },
     {
-        "searches": {"str": re.compile("windows_2000", re.I)},
-        "updates": {"type": "Windows", "dist": "2000"},
-    },
-    {"searches": {"str": re.compile("linux", re.I)}, "updates": {"type": "Linux"}},
-    {"searches": {"str": re.compile("os x", re.I)}, "updates": {"type": "OS X"}},
-    {"searches": {"str": re.compile("cisco", re.I)}, "updates": {"type": "Cisco"}},
-    {"searches": {"str": re.compile("ios", re.I)}, "updates": {"type": "iOS"}},
-    {"searches": {"str": re.compile("airos", re.I)}, "updates": {"type": "AirOS"}},
-    {"searches": {"str": re.compile("android", re.I)}, "updates": {"type": "Android"}},
-    {"searches": {"str": re.compile("freebsd", re.I)}, "updates": {"type": "FreeBSD"}},
-    {"searches": {"str": re.compile("vmware", re.I)}, "updates": {"type": "VMWare"}},
-    {"searches": {"str": re.compile("mikrotik", re.I)}, "updates": {"type": "Mikrotik"}},
-    {"searches": {"str": re.compile("vxworks", re.I)}, "updates": {"type": "VxWorks"}},
-    {"searches": {"str": re.compile("panos", re.I)}, "updates": {"type": "PanOS"}},
-    {
-        "searches": {"str": re.compile("big-ip", re.I)},
-        "updates": {"type": "F5 Networks Big-IP"},
-    },
-    {"searches": {"str": re.compile("solaris", re.I)}, "updates": {"type": "Solaris"}},
-    {"searches": {"str": re.compile("aix", re.I)}, "updates": {"type": "AIX"}},
-    {"searches": {"str": re.compile("printer", re.I)}, "updates": {"type": "Printer"}},
-    {
-        "searches": {"str": re.compile("playstation", re.I)},
-        "updates": {"type": "PlayStation"},
+        "searches": {
+            "str": re.compile("windows_2000", re.I)
+        },
+        "updates": {
+            "type": "Windows",
+            "dist": "2000"
+        },
     },
     {
-        "searches": {"str": re.compile("check point", re.I)},
-        "updates": {"type": "Check Point"},
-    },
-    {"searches": {"str": re.compile("arista", re.I)}, "updates": {"type": "Arista"}},
-    {
-        "searches": {"str": re.compile("netscaler", re.I)},
-        "updates": {"type": "Netscaler"},
-    },
-    {
-        "searches": {"str": re.compile("meraki mx250", re.I)},
-        "updates": {"type": "Meraki", "dist": "mx250"},
+        "searches": {
+            "str": re.compile("linux", re.I)
+        },
+        "updates": {
+            "type": "Linux"
+        }
     },
     {
-        "searches": {"str": re.compile("integrated_lights-out", re.I)},
-        "updates": {"type": "HP iLO"},
+        "searches": {
+            "str": re.compile("os x", re.I)
+        },
+        "updates": {
+            "type": "OS X"
+        }
     },
     {
-        "searches": {"str": re.compile("cisco cgs-2520-16s-8pc", re.I)},
-        "updates": {"dist": "cgs-2520-16s-8pc"},
+        "searches": {
+            "str": re.compile("cisco", re.I)
+        },
+        "updates": {
+            "type": "Cisco"
+        }
     },
     {
-        "searches": {"str": re.compile("cisco cgs-2520-24tc", re.I)},
-        "updates": {"dist": "cgs-2520-24tc"},
+        "searches": {
+            "str": re.compile("ios", re.I)
+        },
+        "updates": {
+            "type": "iOS"
+        }
     },
     {
-        "searches": {"str": re.compile("cisco ws-c3560v2-48ps", re.I)},
-        "updates": {"dist": "ws-c3560v2-48ps"},
+        "searches": {
+            "str": re.compile("airos", re.I)
+        },
+        "updates": {
+            "type": "AirOS"
+        }
     },
     {
-        "searches": {"str": re.compile("vg3x0 software", re.I)},
-        "updates": {"dist": "VG3X0 Analog Voice Gateway"},
+        "searches": {
+            "str": re.compile("android", re.I)
+        },
+        "updates": {
+            "type": "Android"
+        }
     },
     {
-        "searches": {"str": re.compile(r"network_camera_firmware.*axis", re.I | re.DOTALL)},
-        "updates": {"dist": "Axis network camera firmware"},
+        "searches": {
+            "str": re.compile("freebsd", re.I)
+        },
+        "updates": {
+            "type": "FreeBSD"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("vmware", re.I)
+        },
+        "updates": {
+            "type": "VMWare"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("mikrotik", re.I)
+        },
+        "updates": {
+            "type": "Mikrotik"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("vxworks", re.I)
+        },
+        "updates": {
+            "type": "VxWorks"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("panos", re.I)
+        },
+        "updates": {
+            "type": "PanOS"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("big-ip", re.I)
+        },
+        "updates": {
+            "type": "F5 Networks Big-IP"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("solaris", re.I)
+        },
+        "updates": {
+            "type": "Solaris"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("aix", re.I)
+        },
+        "updates": {
+            "type": "AIX"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("printer", re.I)
+        },
+        "updates": {
+            "type": "Printer"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("playstation", re.I)
+        },
+        "updates": {
+            "type": "PlayStation"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("check point", re.I)
+        },
+        "updates": {
+            "type": "Check Point"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("arista", re.I)
+        },
+        "updates": {
+            "type": "Arista"
+        }
+    },
+    {
+        "searches": {
+            "str": re.compile("netscaler", re.I)
+        },
+        "updates": {
+            "type": "Netscaler"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("meraki mx250", re.I)
+        },
+        "updates": {
+            "type": "Meraki",
+            "dist": "mx250"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("integrated_lights-out", re.I)
+        },
+        "updates": {
+            "type": "HP iLO"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("cisco cgs-2520-16s-8pc", re.I)
+        },
+        "updates": {
+            "dist": "cgs-2520-16s-8pc"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("cisco cgs-2520-24tc", re.I)
+        },
+        "updates": {
+            "dist": "cgs-2520-24tc"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("cisco ws-c3560v2-48ps", re.I)
+        },
+        "updates": {
+            "dist": "ws-c3560v2-48ps"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile("vg3x0 software", re.I)
+        },
+        "updates": {
+            "dist": "VG3X0 Analog Voice Gateway"
+        },
+    },
+    {
+        "searches": {
+            "str": re.compile(r"network_camera_firmware.*axis",
+                              re.I | re.DOTALL)
+        },
+        "updates": {
+            "dist": "Axis network camera firmware"
+        },
     },
 ]
 
@@ -316,7 +575,10 @@ def write_csv(results, path="os_counts.csv", logs=True):
     if not logs:
         fields = [x for x in fields if x != "logs"]
     with path.open("w") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fields, extrasaction="ignore", quoting=csv.QUOTE_ALL)
+        writer = csv.DictWriter(fh,
+                                fieldnames=fields,
+                                extrasaction="ignore",
+                                quoting=csv.QUOTE_ALL)
         writer.writerow(dict(zip(fields, fields)))
         for result in results:
             for k, v in result.items():

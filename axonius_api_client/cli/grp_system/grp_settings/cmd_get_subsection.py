@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ....tools import json_dump
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, add_options
-from .grp_common import EXPORT, SECTION, SUB_SECTION, str_subsection
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from .grp_common import EXPORT
+from .grp_common import SECTION
+from .grp_common import str_subsection
+from .grp_common import SUB_SECTION
 
 OPTIONS = [*AUTH, EXPORT, SECTION, SUB_SECTION]
 
@@ -19,7 +24,8 @@ def cmd(ctx, url, key, secret, section, sub_section, export_format, **kwargs):
     apiobj = getattr(client.system, apiname)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        settings = apiobj.get_sub_section(section=section, sub_section=sub_section)
+        settings = apiobj.get_sub_section(section=section,
+                                          sub_section=sub_section)
 
     if export_format == "str":
         str_subsection(meta=settings)

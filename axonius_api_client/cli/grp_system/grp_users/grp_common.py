@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 # from ....constants import DEFAULT_PERM, PERM_SETS, VALID_PERMS
-from ....tools import dt_parse, json_dump, listify
+from ....tools import dt_parse
+from ....tools import json_dump
+from ....tools import listify
 from ...context import click
 
 EXPORT = click.option(

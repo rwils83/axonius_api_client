@@ -4,26 +4,28 @@ import sys
 
 import click
 
+from . import context
+from . import grp_adapters
+from . import grp_assets
+from . import grp_system
+from . import grp_tools
 from .. import version
-from ..constants import (
-    LOG_FILE_MAX_FILES,
-    LOG_FILE_MAX_MB,
-    LOG_FILE_NAME,
-    LOG_FILE_PATH,
-    LOG_LEVEL_API,
-    LOG_LEVEL_AUTH,
-    LOG_LEVEL_CONSOLE,
-    LOG_LEVEL_FILE,
-    LOG_LEVEL_HTTP,
-    LOG_LEVEL_PACKAGE,
-    LOG_LEVELS_STR,
-    REQUEST_ATTR_MAP,
-    RESPONSE_ATTR_MAP,
-    TIMEOUT_CONNECT,
-    TIMEOUT_RESPONSE,
-)
+from ..constants import LOG_FILE_MAX_FILES
+from ..constants import LOG_FILE_MAX_MB
+from ..constants import LOG_FILE_NAME
+from ..constants import LOG_FILE_PATH
+from ..constants import LOG_LEVEL_API
+from ..constants import LOG_LEVEL_AUTH
+from ..constants import LOG_LEVEL_CONSOLE
+from ..constants import LOG_LEVEL_FILE
+from ..constants import LOG_LEVEL_HTTP
+from ..constants import LOG_LEVEL_PACKAGE
+from ..constants import LOG_LEVELS_STR
+from ..constants import REQUEST_ATTR_MAP
+from ..constants import RESPONSE_ATTR_MAP
+from ..constants import TIMEOUT_CONNECT
+from ..constants import TIMEOUT_RESPONSE
 from ..logs import LOG
-from . import context, grp_adapters, grp_assets, grp_system, grp_tools
 
 
 @click.group(
@@ -174,7 +176,8 @@ All of the options listed above must be supplied BEFORE any commands or groups.
     "log_file_path",
     metavar="PATH",
     default=LOG_FILE_PATH,
-    help="Directory to use for -fn/--log-file-name (Defaults to current directory).",
+    help=
+    "Directory to use for -fn/--log-file-name (Defaults to current directory).",
     show_envvar=True,
 )
 @click.option(
@@ -212,7 +215,8 @@ All of the options listed above must be supplied BEFORE any commands or groups.
     "-ccb",
     "cert_client_both",
     type=click.Path(exists=True, resolve_path=True),
-    help="Path to client SSL certificate and private key in one file for mutual TLS.",
+    help=
+    "Path to client SSL certificate and private key in one file for mutual TLS.",
     metavar="PATH",
     show_envvar=True,
     show_default=True,
@@ -242,7 +246,8 @@ All of the options listed above must be supplied BEFORE any commands or groups.
     "-cp",
     "certpath",
     type=click.Path(exists=True, resolve_path=True),
-    help="Path to SSL certificate for verifying the certificate offered by Axonius.",
+    help=
+    "Path to SSL certificate for verifying the certificate offered by Axonius.",
     metavar="PATH",
     show_envvar=True,
     show_default=True,
@@ -254,8 +259,7 @@ All of the options listed above must be supplied BEFORE any commands or groups.
     default=False,
     help=(
         "Perform SSL Certificate Verification (will fail if cert is self-signed"
-        " or not signed by a system CA)."
-    ),
+        " or not signed by a system CA)."),
     is_flag=True,
     show_envvar=True,
 )
@@ -300,35 +304,35 @@ All of the options listed above must be supplied BEFORE any commands or groups.
 @context.pass_context
 @click.pass_context
 def cli(
-    click_ctx,
-    ctx,
-    log_level_package,
-    log_level_http,
-    log_level_auth,
-    log_level_api,
-    log_level_console,
-    log_level_file,
-    log_console,
-    log_file,
-    log_request_attrs,
-    log_response_attrs,
-    log_request_body,
-    log_response_body,
-    log_file_name,
-    log_file_path,
-    log_file_max_mb,
-    log_file_max_files,
-    cert_client_cert,
-    cert_client_key,
-    cert_client_both,
-    proxy,
-    certpath,
-    certverify,
-    certwarn,
-    wraperror,
-    timeout_connect,
-    timeout_response,
-    quiet,
+        click_ctx,
+        ctx,
+        log_level_package,
+        log_level_http,
+        log_level_auth,
+        log_level_api,
+        log_level_console,
+        log_level_file,
+        log_console,
+        log_file,
+        log_request_attrs,
+        log_response_attrs,
+        log_request_body,
+        log_response_body,
+        log_file_name,
+        log_file_path,
+        log_file_max_mb,
+        log_file_max_files,
+        cert_client_cert,
+        cert_client_key,
+        cert_client_both,
+        proxy,
+        certpath,
+        certverify,
+        certwarn,
+        wraperror,
+        timeout_connect,
+        timeout_response,
+        quiet,
 ):
     """Command line interface for the Axonius API Client."""
     LOG.debug(f"sys.argv: {sys.argv}")

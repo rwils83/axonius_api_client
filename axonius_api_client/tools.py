@@ -6,9 +6,18 @@ import logging
 import pathlib
 import platform
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 from itertools import zip_longest
-from typing import Any, Callable, Iterable, Iterator, List, Optional, Tuple, Union
+from typing import Any
+from typing import Callable
+from typing import Iterable
+from typing import Iterator
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 from urllib.parse import urljoin
 
 import click
@@ -18,7 +27,14 @@ import dateutil.tz
 
 from . import __file__ as PACKAGE_FILE
 from . import __package__ as PACKAGE_ROOT
-from .constants import ERROR_ARGS, ERROR_TMPL, NO, OK_ARGS, OK_TMPL, WARN_ARGS, WARN_TMPL, YES
+from .constants import ERROR_ARGS
+from .constants import ERROR_TMPL
+from .constants import NO
+from .constants import OK_ARGS
+from .constants import OK_TMPL
+from .constants import WARN_ARGS
+from .constants import WARN_TMPL
+from .constants import YES
 from .exceptions import ToolsError
 from .version import VERSION
 
@@ -55,7 +71,8 @@ def listify(obj: Any, dictkeys: bool = False) -> list:
     return [obj]
 
 
-def grouper(iterable: Iterable, n: int, fillvalue: Optional[Any] = None) -> Iterator:
+def grouper(iterable: Iterable, n: int,
+            fillvalue: Optional[Any] = None) -> Iterator:
     """Split an iterable into chunks.
 
     Args:
@@ -79,7 +96,8 @@ def coerce_int(obj: Any) -> int:
         return int(obj)
     except Exception:
         vtype = type(obj).__name__
-        raise ToolsError(f"Supplied value {obj!r} of type {vtype} is not an integer.")
+        raise ToolsError(
+            f"Supplied value {obj!r} of type {vtype} is not an integer.")
 
 
 def coerce_int_float(value: Union[int, float, str]) -> Union[int, float]:
@@ -105,7 +123,9 @@ def coerce_int_float(value: Union[int, float, str]) -> Union[int, float]:
             return float(value)
 
     vtype = type(value).__name__
-    raise ToolsError(f"Supplied value {value!r} of type {vtype} is not an integer or float.")
+    raise ToolsError(
+        f"Supplied value {value!r} of type {vtype} is not an integer or float."
+    )
 
 
 def coerce_bool(obj: Any, errmsg: Optional[str] = None) -> bool:
@@ -208,9 +228,11 @@ def strip_left(obj: Union[List[str], str], fix: str) -> Union[List[str], str]:
     return obj
 
 
-def json_dump(
-    obj: Any, indent: int = 2, sort_keys: bool = False, error: bool = True, **kwargs
-) -> Any:
+def json_dump(obj: Any,
+              indent: int = 2,
+              sort_keys: bool = False,
+              error: bool = True,
+              **kwargs) -> Any:
     """Serialize an object into json str.
 
     Args:
@@ -247,7 +269,8 @@ def json_load(obj: str, error: bool = True, **kwargs) -> Any:
         return obj
 
 
-def json_reload(obj: Any, error: bool = False, trim: int = None, **kwargs) -> str:
+def json_reload(obj: Any, error: bool = False, trim: int = None,
+                **kwargs) -> str:
     """Re-serialize a json str into a pretty json str.
 
     Args:
@@ -289,7 +312,8 @@ def dt_parse(obj: Union[str, timedelta, datetime]) -> datetime:
     return dateutil.parser.parse(obj)
 
 
-def dt_parse_tmpl(obj: Union[str, timedelta, datetime], tmpl: str = "%Y-%m-%d") -> str:
+def dt_parse_tmpl(obj: Union[str, timedelta, datetime],
+                  tmpl: str = "%Y-%m-%d") -> str:
     """Parse a string into the format used by the REST API.
 
     Args:
@@ -306,17 +330,13 @@ def dt_parse_tmpl(obj: Union[str, timedelta, datetime], tmpl: str = "%Y-%m-%d") 
     except Exception:
         vtype = type(obj).__name__
         valid = "\n - " + "\n - ".join(valid_fmts)
-        raise ToolsError(
-            (
-                f"Could not parse date {obj!r} of type {vtype}"
-                f", try a string in the format of:{valid}"
-            )
-        )
+        raise ToolsError((f"Could not parse date {obj!r} of type {vtype}"
+                          f", try a string in the format of:{valid}"))
 
 
 def dt_now(
-    delta: Optional[timedelta] = None,
-    tz: timezone = dateutil.tz.tzutc(),
+        delta: Optional[timedelta] = None,
+        tz: timezone = dateutil.tz.tzutc(),
 ) -> datetime:
     """Get the current datetime in for a specific tz.
 
@@ -329,7 +349,8 @@ def dt_now(
     return datetime.now(tz)
 
 
-def dt_sec_ago(obj: Union[str, timedelta, datetime], exact: bool = False) -> int:
+def dt_sec_ago(obj: Union[str, timedelta, datetime],
+               exact: bool = False) -> int:
     """Get number of seconds ago a given datetime was.
 
     Args:
@@ -351,8 +372,8 @@ def dt_min_ago(obj: Union[str, timedelta, datetime]) -> int:
 
 
 def dt_within_min(
-    obj: Union[str, timedelta, datetime],
-    n: Optional[Union[str, int]] = None,
+        obj: Union[str, timedelta, datetime],
+        n: Optional[Union[str, int]] = None,
 ) -> bool:
     """Check if given datetime is within the past n minutes.
 
@@ -375,9 +396,10 @@ def get_path(obj: Union[str, pathlib.Path]) -> pathlib.Path:
     return pathlib.Path(obj).expanduser().resolve()
 
 
-def path_read(
-    obj: Union[str, pathlib.Path], binary: bool = False, is_json: bool = False, **kwargs
-) -> Union[bytes, str]:
+def path_read(obj: Union[str, pathlib.Path],
+              binary: bool = False,
+              is_json: bool = False,
+              **kwargs) -> Union[bytes, str]:
     """Read data from a file.
 
     Notes:
@@ -396,7 +418,8 @@ def path_read(
     robj = get_path(obj=obj)
 
     if not robj.is_file():
-        raise ToolsError(f"Supplied path='{obj}' (resolved='{robj}') does not exist!")
+        raise ToolsError(
+            f"Supplied path='{obj}' (resolved='{robj}') does not exist!")
 
     if binary:
         data = robj.read_bytes()
@@ -414,16 +437,16 @@ def path_read(
 
 
 def path_write(
-    obj: Union[str, pathlib.Path],
-    data: Union[bytes, str],
-    overwrite: bool = False,
-    binary: bool = False,
-    binary_encoding: str = "utf-8",
-    is_json: bool = False,
-    make_parent: bool = True,
-    protect_file=0o600,
-    protect_parent=0o700,
-    **kwargs,
+        obj: Union[str, pathlib.Path],
+        data: Union[bytes, str],
+        overwrite: bool = False,
+        binary: bool = False,
+        binary_encoding: str = "utf-8",
+        is_json: bool = False,
+        make_parent: bool = True,
+        protect_file=0o600,
+        protect_parent=0o700,
+        **kwargs,
 ) -> Tuple[pathlib.Path, Callable]:
     """Write data to a file.
 
@@ -451,7 +474,8 @@ def path_write(
     if is_json:
         data = json_dump(obj=data, **kwargs)
 
-    if obj.suffix == ".json" and not (isinstance(data, str) or isinstance(data, bytes)):
+    if obj.suffix == ".json" and not (isinstance(data, str)
+                                      or isinstance(data, bytes)):
         kwargs.setdefault("error", False)
         data = json_dump(obj=data, **kwargs)
 
@@ -492,12 +516,12 @@ def longest_str(obj: List[str]) -> int:
 
 
 def split_str(
-    obj: Union[List[str], str],
-    split: str = ",",
-    strip: Optional[str] = None,
-    do_strip: bool = True,
-    lower: bool = True,
-    empty: bool = False,
+        obj: Union[List[str], str],
+        split: str = ",",
+        strip: Optional[str] = None,
+        do_strip: bool = True,
+        lower: bool = True,
+        empty: bool = False,
 ) -> List[str]:
     """Split a string or list of strings into a list of strings.
 
@@ -514,9 +538,7 @@ def split_str(
 
     if isinstance(obj, list):
         return [
-            y
-            for x in obj
-            for y in split_str(
+            y for x in obj for y in split_str(
                 obj=x,
                 split=split,
                 strip=strip,
@@ -577,7 +599,8 @@ def echo_warn(msg: str, tmpl: bool = True, **kwargs):  # pragma: no cover
     click.secho(msg, **echoargs)
 
 
-def echo_error(msg: str, abort: bool = True, tmpl: bool = True, **kwargs):  # pragma: no cover
+def echo_error(msg: str, abort: bool = True, tmpl: bool = True,
+               **kwargs):  # pragma: no cover
     """Echo an error message to console.
 
     Args:
@@ -631,7 +654,9 @@ def sysinfo() -> dict:
     return info
 
 
-def calc_percent(part: Union[int, float], whole: Union[int, float], places: int = 2) -> float:
+def calc_percent(part: Union[int, float],
+                 whole: Union[int, float],
+                 places: int = 2) -> float:
     """Calculate the percentage of part out of whole.
 
     Args:
@@ -650,9 +675,9 @@ def calc_percent(part: Union[int, float], whole: Union[int, float], places: int 
     return value
 
 
-def join_kv(
-    obj: Union[List[dict], dict], listjoin: str = ", ", tmpl: str = "{k}: {v!r}"
-) -> List[str]:
+def join_kv(obj: Union[List[dict], dict],
+            listjoin: str = ", ",
+            tmpl: str = "{k}: {v!r}") -> List[str]:
     """Join a dictionary into key value strings.
 
     Args:
@@ -686,7 +711,10 @@ def get_type_str(obj: Any):
         return obj.__name__
 
 
-def check_type(value: Any, exp: Any, name: str = "", exp_items: Optional[Any] = None):
+def check_type(value: Any,
+               exp: Any,
+               name: str = "",
+               exp_items: Optional[Any] = None):
     """Check that a value is the appropriate type.
 
     Args:
@@ -711,8 +739,7 @@ def check_type(value: Any, exp: Any, name: str = "", exp_items: Optional[Any] = 
             etype = get_type_str(obj=exp_items)
             err = (
                 f"Required type {etype}{name} in list item {idx} but received "
-                f"type {vtype}: {value!r}"
-            )
+                f"type {vtype}: {value!r}")
             raise ToolsError(err)
 
 
@@ -741,12 +768,14 @@ def get_raw_version(value: str) -> str:
     version = value
     if ":" in value:
         if "." in value and value.index(":") > value.index("."):
-            raise ToolsError(f"Invalid version with ':' after '.' in {value!r}")
+            raise ToolsError(
+                f"Invalid version with ':' after '.' in {value!r}")
         converted, version = value.split(":", 1)
     octects = version.split(".")
     for octect in octects:
         if not octect.isdigit():
-            raise ToolsError(f"Invalid version with non-digit {octect!r} in {value!r}")
+            raise ToolsError(
+                f"Invalid version with non-digit {octect!r} in {value!r}")
         if len(octect) > 8:
             octect = octect[:8]
         converted += "".join(["0" for _ in range(8 - len(octect))]) + octect
@@ -775,7 +804,8 @@ def coerce_str_to_csv(value: str) -> List[str]:
     return new_value
 
 
-def parse_ip_address(value: str) -> Union[ipaddress.IPv4Address, ipaddress.IPv6Address]:
+def parse_ip_address(value: str
+                     ) -> Union[ipaddress.IPv4Address, ipaddress.IPv6Address]:
     """Parse a string into an IP address.
 
     Args:
@@ -787,7 +817,8 @@ def parse_ip_address(value: str) -> Union[ipaddress.IPv4Address, ipaddress.IPv6A
         raise ToolsError(str(exc))
 
 
-def parse_ip_network(value: str) -> Union[ipaddress.IPv4Network, ipaddress.IPv6Network]:
+def parse_ip_network(value: str
+                     ) -> Union[ipaddress.IPv4Network, ipaddress.IPv6Network]:
     """Parse a string into an IP network.
 
     Args:
@@ -796,11 +827,8 @@ def parse_ip_network(value: str) -> Union[ipaddress.IPv4Network, ipaddress.IPv6N
     if "/" not in str(value):
         vtype = type(value).__name__
         raise ToolsError(
-            (
-                f"Supplied value {value!r} of type {vtype} is not a valid subnet "
-                "- format must be <address>/<CIDR>."
-            )
-        )
+            (f"Supplied value {value!r} of type {vtype} is not a valid subnet "
+             "- format must be <address>/<CIDR>."))
     try:
         return ipaddress.ip_network(value)
     except Exception as exc:

@@ -7,14 +7,15 @@
 [![Documentation Status](https://readthedocs.org/projects/axonius-api-client/badge/?version=latest)](https://axonius-api-client.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://pepy.tech/badge/axonius-api-client)](https://pepy.tech/project/axonius-api-client)
 
-axonius-api-client is an API client for [Axonius](https://axonius.com) that provides:
+axonius-api-client is an API client for [Axonius](https://axonius.com) that
+provides:
 
-* A fully modeled python API library that makes using the Axonius REST API easy.
-* A powerful command line interface that exposes most of the functionality of the
-  underlying python library.
+- A fully modeled python API library that makes using the Axonius REST API easy.
+- A powerful command line interface that exposes most of the functionality of
+  the underlying python library.
 
 Resources:
 
-* [Documentation](https://axonius-api-client.readthedocs.io/)
-* [PyPi package listing](https://pypi.org/project/axonius-api-client/)
-* [GitHub repository](https://github.com/Axonius/axonius_api_client)
+- [Documentation](https://axonius-api-client.readthedocs.io/)
+- [PyPi package listing](https://pypi.org/project/axonius-api-client/)
+- [GitHub repository](https://github.com/Axonius/axonius_api_client)

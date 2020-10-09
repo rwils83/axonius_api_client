@@ -2,9 +2,11 @@
 """Command line interface for Axonius API Client."""
 import click
 
-from ..constants import DEFAULT_NODE, DEFAULT_PATH, MAX_PAGE_SIZE
-from ..tools import coerce_int
 from . import context
+from ..constants import DEFAULT_NODE
+from ..constants import DEFAULT_PATH
+from ..constants import MAX_PAGE_SIZE
+from ..tools import coerce_int
 from .helps import HELPSTRS
 
 
@@ -69,7 +71,6 @@ URL = click.option(
     show_envvar=True,
     show_default=True,
 )
-
 
 AUTH = [
     URL,
@@ -191,7 +192,8 @@ EXPORT = [
         "-xp",
         "export_path",
         default=DEFAULT_PATH,
-        help="If --export-file supplied, the directory to write --export_file to",
+        help=
+        "If --export-file supplied, the directory to write --export_file to",
         type=click.Path(exists=False, resolve_path=True),
         show_envvar=True,
         show_default=True,
@@ -319,7 +321,6 @@ NODE = [
         help="Adapter name",
     ),
 ]
-
 
 NODE_CNX = [
     click.option(

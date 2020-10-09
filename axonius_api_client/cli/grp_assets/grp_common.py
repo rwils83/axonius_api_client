@@ -2,19 +2,22 @@
 """Command line interface for Axonius API Client."""
 import tabulate
 
-from ...api.wizard.constants import Results, Types
-from ...constants import FIELD_JOINER, FIELD_TRIM_LEN, TABLE_FORMAT, TABLE_MAX_ROWS
+from ...api.wizard.constants import Results
+from ...api.wizard.constants import Types
+from ...constants import FIELD_JOINER
+from ...constants import FIELD_TRIM_LEN
+from ...constants import TABLE_FORMAT
+from ...constants import TABLE_MAX_ROWS
 from ...tools import path_read
-from ..context import CONTEXT_SETTINGS, click
-from ..options import (
-    AUTH,
-    EXPORT,
-    FIELDS_SELECT,
-    PAGING,
-    add_options,
-    get_option_fields_default,
-    get_option_help,
-)
+from ..context import click
+from ..context import CONTEXT_SETTINGS
+from ..options import add_options
+from ..options import AUTH
+from ..options import EXPORT
+from ..options import FIELDS_SELECT
+from ..options import get_option_fields_default
+from ..options import get_option_help
+from ..options import PAGING
 
 HISTORY_DATE = click.option(
     "--history-date",
@@ -53,7 +56,8 @@ WIZ = [
         "--wiz",
         "-wz",
         "wizard_content",
-        help="Build a query using an expression (multiples, will override --query)",
+        help=
+        "Build a query using an expression (multiples, will override --query)",
         nargs=2,
         multiple=True,
         default=[],
@@ -205,7 +209,8 @@ GET_EXPORT = [
         "--flatten/--no-flatten",
         "field_flatten",
         default=None,
-        help="Remove complex fields and re-add their sub-field values to the row",
+        help=
+        "Remove complex fields and re-add their sub-field values to the row",
         show_envvar=True,
         show_default=True,
         is_flag=True,
@@ -256,7 +261,8 @@ GET_EXPORT = [
         "--software-whitelist-file",
         "whitelist",
         default=None,
-        help="Read in a file of software names to add missing and delta sw columns",
+        help=
+        "Read in a file of software names to add missing and delta sw columns",
         show_envvar=True,
         show_default=True,
         type=click.File(),
@@ -429,7 +435,8 @@ def gen_get_by_cmd(options, doc, cmd_name, method):
     @click.command(name=cmd_name, context_settings=CONTEXT_SETTINGS, help=doc)
     @add_options(options)
     @click.pass_context
-    def cmd(ctx, url, key, secret, whitelist=None, get_method=method, **kwargs):
+    def cmd(ctx, url, key, secret, whitelist=None, get_method=method,
+            **kwargs):
         client = ctx.obj.start_client(url=url, key=key, secret=secret)
         kwargs["report_software_whitelist"] = load_whitelist(whitelist)
 

@@ -5,7 +5,9 @@ import logging
 
 from ..api.routers import API_VERSION
 from ..constants import LOG_LEVEL_AUTH
-from ..exceptions import AuthError, InvalidCredentials, NotLoggedIn
+from ..exceptions import AuthError
+from ..exceptions import InvalidCredentials
+from ..exceptions import NotLoggedIn
 from ..http import Http
 from ..logs import get_obj_log
 from ..tools import json_reload
@@ -130,16 +132,17 @@ class Mixins(Model):
         if response.status_code == 404:
             raise AuthError(
                 f"Unable to access endpoint {self._validate_path}, "
-                f"API client v{__version__} requires Axonius v3.9 or above"
-            )
+                f"API client v{__version__} requires Axonius v3.9 or above")
 
         body = json_reload(obj=response.text, error=False)
-        self.LOG.debug(f"Received auth path {self._validate_path!r} body:\n{body}")
+        self.LOG.debug(
+            f"Received auth path {self._validate_path!r} body:\n{body}")
 
         try:
             response.raise_for_status()
         except Exception as exc:
             self._logged_in = False
-            raise InvalidCredentials(f"Invalid credentials on {self} -- exception: {exc}")
+            raise InvalidCredentials(
+                f"Invalid credentials on {self} -- exception: {exc}")
 
         self._logged_in = True

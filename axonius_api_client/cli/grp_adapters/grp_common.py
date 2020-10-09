@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ...constants import CONFIG_TYPES
-
-# from ...api.parsers.tables import tablize_adapters
 from ...tools import json_dump
 from ..context import click
+# from ...api.parsers.tables import tablize_adapters
 
 CONFIG_EXPORT = click.option(
     "--export-format",

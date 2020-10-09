@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, add_options
-from .grp_common import EXPORT, handle_export
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from .grp_common import EXPORT
+from .grp_common import handle_export
 
 USER_NAME = click.option(
     "--name",
@@ -58,7 +61,9 @@ ROLE_NAME = click.option(
     show_envvar=True,
     show_default=True,
 )
-OPTIONS = [*AUTH, EXPORT, FIRST_NAME, LAST_NAME, EMAIL, USER_NAME, PASSWORD, ROLE_NAME]
+OPTIONS = [
+    *AUTH, EXPORT, FIRST_NAME, LAST_NAME, EMAIL, USER_NAME, PASSWORD, ROLE_NAME
+]
 
 
 @click.command(name="update", context_settings=CONTEXT_SETTINGS)

@@ -2,9 +2,12 @@
 """API model for working with system configuration."""
 import math
 
-from ..tools import dt_now, dt_parse, timedelta
+from ..tools import dt_now
+from ..tools import dt_parse
+from ..tools import timedelta
 from .mixins import ModelMixins
-from .routers import API_VERSION, Router
+from .routers import API_VERSION
+from .routers import Router
 
 
 class Dashboard(ModelMixins):
@@ -116,8 +119,12 @@ def parse_lifecycle(raw: dict) -> dict:
     parsed["next_in_minutes"] = next_minutes
 
     parsed["is_running"] = not raw["status"] == "done"
-    parsed["phases_done"] = [x["name"] for x in raw["sub_phases"] if x["status"] == 1]
-    parsed["phases_pending"] = [x["name"] for x in raw["sub_phases"] if x["status"] != 1]
+    parsed["phases_done"] = [
+        x["name"] for x in raw["sub_phases"] if x["status"] == 1
+    ]
+    parsed["phases_pending"] = [
+        x["name"] for x in raw["sub_phases"] if x["status"] != 1
+    ]
     parsed["phases"] = [parse_sub_phase(raw=x) for x in raw["sub_phases"]]
     return parsed
 

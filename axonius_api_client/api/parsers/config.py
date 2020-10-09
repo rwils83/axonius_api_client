@@ -2,26 +2,32 @@
 """API models for working with adapters and connections."""
 import copy
 import pathlib
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from ...constants import NO, SETTING_UNCHANGED, YES
-from ...exceptions import (
-    ApiError,
-    ConfigInvalidValue,
-    ConfigRequired,
-    ConfigUnchanged,
-    ConfigUnknown,
-)
-from ...tools import is_int, join_kv, json_load
+from ...constants import NO
+from ...constants import SETTING_UNCHANGED
+from ...constants import YES
+from ...exceptions import ApiError
+from ...exceptions import ConfigInvalidValue
+from ...exceptions import ConfigRequired
+from ...exceptions import ConfigUnchanged
+from ...exceptions import ConfigUnknown
+from ...tools import is_int
+from ...tools import join_kv
+from ...tools import json_load
 from .tables import tablize_schemas
 
 
 def config_check(
-    value: str,
-    schema: dict,
-    source: str,
-    callbacks: Optional[dict] = None,
-    none_ok: bool = True,
+        value: str,
+        schema: dict,
+        source: str,
+        callbacks: Optional[dict] = None,
+        none_ok: bool = True,
 ) -> Any:
     """Check a supplied value for a setting is correctly typed."""
     schema_type = schema["type"]
@@ -34,22 +40,40 @@ def config_check(
             raise ConfigInvalidValue(f"{sinfo}\nValue of None not allowed")
 
     if schema_type == "file":
-        return config_check_file(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_file(value=value,
+                                 schema=schema,
+                                 callbacks=callbacks,
+                                 source=source)
 
     if schema_type == "bool":
-        return config_check_bool(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_bool(value=value,
+                                 schema=schema,
+                                 callbacks=callbacks,
+                                 source=source)
 
     if schema_type == "number":
-        return config_check_int(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_int(value=value,
+                                schema=schema,
+                                callbacks=callbacks,
+                                source=source)
 
     if schema_type == "integer":
-        return config_check_int(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_int(value=value,
+                                schema=schema,
+                                callbacks=callbacks,
+                                source=source)
 
     if schema_type == "array":
-        return config_check_array(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_array(value=value,
+                                  schema=schema,
+                                  callbacks=callbacks,
+                                  source=source)
 
     if schema_type == "string":
-        return config_check_str(value=value, schema=schema, callbacks=callbacks, source=source)
+        return config_check_str(value=value,
+                                schema=schema,
+                                callbacks=callbacks,
+                                source=source)
 
     valids = ["string", "integer", "number", "bool", "array"]
     valids = ", ".join(valids)
@@ -57,10 +81,10 @@ def config_check(
 
 
 def config_check_file(
-    value: Union[str, dict, pathlib.Path],
-    schema: dict,
-    source: str,
-    callbacks: Optional[dict] = None,
+        value: Union[str, dict, pathlib.Path],
+        schema: dict,
+        source: str,
+        callbacks: Optional[dict] = None,
 ) -> dict:
     """Pass."""
     sname = schema["name"]
@@ -73,16 +97,20 @@ def config_check_file(
         return value
 
     if callable(cb_file):
-        return cb_file(value=value, schema=schema, callbacks=callbacks, source=source)
+        return cb_file(value=value,
+                       schema=schema,
+                       callbacks=callbacks,
+                       source=source)
 
-    raise ApiError(f"File uploads for {source} setting {sname!r} are not supported yet")
+    raise ApiError(
+        f"File uploads for {source} setting {sname!r} are not supported yet")
 
 
 def config_check_bool(
-    value: Union[str, bool, int],
-    schema: dict,
-    source: str,
-    callbacks: Optional[dict] = None,
+        value: Union[str, bool, int],
+        schema: dict,
+        source: str,
+        callbacks: Optional[dict] = None,
 ) -> bool:
     """Pass."""
     coerce = value.lower().strip() if isinstance(value, str) else value
@@ -106,9 +134,10 @@ def config_check_bool(
     raise ConfigInvalidValue("\n".join(msg))
 
 
-def config_check_int(
-    value: Union[str, int], schema: dict, source: str, callbacks: Optional[dict] = None
-) -> int:
+def config_check_int(value: Union[str, int],
+                     schema: dict,
+                     source: str,
+                     callbacks: Optional[dict] = None) -> int:
     """Pass."""
     if is_int(obj=value, digit=True):
         return int(value)
@@ -118,10 +147,10 @@ def config_check_int(
 
 
 def config_check_array(
-    value: Union[str, List[str]],
-    schema: dict,
-    source: str,
-    callbacks: Optional[dict] = None,
+        value: Union[str, List[str]],
+        schema: dict,
+        source: str,
+        callbacks: Optional[dict] = None,
 ) -> List[str]:
     """Pass."""
     if isinstance(value, str):
@@ -129,7 +158,8 @@ def config_check_array(
 
     is_list = isinstance(value, list)
 
-    if not is_list or (is_list and not all([isinstance(x, str) for x in value])):
+    if not is_list or (is_list and not all([isinstance(x, str)
+                                            for x in value])):
         sinfo = config_info(schema=schema, value=value, source=source)
         msg = f"{sinfo}\nIs not a list of strings or a comma seperated string!"
         raise ConfigInvalidValue(msg)
@@ -137,7 +167,8 @@ def config_check_array(
     return value
 
 
-def parse_unchanged(value: Union[str, List[str]]) -> Tuple[bool, Union[str, List[str]]]:
+def parse_unchanged(value: Union[str, List[str]]
+                    ) -> Tuple[bool, Union[str, List[str]]]:
     """Pass."""
     unchanges = [
         SETTING_UNCHANGED,
@@ -150,9 +181,10 @@ def parse_unchanged(value: Union[str, List[str]]) -> Tuple[bool, Union[str, List
     return False, value
 
 
-def config_check_str(
-    value: str, schema: dict, source: str, callbacks: Optional[dict] = None
-) -> str:
+def config_check_str(value: str,
+                     schema: dict,
+                     source: str,
+                     callbacks: Optional[dict] = None) -> str:
     """Pass."""
     schema_fmt = schema.get("format", "")
     schema_enum = schema.get("enum", [])
@@ -162,11 +194,13 @@ def config_check_str(
         if enum_is_str:
             if value not in schema_enum:
                 sinfo = config_info(schema=schema, value=value, source=source)
-                raise ConfigInvalidValue(f"{sinfo}\nIs not one of {schema_enum}!")
+                raise ConfigInvalidValue(
+                    f"{sinfo}\nIs not one of {schema_enum}!")
         else:  # pragma: no cover
             valids = [x["name"] for x in schema_enum]
             if value not in valids:
-                valids = "\n" + "\n".join(["  ".join(x) for x in join_kv(obj=schema_enum)])
+                valids = "\n" + "\n".join(
+                    ["  ".join(x) for x in join_kv(obj=schema_enum)])
                 sinfo = config_info(schema=schema, value=value, source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nIs not one of:{valids}!")
 
@@ -185,12 +219,12 @@ def config_check_str(
 
 
 def config_build(
-    schemas: List[dict],
-    old_config: dict,
-    new_config: dict,
-    source: str,
-    check: bool = True,
-    callbacks: Optional[dict] = None,
+        schemas: List[dict],
+        old_config: dict,
+        new_config: dict,
+        source: str,
+        check: bool = True,
+        callbacks: Optional[dict] = None,
 ) -> dict:
     """Pass."""
     for name, schema in schemas.items():
@@ -199,14 +233,18 @@ def config_build(
         elif name in new_config:
             value = new_config[name]
             if check:
-                value = config_check(value=value, schema=schema, source=source, callbacks=callbacks)
+                value = config_check(value=value,
+                                     schema=schema,
+                                     source=source,
+                                     callbacks=callbacks)
             new_config[name] = value
     return new_config
 
 
-def config_unknown(
-    schemas: List[dict], new_config: dict, source: str, callbacks: Optional[dict] = None
-) -> dict:
+def config_unknown(schemas: List[dict],
+                   new_config: dict,
+                   source: str,
+                   callbacks: Optional[dict] = None) -> dict:
     """Pass."""
     unknowns = {k: v for k, v in new_config.items() if k not in schemas}
     if unknowns:
@@ -218,25 +256,26 @@ def config_unknown(
 
 
 def config_unchanged(
-    schemas: List[dict],
-    old_config: dict,
-    new_config: dict,
-    source: str,
-    callbacks: Optional[dict] = None,
+        schemas: List[dict],
+        old_config: dict,
+        new_config: dict,
+        source: str,
+        callbacks: Optional[dict] = None,
 ) -> dict:
     """Pass."""
     if new_config == old_config or not new_config:
         err = f"No changes supplied for {source}"
-        raise ConfigUnchanged(tablize_schemas(schemas=schemas, config=old_config, err=err))
+        raise ConfigUnchanged(
+            tablize_schemas(schemas=schemas, config=old_config, err=err))
     return new_config
 
 
 def config_default(
-    schemas: List[dict],
-    new_config: dict,
-    source: str,
-    sane_defaults: Optional[dict] = None,
-    callbacks: Optional[dict] = None,
+        schemas: List[dict],
+        new_config: dict,
+        source: str,
+        sane_defaults: Optional[dict] = None,
+        callbacks: Optional[dict] = None,
 ) -> dict:
     """Pass."""
     sane_defaults = sane_defaults or {}
@@ -255,17 +294,18 @@ def config_default(
 
 
 def config_required(
-    schemas: List[dict],
-    new_config: dict,
-    source: str,
-    ignores: Optional[List[str]] = None,
-    callbacks: Optional[dict] = None,
+        schemas: List[dict],
+        new_config: dict,
+        source: str,
+        ignores: Optional[List[str]] = None,
+        callbacks: Optional[dict] = None,
 ) -> dict:
     """Pass."""
     missing = []
     ignores = ignores or []
     for name, schema in schemas.items():
-        if schema["required"] and name not in new_config and name not in ignores:
+        if schema[
+                "required"] and name not in new_config and name not in ignores:
             missing.append(schema)
 
     if missing:
@@ -274,9 +314,10 @@ def config_required(
     return new_config
 
 
-def config_empty(
-    schemas: List[dict], new_config: dict, source: str, callbacks: Optional[dict] = None
-) -> dict:
+def config_empty(schemas: List[dict],
+                 new_config: dict,
+                 source: str,
+                 callbacks: Optional[dict] = None) -> dict:
     """Pass."""
     if not new_config:
         err = f"No configuration supplied for {source}"
@@ -287,10 +328,8 @@ def config_empty(
 def config_info(schema: dict, value: Any, source: str) -> str:
     """Pass."""
     value_type = type(value).__name__
-    return (
-        f"Value {value!r} of type {value_type!r} "
-        f"supplied for {source} setting {schema['name']!r}"
-    )
+    return (f"Value {value!r} of type {value_type!r} "
+            f"supplied for {source} setting {schema['name']!r}")
 
 
 def is_uploaded_file(value: Union[str, dict]) -> Tuple[bool, Union[str, dict]]:
@@ -334,7 +373,8 @@ def parse_schema_enum(schema: dict):
         schema["enum"] = {x["name"]: x for x in schema["enum"]}
 
 
-def parse_section(raw: dict, raw_config: dict, parent: dict, settings: dict) -> dict:
+def parse_section(raw: dict, raw_config: dict, parent: dict,
+                  settings: dict) -> dict:
     """Pass."""
     # FYI has no title:
     #   settings_gui::saml_login_settings::configure_authncc
@@ -392,7 +432,8 @@ def parse_section(raw: dict, raw_config: dict, parent: dict, settings: dict) -> 
 
         # FYI has no title:
         #   settings_gui::saml_login_settings::configure_authncc
-        schema["title"] = schema.get("title", schema_name.replace("_", " ").title())
+        schema["title"] = schema.get("title",
+                                     schema_name.replace("_", " ").title())
 
     return parsed
 
@@ -414,8 +455,9 @@ def parse_settings(raw: dict, title: str = "") -> dict:
 
     for raw_section in raw_sections:
         section_name = raw_section["name"]
-        sections[section_name] = parse_section(
-            raw=raw_section, raw_config=raw_config, parent={}, settings=parsed
-        )
+        sections[section_name] = parse_section(raw=raw_section,
+                                               raw_config=raw_config,
+                                               parent={},
+                                               settings=parsed)
 
     return parsed

@@ -2,7 +2,8 @@
 """API models for working with adapters and connections."""
 from typing import List
 
-from ...constants import DISCOVERY_NAME, GENERIC_NAME
+from ...constants import DISCOVERY_NAME
+from ...constants import GENERIC_NAME
 from ...tools import strip_right
 from .config import parse_schema
 
@@ -72,15 +73,19 @@ def parse_adapter(name: str, raw: dict) -> dict:
 
     parsed["cnx"] = parse_cnx(raw=raw, parsed=parsed)
     parsed["cnx_count_total"] = len(parsed["cnx"])
-    parsed["cnx_count_broken"] = len([x for x in parsed["cnx"] if not x["working"]])
-    parsed["cnx_count_working"] = len([x for x in parsed["cnx"] if x["working"]])
+    parsed["cnx_count_broken"] = len(
+        [x for x in parsed["cnx"] if not x["working"]])
+    parsed["cnx_count_working"] = len(
+        [x for x in parsed["cnx"] if x["working"]])
 
     return parsed
 
 
 def get_specific_name(raw: dict) -> str:
     """Pass."""
-    found = [x for x in raw["config"] if x not in [GENERIC_NAME, DISCOVERY_NAME]]
+    found = [
+        x for x in raw["config"] if x not in [GENERIC_NAME, DISCOVERY_NAME]
+    ]
     return found[0] if found else ""
 
 
@@ -96,7 +101,8 @@ def parse_cnx(raw: dict, parsed: dict) -> List[dict]:
         cnx_parsed["node_name"] = parsed["node_name"]
         cnx_parsed["node_id"] = parsed["node_id"]
         cnx_parsed["status"] = cnx_raw["status"]
-        cnx_parsed["working"] = cnx_raw["status"] == "success" and not cnx_raw["error"]
+        cnx_parsed["working"] = cnx_raw[
+            "status"] == "success" and not cnx_raw["error"]
         cnx_parsed["id"] = cnx_raw["client_id"]
         cnx_parsed["uuid"] = cnx_raw["uuid"]
         cnx_parsed["date_fetched"] = cnx_raw["date_fetched"]

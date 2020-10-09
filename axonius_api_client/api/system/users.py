@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """API model for working with system configuration."""
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
-from ...exceptions import ApiError, NotFoundError
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
 from ..mixins import ChildMixins
 from ..parsers import parse_unchanged
 
@@ -11,19 +13,21 @@ class Users(ChildMixins):  # pragma: no cover
     """User Role controls."""
 
     def add(
-        self,
-        name: str,
-        role_name: str,
-        password: Optional[str] = None,
-        generate_password_link: bool = False,
-        email_password_link: bool = False,
-        first_name: Optional[str] = None,
-        last_name: Optional[str] = None,
-        email: Optional[str] = None,
+            self,
+            name: str,
+            role_name: str,
+            password: Optional[str] = None,
+            generate_password_link: bool = False,
+            email_password_link: bool = False,
+            first_name: Optional[str] = None,
+            last_name: Optional[str] = None,
+            email: Optional[str] = None,
     ) -> dict:
         """Pass."""
         if not any([password, generate_password_link, email_password_link]):
-            raise ApiError("Must supply password, generate_password_link, or email_password_link")
+            raise ApiError(
+                "Must supply password, generate_password_link, or email_password_link"
+            )
 
         if email_password_link and not email:
             raise ApiError("Must supply email if email_password_link is True")
@@ -49,18 +53,20 @@ class Users(ChildMixins):  # pragma: no cover
         user_obj = self.get_by_name(name=name)
 
         if generate_password_link or email_password_link:
-            password_reset_link = self._get_password_reset_link(uuid=user_obj["uuid"])
+            password_reset_link = self._get_password_reset_link(
+                uuid=user_obj["uuid"])
             if generate_password_link:
                 user_obj["password_reset_link"] = password_reset_link
 
         if email_password_link:
             try:
-                self._email_password_reset_link(uuid=user_obj["uuid"], email=email, new_user=True)
+                self._email_password_reset_link(uuid=user_obj["uuid"],
+                                                email=email,
+                                                new_user=True)
                 user_obj["email_password_link_error"] = None
             except Exception as exc:
-                user_obj["email_password_link_error"] = (
-                    getattr(getattr(exc, "response", None), "text", None) or exc
-                )
+                user_obj["email_password_link_error"] = (getattr(
+                    getattr(exc, "response", None), "text", None) or exc)
 
         return user_obj
 
@@ -84,18 +90,19 @@ class Users(ChildMixins):  # pragma: no cover
 
         if name not in valid:
             valid = "\n" + "\n".join(valid)
-            raise NotFoundError(f"User name {name!r} not found, valid users:{valid}")
+            raise NotFoundError(
+                f"User name {name!r} not found, valid users:{valid}")
 
         return [x for x in users if x["user_name"] == name][0]
 
     def update(
-        self,
-        name: str,
-        first_name: Optional[str] = None,
-        last_name: Optional[str] = None,
-        password: Optional[str] = None,
-        email: Optional[str] = None,
-        role_name: Optional[str] = None,
+            self,
+            name: str,
+            first_name: Optional[str] = None,
+            last_name: Optional[str] = None,
+            password: Optional[str] = None,
+            email: Optional[str] = None,
+            role_name: Optional[str] = None,
     ) -> dict:
         """Pass."""
         user = self.get_by_name(name=name)
@@ -103,7 +110,8 @@ class Users(ChildMixins):  # pragma: no cover
         one_of = [first_name, last_name, password, email, role_name]
 
         if all([x is None for x in one_of]):
-            req = ", ".join(["first_name", "last_name", "password", "email", "role_name"])
+            req = ", ".join(
+                ["first_name", "last_name", "password", "email", "role_name"])
             raise ApiError(f"Must supply at least one of: {req!r}")
 
         uuid = user["uuid"]
@@ -137,15 +145,16 @@ class Users(ChildMixins):  # pragma: no cover
     def get_password_reset_link(self, name: str) -> str:
         """Pass."""
         user = self.get_by_name(name=name)
-        user["password_reset_link"] = self._get_password_reset_link(uuid=user["uuid"])
+        user["password_reset_link"] = self._get_password_reset_link(
+            uuid=user["uuid"])
         return user
 
     def email_password_reset_link(
-        self,
-        name: str,
-        email: Optional[str] = None,
-        new_user: bool = False,
-        generate_first: bool = True,
+            self,
+            name: str,
+            email: Optional[str] = None,
+            new_user: bool = False,
+            generate_first: bool = True,
     ) -> str:
         """Pass."""
         user = self.get_by_name(name=name)
@@ -153,15 +162,20 @@ class Users(ChildMixins):  # pragma: no cover
         email = email or user_email
 
         if not email:
-            raise ApiError("User has no email address defined, must supply email")
+            raise ApiError(
+                "User has no email address defined, must supply email")
 
         if generate_first:
-            user["password_reset_link"] = self._get_password_reset_link(uuid=user["uuid"])
+            user["password_reset_link"] = self._get_password_reset_link(
+                uuid=user["uuid"])
 
-        self._email_password_reset_link(uuid=user["uuid"], email=email, new_user=False)
+        self._email_password_reset_link(uuid=user["uuid"],
+                                        email=email,
+                                        new_user=False)
         return email
 
-    def _get(self, limit: Optional[int] = None, skip: Optional[int] = None) -> List[dict]:
+    def _get(self, limit: Optional[int] = None,
+             skip: Optional[int] = None) -> List[dict]:
         """Pass."""
         data = {}
 
@@ -187,15 +201,24 @@ class Users(ChildMixins):  # pragma: no cover
     def _update(self, uuid: str, user: dict) -> str:
         """Pass."""
         path = self.router.user.format(uuid=uuid)
-        return self.request(method="post", path=path, json=user, error_json_invalid=False)
+        return self.request(method="post",
+                            path=path,
+                            json=user,
+                            error_json_invalid=False)
 
     def _get_password_reset_link(self, uuid: str) -> str:
         """Pass."""
         path = f"{self.router._base}/tokens/reset"
         data = {"user_id": uuid}
-        return self.request(method="put", path=path, json=data, error_json_invalid=False)
+        return self.request(method="put",
+                            path=path,
+                            json=data,
+                            error_json_invalid=False)
 
-    def _email_password_reset_link(self, uuid: str, email: str, new_user: bool = False) -> str:
+    def _email_password_reset_link(self,
+                                   uuid: str,
+                                   email: str,
+                                   new_user: bool = False) -> str:
         """Pass."""
         path = f"{self.router._base}/tokens/notify"
         data = {"user_id": uuid, "email": email, "invite": new_user}

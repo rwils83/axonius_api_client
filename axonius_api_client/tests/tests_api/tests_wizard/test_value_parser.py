@@ -36,7 +36,8 @@ class TestValueParser:
             assert hasattr(value_parser, f"value_{parser}")
 
         for item in dir(value_parser):
-            if item.startswith("value_") and callable(getattr(value_parser, item)):
+            if item.startswith("value_") and callable(
+                    getattr(value_parser, item)):
                 assert item[6:] in parsers
 
     def test_api_items(self, value_parser):
@@ -70,7 +71,8 @@ class TestToCsvAdapters(TestValueParser, Common):
         return Parsers.to_csv_adapters.name
 
     def test_valid(self, value_parser, parser):
-        ret = value_parser(value="  active_directory   ,   aws  ,,", parser=parser)
+        ret = value_parser(value="  active_directory   ,   aws  ,,",
+                           parser=parser)
         assert ret == (
             '"active_directory_adapter", "aws_adapter"',
             "active_directory_adapter,aws_adapter",
@@ -121,7 +123,9 @@ class TestToCsvCnxLabel(TestValueParser, Common):
             value_parser(value="label1, label3, label2,", parser=parser)
 
     def test_no_items(self, value_parser, monkeypatch, parser):
-        patch_cnx_labels(values=[], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_cnx_labels(values=[],
+                         value_parser=value_parser,
+                         monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="label1, label3, label2,", parser=parser)
 
@@ -158,14 +162,16 @@ class TestToCsvIp(TestValueParser, Common):
         return Parsers.to_csv_ip.name
 
     def test_valid(self, value_parser, parser):
-        ret = value_parser(value="192.168.1.28, 10.0.0.43, 10.4.2.1,", parser=parser)
+        ret = value_parser(value="192.168.1.28, 10.0.0.43, 10.4.2.1,",
+                           parser=parser)
         assert ret == (
             '"192.168.1.28", "10.0.0.43", "10.4.2.1"',
             "192.168.1.28,10.0.0.43,10.4.2.1",
         )
 
     def test_valid_list(self, value_parser, parser):
-        ret = value_parser(value=["192.168.1.28", "10.0.0.43", "10.4.2.1"], parser=parser)
+        ret = value_parser(value=["192.168.1.28", "10.0.0.43", "10.4.2.1"],
+                           parser=parser)
         assert ret == (
             '"192.168.1.28", "10.0.0.43", "10.4.2.1"',
             "192.168.1.28,10.0.0.43,10.4.2.1",
@@ -201,11 +207,14 @@ class TestToCsvSubnet(TestValueParser, Common):
 
     def test_valid(self, value_parser, parser):
         ret = value_parser(value="10.0.0.0/24, 192.168.1.0/24", parser=parser)
-        assert ret == ('"10.0.0.0/24", "192.168.1.0/24"', "10.0.0.0/24,192.168.1.0/24")
+        assert ret == ('"10.0.0.0/24", "192.168.1.0/24"',
+                       "10.0.0.0/24,192.168.1.0/24")
 
     def test_valid_list(self, value_parser, parser):
-        ret = value_parser(value=["10.0.0.0/24", "192.168.1.0/24"], parser=parser)
-        assert ret == ('"10.0.0.0/24", "192.168.1.0/24"', "10.0.0.0/24,192.168.1.0/24")
+        ret = value_parser(value=["10.0.0.0/24", "192.168.1.0/24"],
+                           parser=parser)
+        assert ret == ('"10.0.0.0/24", "192.168.1.0/24"',
+                       "10.0.0.0/24,192.168.1.0/24")
 
     def test_invalid1(self, value_parser, parser):
         with pytest.raises(WizardError):
@@ -222,22 +231,30 @@ class TestToCsvTags(TestValueParser, Common):
         return Parsers.to_csv_tags.name
 
     def test_valid(self, value_parser, monkeypatch, parser):
-        patch_tags(values=["tag1", "tag2"], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=["tag1", "tag2"],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         ret = value_parser(value="tag1, tag2,", parser=parser)
         assert ret == ('"tag1", "tag2"', "tag1,tag2")
 
     def test_valid_list(self, value_parser, monkeypatch, parser):
-        patch_tags(values=["tag1", "tag2"], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=["tag1", "tag2"],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         ret = value_parser(value=["tag1", "tag2"], parser=parser)
         assert ret == ('"tag1", "tag2"', "tag1,tag2")
 
     def test_invalid(self, value_parser, monkeypatch, parser):
-        patch_tags(values=["tag1", "tag2"], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=["tag1", "tag2"],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="tag1, tag3, tag2,", parser=parser)
 
     def test_no_items(self, value_parser, monkeypatch, parser):
-        patch_tags(values=[], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=[],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="tag1, tag3, tag2,", parser=parser)
 
@@ -382,7 +399,9 @@ class TestToStrCnxLabel(TestValueParser, Common):
             value_parser(value="label3", parser=parser)
 
     def test_no_items(self, value_parser, monkeypatch, parser):
-        patch_cnx_labels(values=[], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_cnx_labels(values=[],
+                         value_parser=value_parser,
+                         monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="label1", parser=parser)
 
@@ -407,17 +426,23 @@ class TestToStrTags(TestValueParser, Common):
         return Parsers.to_str_tags.name
 
     def test_valid(self, value_parser, monkeypatch, parser):
-        patch_tags(values=["tag1", "tag2"], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=["tag1", "tag2"],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         ret = value_parser(value="tag1", parser=parser)
         assert ret == ("tag1", "tag1")
 
     def test_invalid(self, value_parser, monkeypatch, parser):
-        patch_tags(values=["tag1", "tag2"], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=["tag1", "tag2"],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="tag3", parser=parser)
 
     def test_no_items(self, value_parser, monkeypatch, parser):
-        patch_tags(values=[], value_parser=value_parser, monkeypatch=monkeypatch)
+        patch_tags(values=[],
+                   value_parser=value_parser,
+                   monkeypatch=monkeypatch)
         with pytest.raises(WizardError):
             value_parser(value="tag1", parser=parser)
 

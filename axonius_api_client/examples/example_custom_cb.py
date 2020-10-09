@@ -2,7 +2,8 @@
 """Utilities for this package."""
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
 import axonius_api_client as axonapi
 from axonius_api_client.constants import ALL_NAME
@@ -11,10 +12,8 @@ PAGE_SIZE = 10
 MAX_PAGE_TOOK_SECS = 10
 MAX_ROW_KB = 1000
 MAX_KEY_KB = 2000
-ROW_TMPL = (
-    "#{row_num} {axid} KB: {row_kb:0.2f}, KB TOTAL: "
-    "{rows_size:0.2f}, page took: {page_took:0.2f}"
-)
+ROW_TMPL = ("#{row_num} {axid} KB: {row_kb:0.2f}, KB TOTAL: "
+            "{rows_size:0.2f}, page took: {page_took:0.2f}")
 KEY_TMPL = "               KEY over {MAX_KEY_KB}: {k}, KB: {vkb:0.2f}"
 
 
@@ -95,7 +94,8 @@ if __name__ == "__main__":
 
     now = datetime.utcnow()
     this_time = now.isoformat(sep=" ", timespec="seconds")
-    last_time = (now - timedelta(days=1)).isoformat(sep=" ", timespec="seconds")
+    last_time = (now - timedelta(days=1)).isoformat(sep=" ",
+                                                    timespec="seconds")
     filters = [
         f'(specific_data.data.fetch_time < date("{this_time}"))',
         f'(specific_data.data.fetch_time >= date("{last_time}"))',
@@ -103,10 +103,13 @@ if __name__ == "__main__":
     query = " and ".join(filters)
 
     agg_fields = devices.fields.get().get("agg")
-    get_fields = [field.get("name_qual") for field in agg_fields if _field_wanted(field)]
-    get_fields.extend(
-        ["specific_data", "specific_data.data.network_interfaces.ips", "agent_versions"]
-    )
+    get_fields = [
+        field.get("name_qual") for field in agg_fields if _field_wanted(field)
+    ]
+    get_fields.extend([
+        "specific_data", "specific_data.data.network_interfaces.ips",
+        "agent_versions"
+    ])
 
     start_all = datetime.now()
     # count = devices.count(query=query)

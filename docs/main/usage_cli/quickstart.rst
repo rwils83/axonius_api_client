@@ -69,4 +69,3 @@ Also include the columns for AWS device type and OS Type:
 .. seealso::
 
    :ref:`cli_commands` for the list of all commands across all command groups.
-

@@ -2,26 +2,22 @@
 """Command line interface for Axonius API Client."""
 import click
 
+from . import cmd_count
+from . import cmd_count_by_saved_query
+from . import cmd_destroy
+from . import cmd_get
+from . import cmd_get_by_id
+from . import cmd_get_by_saved_query
+from . import cmd_get_fields
+from . import cmd_get_fields_default
+from . import cmd_get_tags
+from . import grp_saved_query
 from ..context import AliasedGroup
-from . import (
-    cmd_count,
-    cmd_count_by_saved_query,
-    cmd_destroy,
-    cmd_get,
-    cmd_get_by_id,
-    cmd_get_by_saved_query,
-    cmd_get_fields,
-    cmd_get_fields_default,
-    cmd_get_tags,
-    grp_saved_query,
-)
-from .grp_common import (
-    GET_BY_VALUE_BUILDERS,
-    GET_BY_VALUE_FIELD,
-    GET_BY_VALUE_REGEX_BUILDERS,
-    GET_BY_VALUES_BUILDERS,
-    gen_get_by_cmd,
-)
+from .grp_common import gen_get_by_cmd
+from .grp_common import GET_BY_VALUE_BUILDERS
+from .grp_common import GET_BY_VALUE_FIELD
+from .grp_common import GET_BY_VALUE_REGEX_BUILDERS
+from .grp_common import GET_BY_VALUES_BUILDERS
 
 
 @click.group(cls=AliasedGroup)

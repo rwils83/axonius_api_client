@@ -9,7 +9,8 @@ from click.testing import CliRunner
 from ....cli import cli
 from ....cli.grp_tools import cmd_shell
 from ....tools import pathlib
-from ...utils import MockError, load_clirunner
+from ...utils import load_clirunner
+from ...utils import MockError
 
 
 class TestCmdShell:
@@ -116,9 +117,8 @@ class TestCliRegisterReadline:
 
         captured = capsys.readouterr()
 
-        assert (
-            captured.err.splitlines()[0] == "** ERROR: Unable to register history and autocomplete:"
-        )
+        assert (captured.err.splitlines()[0] ==
+                "** ERROR: Unable to register history and autocomplete:")
 
 
 class TestCliJdump:

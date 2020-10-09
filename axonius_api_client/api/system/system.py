@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 """API model for working with system configuration."""
 from ..mixins import ModelMixins
-from ..routers import API_VERSION, Router
+from ..routers import API_VERSION
+from ..routers import Router
 from .central_core import CentralCore
 from .meta import Meta
 from .roles import Roles
-from .settings import SettingsCore, SettingsGui, SettingsLifecycle
+from .settings import SettingsCore
+from .settings import SettingsGui
+from .settings import SettingsLifecycle
 from .users import Users
 
 

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 """Wizard for text files."""
 import pathlib
-from typing import List, Union
+from typing import List
+from typing import Union
 
 from ...exceptions import WizardError
-from ...tools import check_type, path_read
-from .constants import Docs, Entry, Sources, Types
+from ...tools import check_type
+from ...tools import path_read
+from .constants import Docs
+from .constants import Entry
+from .constants import Sources
+from .constants import Types
 from .wizard import Wizard
 
 
@@ -49,7 +54,8 @@ class WizardText(Wizard):
 
     DOCS: str = Docs.TEXT
 
-    def parse(self, content: str, source: str = Sources.TEXT_STR) -> List[dict]:
+    def parse(self, content: str,
+              source: str = Sources.TEXT_STR) -> List[dict]:
         """Parse a CSV string into a query and GUI expressions.
 
         Args:
@@ -59,9 +65,9 @@ class WizardText(Wizard):
         entries = self._lines_to_entries(content=content, source=source)
         return super().parse(entries=entries, source=source)
 
-    def parse_path(
-        self, path: Union[str, pathlib.Path], source: str = Sources.TEXT_PATH
-    ) -> List[dict]:
+    def parse_path(self,
+                   path: Union[str, pathlib.Path],
+                   source: str = Sources.TEXT_PATH) -> List[dict]:
         """Parse a text file into a query and GUI expressions.
 
         Args:

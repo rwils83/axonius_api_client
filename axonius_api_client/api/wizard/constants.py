@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Constants for wizards."""
 import re
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
 
 class Sources:
@@ -67,24 +69,19 @@ class Patterns:
     FIELD_VALID: str = re.compile(
         r"""(?ix)            # case insensitive and verbose
 ([^a-z0-9:._\-]) # contains characters that are not one of: a-z 0-9 : . _ -
-""",
-    )
+""", )
     FIELD_FIRST_ALPHA: str = re.compile(
         r"""(?ix)        # case insensitive and verbose
 (^[^a-zA-Z]) # starts with characters that are not one of: a-z
-"""
-    )
-    OP_ALPHA: str = re.compile(
-        r"""(?ix)        # case insensitive and verbose
+""")
+    OP_ALPHA: str = re.compile(r"""(?ix)        # case insensitive and verbose
 ([^a-z_\-])  # contains characters that are not one of: a-z _ -
-"""
-    )
+""")
     FLAGS: str = re.compile(
         r"""(?ix)                   # case insensitive and verbose
 (?P<flags>[^a-z0-9]*)?  # capture optional flags at beginning
 (?P<value>.*)           # capture the rest as the value
-"""
-    )
+""")
 
     FIELD: List[str] = [FIELD_VALID, FIELD_FIRST_ALPHA]
     OP: List[str] = [OP_ALPHA]
@@ -107,7 +104,8 @@ class Flags:
     }
     LFMT: str = "[" + " ".join(list(FLAGS)) + "]"
     RFMT: str = f"[{RIGHTB}]"
-    FMT_TEXT: str = "\n# " + "\n# ".join([f"{k}  {v}" for k, v in FLAGS.items()])
+    FMT_TEXT: str = "\n# " + "\n# ".join(
+        [f"{k}  {v}" for k, v in FLAGS.items()])
     FMT_CSV: str = ", ".join([f"{k} {v}" for k, v in FLAGS.items()])
 
 
@@ -176,17 +174,17 @@ class Docs:
     OPVAL: str = "FIELD OPERATOR VALUE"
 
     FMT_SIMPLE: str = f"{Flags.LFMT} {OPVAL} {Flags.RFMT}"
-    FMT_COMPLEX: str = f"{Flags.LFMT} COMPLEX-FIELD{Entry.CSPLIT}SUB-{OPVAL}{SUB_OPT} {Flags.RFMT}"
+    FMT_COMPLEX: str = (
+        f"{Flags.LFMT} COMPLEX-FIELD{Entry.CSPLIT}SUB-{OPVAL}{SUB_OPT} {Flags.RFMT}"
+    )
     DESC_SIMPLE: str = "Filter entry for simple fields"
     DESC_COMPLEX: str = "Filter entry for complex fields and their sub-fields"
     EX_SIMPLE1: str = f"{Flags.LEFTB} hostname contains test"
     EX_SIMPLE2: str = f"{Flags.NOT} hostname contains internal {Flags.RIGHTB}"
     EX_SIMPLE3: str = f"{Flags.LEFTB} os.type equals windows"
     EX_SIMPLE4: str = f"{Flags.OR} os.type equals os x {Flags.RIGHTB}"
-    EX_COMPLEX1: str = (
-        f"installed_software{Entry.CSPLIT}name contains chrome"
-        f"{Entry.CSPLIT}version earlier_than 82"
-    )
+    EX_COMPLEX1: str = (f"installed_software{Entry.CSPLIT}name contains chrome"
+                        f"{Entry.CSPLIT}version earlier_than 82")
 
     EX_TEXT: str = f"""{Types.SIMPLE:<8} {EX_SIMPLE1}
 {Types.SIMPLE:<8} {EX_SIMPLE2}
@@ -309,15 +307,15 @@ class Expr:
 
     @classmethod
     def build(
-        cls,
-        entry: dict,
-        query: str,
-        field: dict,
-        idx: int,
-        op_comp: str,
-        value: Optional[Union[int, str, bool]] = None,
-        is_complex: bool = False,
-        children: Optional[List[dict]] = None,
+            cls,
+            entry: dict,
+            query: str,
+            field: dict,
+            idx: int,
+            op_comp: str,
+            value: Optional[Union[int, str, bool]] = None,
+            is_complex: bool = False,
+            children: Optional[List[dict]] = None,
     ) -> dict:
         """Build an expression for the GUI to understand the query.
 
@@ -379,12 +377,12 @@ class Expr:
 
     @classmethod
     def build_child(
-        cls,
-        query: str = "",
-        op_comp: str = "",
-        field: str = "",
-        value: Optional[Union[int, str, bool]] = None,
-        idx: int = 0,
+            cls,
+            query: str = "",
+            op_comp: str = "",
+            field: str = "",
+            value: Optional[Union[int, str, bool]] = None,
+            idx: int = 0,
     ) -> dict:
         """Build a child expression to be used in an expression.
 

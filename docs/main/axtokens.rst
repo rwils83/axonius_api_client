@@ -13,4 +13,3 @@ the :green:`API Key` and :green:`API Secret` fields under the :blue:`API Key` ta
 
 .. image:: /_static/apikeysecret.png
    :scale: 60
-

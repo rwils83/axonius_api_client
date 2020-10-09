@@ -5,11 +5,12 @@ import json
 
 import pytest
 
-from axonius_api_client.api.assets.saved_query import check_gui_page_size
-from axonius_api_client.constants import GUI_PAGE_SIZES, SIMPLE
-from axonius_api_client.exceptions import ApiError, NotFoundError
-
 from ...meta import QUERIES
+from axonius_api_client.api.assets.saved_query import check_gui_page_size
+from axonius_api_client.constants import GUI_PAGE_SIZES
+from axonius_api_client.constants import SIMPLE
+from axonius_api_client.exceptions import ApiError
+from axonius_api_client.exceptions import NotFoundError
 
 
 def test_check_gui_page_size_error():
@@ -182,14 +183,18 @@ class SavedQueryPublic:
         fields = "last_seen"
         sort_field = "badwolf"
         with pytest.raises(ApiError):
-            apiobj.saved_query.add(name=name, fields=fields, sort_field=sort_field)
+            apiobj.saved_query.add(name=name,
+                                   fields=fields,
+                                   sort_field=sort_field)
 
     def test_add_error_bad_colfilter(self, apiobj):
         name = "badwolf_ttttttttttt"
         fields = "last_seen"
         colfilters = {"badwolf": "badwolf"}
         with pytest.raises(ApiError):
-            apiobj.saved_query.add(name=name, fields=fields, column_filters=colfilters)
+            apiobj.saved_query.add(name=name,
+                                   fields=fields,
+                                   column_filters=colfilters)
 
 
 class TestSavedQueryDevices(SavedQueryPrivate, SavedQueryPublic):

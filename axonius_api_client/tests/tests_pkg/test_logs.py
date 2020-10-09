@@ -6,29 +6,25 @@ import time
 
 import pytest
 
-from axonius_api_client.constants import (
-    LOG_LEVEL_CONSOLE,
-    LOG_LEVEL_FILE,
-    LOG_NAME_FILE,
-    LOG_NAME_STDERR,
-    LOG_NAME_STDOUT,
-)
+from axonius_api_client.constants import LOG_LEVEL_CONSOLE
+from axonius_api_client.constants import LOG_LEVEL_FILE
+from axonius_api_client.constants import LOG_NAME_FILE
+from axonius_api_client.constants import LOG_NAME_STDERR
+from axonius_api_client.constants import LOG_NAME_STDOUT
 from axonius_api_client.exceptions import ToolsError
-from axonius_api_client.logs import (
-    LOG,
-    add_file,
-    add_null,
-    add_stderr,
-    add_stdout,
-    del_file,
-    del_null,
-    del_stderr,
-    del_stdout,
-    get_obj_log,
-    gmtime,
-    localtime,
-    str_level,
-)
+from axonius_api_client.logs import add_file
+from axonius_api_client.logs import add_null
+from axonius_api_client.logs import add_stderr
+from axonius_api_client.logs import add_stdout
+from axonius_api_client.logs import del_file
+from axonius_api_client.logs import del_null
+from axonius_api_client.logs import del_stderr
+from axonius_api_client.logs import del_stdout
+from axonius_api_client.logs import get_obj_log
+from axonius_api_client.logs import gmtime
+from axonius_api_client.logs import localtime
+from axonius_api_client.logs import LOG
+from axonius_api_client.logs import str_level
 
 
 class TestLogs:

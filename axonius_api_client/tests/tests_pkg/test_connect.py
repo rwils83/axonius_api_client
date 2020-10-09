@@ -4,11 +4,13 @@ import logging
 
 import pytest
 
+from ..utils import get_key_creds
+from ..utils import get_url
+from ..utils import IS_LINUX
 from axonius_api_client.connect import Connect
-from axonius_api_client.exceptions import ConnectError, InvalidCredentials
+from axonius_api_client.exceptions import ConnectError
+from axonius_api_client.exceptions import InvalidCredentials
 from axonius_api_client.http import requests
-
-from ..utils import IS_LINUX, get_key_creds, get_url
 
 BAD_CRED = "tardis"
 
@@ -27,7 +29,11 @@ class TestConnect:
     def test_no_start_logs(self, request):
         ax_url = get_url(request)
 
-        c = Connect(url=ax_url, key=BAD_CRED, secret=BAD_CRED, log_console=True, log_file=True)
+        c = Connect(url=ax_url,
+                    key=BAD_CRED,
+                    secret=BAD_CRED,
+                    log_console=True,
+                    log_file=True)
 
         assert "Not connected" in format(c)
         assert "Not connected" in repr(c)
@@ -70,7 +76,10 @@ class TestConnect:
         assert isinstance(exc.value.exc, InvalidCredentials)
 
     def test_connect_timeout(self):
-        c = Connect(url="127.0.0.99", key=BAD_CRED, secret=BAD_CRED, certwarn=False)
+        c = Connect(url="127.0.0.99",
+                    key=BAD_CRED,
+                    secret=BAD_CRED,
+                    certwarn=False)
 
         c.HTTP.CONNECT_TIMEOUT = 1
 
@@ -83,7 +92,10 @@ class TestConnect:
             assert isinstance(exc.value.exc, requests.ConnectTimeout)
 
     def test_connect_error(self):
-        c = Connect(url="https://127.0.0.1:3919", key=BAD_CRED, secret=BAD_CRED, certwarn=False)
+        c = Connect(url="https://127.0.0.1:3919",
+                    key=BAD_CRED,
+                    secret=BAD_CRED,
+                    certwarn=False)
 
         c.HTTP.CONNECT_TIMEOUT = 1
 
@@ -94,7 +106,11 @@ class TestConnect:
     def test_invalid_creds_nowrap(self, request):
         ax_url = get_url(request)
 
-        c = Connect(url=ax_url, key=BAD_CRED, secret=BAD_CRED, certwarn=False, wraperror=False)
+        c = Connect(url=ax_url,
+                    key=BAD_CRED,
+                    secret=BAD_CRED,
+                    certwarn=False,
+                    wraperror=False)
 
         c.HTTP.CONNECT_TIMEOUT = 1
 
@@ -102,7 +118,10 @@ class TestConnect:
             c.start()
 
     def test_other_exc(self, request):
-        c = Connect(url="127.0.0.1", key=BAD_CRED, secret=BAD_CRED, certwarn=False)
+        c = Connect(url="127.0.0.1",
+                    key=BAD_CRED,
+                    secret=BAD_CRED,
+                    certwarn=False)
 
         c.HTTP.CONNECT_TIMEOUT = 1
         c.AUTH._creds = None

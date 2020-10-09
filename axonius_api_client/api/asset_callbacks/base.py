@@ -4,20 +4,26 @@ import copy
 import logging
 import re
 import sys
-from typing import Generator, List, Optional, Tuple, Union
+from typing import Generator
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from ...constants import DEFAULT_PATH, FIELD_JOINER, FIELD_TRIM_LEN, FIELD_TRIM_STR, SCHEMAS_CUSTOM
+from ...constants import DEFAULT_PATH
+from ...constants import FIELD_JOINER
+from ...constants import FIELD_TRIM_LEN
+from ...constants import FIELD_TRIM_STR
+from ...constants import SCHEMAS_CUSTOM
 from ...exceptions import ApiError
-from ...tools import (
-    calc_percent,
-    coerce_int,
-    echo_error,
-    echo_ok,
-    echo_warn,
-    get_path,
-    join_kv,
-    listify,
-)
+from ...tools import calc_percent
+from ...tools import coerce_int
+from ...tools import echo_error
+from ...tools import echo_ok
+from ...tools import echo_warn
+from ...tools import get_path
+from ...tools import join_kv
+from ...tools import listify
 from ..parsers import schema_custom
 
 
@@ -35,11 +41,11 @@ class Base:
     """field schema keys to use when finding a fields schema"""
 
     def __init__(
-        self,
-        apiobj,
-        store: dict,
-        state: Optional[dict] = None,
-        getargs: dict = None,
+            self,
+            apiobj,
+            store: dict,
+            state: Optional[dict] = None,
+            getargs: dict = None,
     ):
         """Callbacks base class for assets.
 
@@ -106,7 +112,8 @@ class Base:
             return
 
         join = "\n   - "
-        schemas_pretty = self.APIOBJ.fields._prettify_schemas(schemas=self.schemas_selected)
+        schemas_pretty = self.APIOBJ.fields._prettify_schemas(
+            schemas=self.schemas_selected)
         schemas_pretty = join + join.join(schemas_pretty)
         self.echo(msg=f"Selected Columns: {schemas_pretty}")
 
@@ -215,7 +222,11 @@ class Base:
                 rows = listify(rows)
             except Exception as exc:
                 msg = f"Custom callback {custom_cb} failed: {exc}"
-                self.CUSTOM_CB_EXC.append({"cb": custom_cb, "exc": exc, "msg": msg})
+                self.CUSTOM_CB_EXC.append({
+                    "cb": custom_cb,
+                    "exc": exc,
+                    "msg": msg
+                })
                 self.echo(msg=msg, error="exception", abort=False)
         return rows
 
@@ -234,7 +245,10 @@ class Base:
                 self._do_add_null_values(row=row, schema=schema)
         return rows
 
-    def _do_add_null_values(self, row: dict, schema: dict, key: str = "name_qual"):
+    def _do_add_null_values(self,
+                            row: dict,
+                            schema: dict,
+                            key: str = "name_qual"):
         """Null out missing fields.
 
         Args:
@@ -255,7 +269,9 @@ class Base:
 
             for item in row[field]:
                 for sub_schema in self.get_sub_schemas(schema=schema):
-                    self._do_add_null_values(schema=sub_schema, row=item, key="name")
+                    self._do_add_null_values(schema=sub_schema,
+                                             row=item,
+                                             key="name")
         else:
             row[field] = row.get(field, null_value)
 
@@ -312,19 +328,22 @@ class Base:
             row: row being processed
         """
         joiner = str(self.GETARGS.get("field_join_value", FIELD_JOINER))
-        trim_len = coerce_int(self.GETARGS.get("field_join_trim", FIELD_TRIM_LEN))
+        trim_len = coerce_int(
+            self.GETARGS.get("field_join_trim", FIELD_TRIM_LEN))
         trim_str = FIELD_TRIM_STR
 
         for field in row:
             if isinstance(row[field], list):
                 row[field] = joiner.join([str(x) for x in row[field]])
 
-            if trim_len and isinstance(row[field], str) and len(row[field]) >= trim_len:
+            if trim_len and isinstance(row[field],
+                                       str) and len(row[field]) >= trim_len:
                 field_len = len(row[field])
                 msg = trim_str.format(field_len=field_len, trim_len=trim_len)
                 row[field] = joiner.join([row[field][:trim_len], msg])
 
-    def do_change_field_titles(self, rows: Union[List[dict], dict]) -> List[dict]:
+    def do_change_field_titles(self,
+                               rows: Union[List[dict], dict]) -> List[dict]:
         """Asset callback to change qual name to title.
 
         Args:
@@ -460,7 +479,9 @@ class Base:
         tags_remove = listify(self.GETARGS.get("tags_remove", []))
         rows_remove = self.TAG_ROWS_REMOVE
         if tags_remove and rows_remove:
-            self.echo(msg=f"Removing tags {tags_remove} from {len(rows_remove)} assets")
+            self.echo(
+                msg=
+                f"Removing tags {tags_remove} from {len(rows_remove)} assets")
             self.APIOBJ.labels.remove(rows=rows_remove, labels=tags_remove)
 
     def process_tags_to_add(self, rows: Union[List[dict], dict]) -> List[dict]:
@@ -481,7 +502,8 @@ class Base:
                 self.TAG_ROWS_ADD.append(tag_row)
         return rows
 
-    def process_tags_to_remove(self, rows: Union[List[dict], dict]) -> List[dict]:
+    def process_tags_to_remove(self,
+                               rows: Union[List[dict], dict]) -> List[dict]:
         """Add assets to tracker for removing tags.
 
         Args:
@@ -500,7 +522,8 @@ class Base:
 
         return rows
 
-    def add_report_software_whitelist(self, rows: Union[List[dict], dict]) -> List[dict]:
+    def add_report_software_whitelist(self, rows: Union[List[dict], dict]
+                                      ) -> List[dict]:
         """Process report: Software whitelist.
 
         Args:
@@ -528,18 +551,29 @@ class Base:
             self.echo(msg=msg, error=ApiError, level="error")
 
         sws = listify(row.get(sw_field, []))
-        names = [x.get("name") for x in sws if x.get("name") and isinstance(x.get("name"), str)]
+        names = [
+            x.get("name") for x in sws
+            if x.get("name") and isinstance(x.get("name"), str)
+        ]
 
         whitelists = listify(self.GETARGS.get("report_software_whitelist", []))
-        extras = [n for n in names if any([re.search(x, n, re.I)] for x in whitelists)]
-        missing = [x for x in whitelists if any([re.search(x, n, re.I) for n in names])]
+        extras = [
+            n for n in names
+            if any([re.search(x, n, re.I)] for x in whitelists)
+        ]
+        missing = [
+            x for x in whitelists
+            if any([re.search(x, n, re.I) for n in names])
+        ]
 
         schemas = SCHEMAS_CUSTOM["report_software_whitelist"]
-        row[schemas["software_missing"]["name_qual"]] = sorted(list(set(missing)))
+        row[schemas["software_missing"]["name_qual"]] = sorted(
+            list(set(missing)))
         row[schemas["software_whitelist"]["name_qual"]] = whitelists
         row[schemas["software_extra"]["name_qual"]] = sorted(list(set(extras)))
 
-    def add_report_adapters_missing(self, rows: Union[List[dict], dict]) -> List[dict]:
+    def add_report_adapters_missing(self, rows: Union[List[dict], dict]
+                                    ) -> List[dict]:
         """Process report: Missing adapters.
 
         Args:
@@ -656,14 +690,14 @@ class Base:
             self._fd.close()
 
     def echo(
-        self,
-        msg: str,
-        error: bool = False,
-        warning: bool = False,
-        level: str = "info",
-        level_error: str = "error",
-        level_warning: str = "warning",
-        abort: bool = True,
+            self,
+            msg: str,
+            error: bool = False,
+            warning: bool = False,
+            level: str = "info",
+            level_error: str = "error",
+            level_warning: str = "warning",
+            abort: bool = True,
     ):
         """Echo a message to console or log it.
 
@@ -704,7 +738,8 @@ class Base:
         """
         sub_schemas = listify(schema.get("sub_fields"))
         for sub_schema in sub_schemas:
-            if self.is_excluded(schema=sub_schema) or not sub_schema["is_root"]:
+            if self.is_excluded(
+                    schema=sub_schema) or not sub_schema["is_root"]:
                 continue
             yield sub_schema
 
@@ -715,7 +750,8 @@ class Base:
         if self.GETARGS.get("report_adapters_missing", False):
             schemas += list(SCHEMAS_CUSTOM["report_adapters_missing"].values())
         if self.GETARGS.get("report_software_whitelist", False):
-            schemas += list(SCHEMAS_CUSTOM["report_software_whitelist"].values())
+            schemas += list(
+                SCHEMAS_CUSTOM["report_software_whitelist"].values())
         return schemas
 
     @property
@@ -767,18 +803,23 @@ class Base:
         api_fields = [x for x in self.APIOBJ.FIELDS_API if x not in fields]
 
         if include_details:  # pragma: no cover
-            api_fields += ["meta_data.client_used", "unique_adapter_names_details"]
+            api_fields += [
+                "meta_data.client_used", "unique_adapter_names_details"
+            ]
 
         self._fields_selected = []
 
         for field in api_fields + fields:
             self._fields_selected.append(field)
-            if include_details and not field.startswith("adapters_data."):  # pragma: no cover
+            if include_details and not field.startswith(
+                    "adapters_data."):  # pragma: no cover
                 field_details = f"{field}_details"
                 self._fields_selected.append(field_details)
 
         for row in self.CURRENT_ROWS:
-            self._fields_selected += [x for x in row if x not in self._fields_selected]
+            self._fields_selected += [
+                x for x in row if x not in self._fields_selected
+            ]
 
         return self._fields_selected
 
@@ -840,7 +881,8 @@ class Base:
     @property
     def adapter_map(self) -> dict:
         """Build a map of adapters that have connections."""
-        self._adapters_meta = getattr(self, "_adapters_meta", self.APIOBJ.adapters.get())
+        self._adapters_meta = getattr(self, "_adapters_meta",
+                                      self.APIOBJ.adapters.get())
         amap = {
             "has_cnx": [],
             "all": [],
@@ -859,7 +901,9 @@ class Base:
         return amap
 
     @classmethod
-    def args_map(cls) -> List[Tuple[str, str, Optional[Union[list, bool, str, int]]]]:
+    def args_map(
+            cls
+    ) -> List[Tuple[str, str, Optional[Union[list, bool, str, int]]]]:
         """Get the map of arguments that can be supplied to GETARGS.
 
         Notes:

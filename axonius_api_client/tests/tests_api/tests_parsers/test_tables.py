@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
-from axonius_api_client.api.parsers.tables import tab_map, tablize
+from axonius_api_client.api.parsers.tables import tab_map
+from axonius_api_client.api.parsers.tables import tablize
 from axonius_api_client.constants import KEY_MAP_SCHEMA
 
 
@@ -43,15 +44,30 @@ def test_tablize_err_false():
 
 
 def test_tab_map_orig_false():
-    value = {"name": "schema_str", "type": "string", "required": False, "other": "bloop"}
+    value = {
+        "name": "schema_str",
+        "type": "string",
+        "required": False,
+        "other": "bloop",
+    }
     exp = {"Name": "schema_str", "Type": "string", "Required": False}
     result = tab_map(value=value, key_map=KEY_MAP_SCHEMA, orig=False)
     assert result == exp
 
 
 def test_tab_map_orig_true():
-    value = {"name": "schema_str", "type": "string", "required": False, "other": "bloop"}
-    exp = {"Name": "schema_str", "Type": "string", "Required": False, "other": "bloop"}
+    value = {
+        "name": "schema_str",
+        "type": "string",
+        "required": False,
+        "other": "bloop",
+    }
+    exp = {
+        "Name": "schema_str",
+        "Type": "string",
+        "Required": False,
+        "other": "bloop"
+    }
     result = tab_map(value=value, key_map=KEY_MAP_SCHEMA, orig=True)
     assert result == exp
 
@@ -75,18 +91,16 @@ def test_tab_map_list():
 
 def test_tab_map_long_str():
     long_str = "badwolf " * 30
-    long_str_exp = (
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf\n"
-        "badwolf badwolf badwolf"
-    )
+    long_str_exp = ("badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf\n"
+                    "badwolf badwolf badwolf")
     value = {
         "title": long_str,
         "type": "string",

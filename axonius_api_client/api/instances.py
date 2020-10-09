@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """API model for working with system configuration."""
 from .mixins import ModelMixins
-from .routers import API_VERSION, Router
+from .routers import API_VERSION
+from .routers import Router
 
 
 class Instances(ModelMixins):
@@ -67,7 +68,8 @@ class Instances(ModelMixins):
         path = self.router.root
         return self.request(method="delete", path=path, json=data)
 
-    def _update(self, node_id: str, node_name: str, hostname: str) -> dict:  # pragma: no cover
+    def _update(self, node_id: str, node_name: str,
+                hostname: str) -> dict:  # pragma: no cover
         """Direct API method to update an instance.
 
         Args:
@@ -86,6 +88,10 @@ class Instances(ModelMixins):
             "hostname": "builds-vm-jim-2-15-b-1581114965-000"
         }
         """
-        data = {"nodeIds": node_id, "node_name": node_name, "hostname": hostname}
+        data = {
+            "nodeIds": node_id,
+            "node_name": node_name,
+            "hostname": hostname
+        }
         path = self.router.root
         return self.request(method="post", path=path, json=data)

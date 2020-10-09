@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client."""
 # import pytest
-
 import dataclasses
 
-from axonius_api_client.data import BaseData, BaseEnum
+from axonius_api_client.data import BaseData
+from axonius_api_client.data import BaseEnum
 
 
 class TestBaseData:
@@ -42,8 +42,7 @@ class TestBaseData:
         assert cls_names == cls_names_exp
 
         cls_defaults = [
-            x.default
-            for x in BadWolf.get_fields()
+            x.default for x in BadWolf.get_fields()
             if not isinstance(x.default, dataclasses._MISSING_TYPE)
         ]
         cls_defaults_exp = ["boo"]
@@ -55,8 +54,7 @@ class TestBaseData:
         assert obj_names == cls_names_exp
 
         obj_defaults = [
-            x.default
-            for x in BadWolf.get_fields()
+            x.default for x in BadWolf.get_fields()
             if not isinstance(x.default, dataclasses._MISSING_TYPE)
         ]
         assert obj_defaults == cls_defaults_exp

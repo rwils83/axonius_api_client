@@ -8,10 +8,13 @@ import sys
 from io import StringIO
 
 import pytest
-from cachetools import TTLCache, cached
+from cachetools import cached
+from cachetools import TTLCache
 from click.testing import CliRunner
 
-from axonius_api_client import Wizard, api, auth
+from axonius_api_client import api
+from axonius_api_client import auth
+from axonius_api_client import Wizard
 from axonius_api_client.cli.context import Context
 from axonius_api_client.constants import AGG_ADAPTER_NAME
 from axonius_api_client.http import Http
@@ -20,7 +23,6 @@ from axonius_api_client.tools import listify
 IS_WINDOWS = sys.platform == "win32"
 IS_LINUX = sys.platform == "linux"
 IS_MAC = sys.platform == "darwin"
-
 
 CACHE: TTLCache = TTLCache(maxsize=1024, ttl=600)
 
@@ -56,7 +58,10 @@ def exists_query(apiobj, fields=None, not_exist=False):
         pytest.skip(f"Fields {fields} not known for {apiobj}: {exc}")
 
     if not_exist:
-        entries = [{"type": "simple", "value": f"! {x} exists"} for x in fields]
+        entries = [{
+            "type": "simple",
+            "value": f"! {x} exists"
+        } for x in fields]
     else:
         entries = [{"type": "simple", "value": f"{x} exists"} for x in fields]
 

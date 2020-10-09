@@ -2,7 +2,10 @@
 """JSON export callbacks class."""
 import json
 import textwrap
-from typing import List, Optional, Tuple, Union
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 from ...tools import listify
 from .base import Base
@@ -48,7 +51,9 @@ class Json(Base):
         """
         rows = listify(row)
         rows = self.do_pre_row(rows=rows)
-        row_return = [{"internal_axon_id": row["internal_axon_id"]} for row in rows]
+        row_return = [{
+            "internal_axon_id": row["internal_axon_id"]
+        } for row in rows]
         rows = self.do_row(rows=rows)
         self.write_rows(rows=rows)
         del rows, row
@@ -90,7 +95,9 @@ class Json(Base):
             del row
 
     @classmethod
-    def args_map(cls) -> List[Tuple[str, str, Optional[Union[list, bool, str, int]]]]:
+    def args_map(
+            cls
+    ) -> List[Tuple[str, str, Optional[Union[list, bool, str, int]]]]:
         """Argument maps specific to this callbacks class."""
         args = super(Json, cls).args_map()
         return args + [

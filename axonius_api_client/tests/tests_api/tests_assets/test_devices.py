@@ -2,8 +2,12 @@
 """Test suite for assets."""
 import pytest
 
-from ...utils import check_assets, get_field_vals, get_rows_exist
-from .test_base_assets import AssetsPrivate, AssetsPublic, ModelMixinsBase
+from ...utils import check_assets
+from ...utils import get_field_vals
+from ...utils import get_rows_exist
+from .test_base_assets import AssetsPrivate
+from .test_base_assets import AssetsPublic
+from .test_base_assets import ModelMixinsBase
 
 
 class TestDevices(AssetsPrivate, AssetsPublic, ModelMixinsBase):
@@ -13,7 +17,8 @@ class TestDevices(AssetsPrivate, AssetsPublic, ModelMixinsBase):
 
     @pytest.mark.parametrize(
         "method, field",
-        [["hostname", "FIELD_HOSTNAME"], ["mac", "FIELD_MAC"], ["ip", "FIELD_IP"]],
+        [["hostname", "FIELD_HOSTNAME"], ["mac", "FIELD_MAC"],
+         ["ip", "FIELD_IP"]],
     )
     def test_get_bys(self, apiobj, method, field):
         self._all_get_by(apiobj=apiobj, method=method, field=field)

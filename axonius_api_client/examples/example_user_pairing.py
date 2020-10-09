@@ -6,20 +6,18 @@ import os
 import axonius_api_client as axonapi  # noqa: F401
 from axonius_api_client.connect import Connect
 from axonius_api_client.constants import load_dotenv
-from axonius_api_client.tools import json_reload, listify
+from axonius_api_client.tools import json_reload
+from axonius_api_client.tools import listify
 
-FIND_DVC_QUERY_TMPL = (
-    '(specific_data.data.hostname == "{value}") or ' '(specific_data.data.name == "{value}")'
-)
+FIND_DVC_QUERY_TMPL = ('(specific_data.data.hostname == "{value}") or '
+                       '(specific_data.data.name == "{value}")')
 ASS_DVC_FIELD = "specific_data.data.associated_devices"
 AGENT_VERSIONS_FIELD = "specific_data.data.agent_versions"
 DVC_FIELDS = [AGENT_VERSIONS_FIELD]
-AGENT_CHECKS = [
-    {
-        "name": "CrowdStrike Agent",
-        "version": "5.36.11809.0",
-    }
-]
+AGENT_CHECKS = [{
+    "name": "CrowdStrike Agent",
+    "version": "5.36.11809.0",
+}]
 
 
 def jdump(obj, **kwargs):
@@ -55,21 +53,20 @@ def parse_ass_dvc(user, ass_dvc, client):
     # NEED TO PASS devices apiobj
 
     if not found:
-        print(f"No devices found that match associated device {caption} for " f"user {username}")
+        print(f"No devices found that match associated device {caption} for "
+              f"user {username}")
         return
 
     if len(found) > 1:
         print(
             f"Too many devices ({len(found)}) found that match associated device "
-            f"{caption} for user {username}"
-        )
+            f"{caption} for user {username}")
         return
 
     return found[0]
 
 
 j = jdump
-
 
 if __name__ == "__main__":
     load_dotenv()
@@ -93,7 +90,6 @@ if __name__ == "__main__":
 
     for user in assets:
         parse_user(user=user, client=ctx)
-
     """
     take in a csv
     csv has columns: email, first name, last name

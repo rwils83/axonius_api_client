@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 """API models package."""
-from . import asset_mixin, devices, fields, labels, saved_query, users
+from . import asset_mixin
+from . import devices
+from . import fields
+from . import labels
+from . import saved_query
+from . import users
 from .asset_mixin import AssetMixin
 from .devices import Devices
 from .fields import Fields

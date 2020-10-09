@@ -22,7 +22,9 @@ class LabelsPrivate:
         assert add_label_result == 1
 
         # re-get the asset and check that it has the label
-        assets_added = apiobj.get_by_values(values=labels, field="labels", fields="labels")
+        assets_added = apiobj.get_by_values(values=labels,
+                                            field="labels",
+                                            fields="labels")
         assets_added_ids = [x["internal_axon_id"] for x in assets_added]
         assert asset_id in assets_added_ids
 
@@ -42,11 +44,14 @@ class LabelsPrivate:
             assert label in all_labels_post_add
 
         # remove the label from an asset
-        remove_label_result = apiobj.labels._remove(labels=labels, ids=assets_added_ids)
+        remove_label_result = apiobj.labels._remove(labels=labels,
+                                                    ids=assets_added_ids)
         assert remove_label_result >= 1
 
         # re-get the asset and check that it has the label
-        assets_removed = apiobj.get_by_values(values=labels, field="labels", fields="labels")
+        assets_removed = apiobj.get_by_values(values=labels,
+                                              field="labels",
+                                              fields="labels")
         assert not assets_removed
 
         # check that the label is not in all the labels on the system
@@ -100,11 +105,14 @@ class LabelsPublic:
             assert label in all_labels_post_add
 
         # remove the label from an asset
-        remove_label_result = apiobj.labels.remove(labels=labels, rows=assets_added)
+        remove_label_result = apiobj.labels.remove(labels=labels,
+                                                   rows=assets_added)
         assert remove_label_result >= 1
 
         # re-get the asset and check that it has the label
-        assets_removed = apiobj.get_by_values(values=labels, field="labels", fields="labels")
+        assets_removed = apiobj.get_by_values(values=labels,
+                                              field="labels",
+                                              fields="labels")
         assert not assets_removed
 
         # check that the label is not in all the labels on the system

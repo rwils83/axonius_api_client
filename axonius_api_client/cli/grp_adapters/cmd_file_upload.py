@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ...tools import json_dump
-from ..context import CONTEXT_SETTINGS, click
-from ..options import AUTH, NODE, add_options
+from ..context import click
+from ..context import CONTEXT_SETTINGS
+from ..options import add_options
+from ..options import AUTH
+from ..options import NODE
 
 OPTIONS = [
     *AUTH,

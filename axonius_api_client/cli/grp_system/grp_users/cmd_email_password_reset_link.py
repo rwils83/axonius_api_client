@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, add_options
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
 
 USER_NAME = click.option(
     "--name",
@@ -24,7 +26,8 @@ EMAIL = click.option(
 OPTIONS = [*AUTH, USER_NAME, EMAIL]
 
 
-@click.command(name="email-password-reset-link", context_settings=CONTEXT_SETTINGS)
+@click.command(name="email-password-reset-link",
+               context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(ctx, url, key, secret, name, email, **kwargs):
@@ -32,5 +35,7 @@ def cmd(ctx, url, key, secret, name, email, **kwargs):
     client = ctx.obj.start_client(url=url, key=key, secret=secret)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        data = client.system.users.email_password_reset_link(name=name, email=email)
-        ctx.obj.echo_ok(f"Emailed password reset link for user {name!r} to {data!r}")
+        data = client.system.users.email_password_reset_link(name=name,
+                                                             email=email)
+        ctx.obj.echo_ok(
+            f"Emailed password reset link for user {name!r} to {data!r}")

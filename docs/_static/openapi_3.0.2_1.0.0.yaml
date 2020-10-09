@@ -2,14 +2,14 @@ openapi: 3.0.2
 info:
   title: Axonius REST API
   description: API for Axonius
-  termsOfService: 'http://swagger.io/terms/'
+  termsOfService: "http://swagger.io/terms/"
   contact:
     email: support@axonius.com
     name: Axonius
-    url: 'https://axonius.com'
+    url: "https://axonius.com"
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   version: "3.0.2_1.0.0"
 servers:
   - url: /api/V1
@@ -37,29 +37,29 @@ paths:
         filter (query in GUI)
       operationId: AssetsUserOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetsRequest'
+        $ref: "#/components/requestBodies/AssetsRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetsResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-  '/users/{id}':
+        "200":
+          $ref: "#/components/responses/AssetsResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+  "/users/{id}":
     get:
       tags:
         - Users
       summary: Get all adapter keys and values for a user by internal_axon_id
       operationId: AssetByIdUserOperation
       parameters:
-        - $ref: '#/components/parameters/asset_id_parameter'
+        - $ref: "#/components/parameters/asset_id_parameter"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetByIdResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '404':
-          $ref: '#/components/responses/ErrorNotFoundByIdResponse'
+        "200":
+          $ref: "#/components/responses/AssetByIdResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/ErrorNotFoundByIdResponse"
   /users/count:
     post:
       tags:
@@ -67,14 +67,14 @@ paths:
       summary: Get count of user assets matching a filter (query in GUI)
       operationId: AssetCountUserOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetCountRequest'
+        $ref: "#/components/requestBodies/AssetCountRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetCountResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetCountResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /users/fields:
     get:
       tags:
@@ -82,10 +82,10 @@ paths:
       summary: Get all fields defined for user assets
       operationId: AssetFieldsUserOperation
       responses:
-        '200':
-          $ref: '#/components/responses/AssetFieldsResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetFieldsResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /users/labels:
     get:
       tags:
@@ -93,38 +93,38 @@ paths:
       summary: Get all labels (tags in GUI) assigned to user assets
       operationId: AssetLabelUserAddOperation
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelGetResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelGetResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Users
       summary: Add labels (tags in GUI) to user assets
       operationId: AssetLabelUserGetOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetLabelAddRemoveRequest'
+        $ref: "#/components/requestBodies/AssetLabelAddRemoveRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Users
       summary: Remove labels (tags in GUI) from user assets
       operationId: AssetLabelUserRemoveOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetLabelAddRemoveRequest'
+        $ref: "#/components/requestBodies/AssetLabelAddRemoveRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /users/views:
     get:
       tags:
@@ -132,42 +132,42 @@ paths:
       summary: Get saved queries for users using paging with optional filter
       operationId: SavedQueryUserGetOperation
       parameters:
-        - $ref: '#/components/parameters/saved_query_filter_parameter'
-        - $ref: '#/components/parameters/page_skip_parameter'
-        - $ref: '#/components/parameters/page_limit_parameter'
+        - $ref: "#/components/parameters/saved_query_filter_parameter"
+        - $ref: "#/components/parameters/page_skip_parameter"
+        - $ref: "#/components/parameters/page_limit_parameter"
       responses:
-        '200':
-          $ref: '#/components/responses/SavedQueryUserGetResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/SavedQueryUserGetResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Users
       summary: Create or overwrite a saved query for users
       operationId: SavedQueryUserCreateOperation
       requestBody:
-        $ref: '#/components/requestBodies/SavedQueryCreateRequest'
+        $ref: "#/components/requestBodies/SavedQueryCreateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/SavedQueryUserCreateResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedSavedQueryUserCreateResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/SavedQueryUserCreateResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedSavedQueryUserCreateResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Users
       summary: Delete a saved query for users
       operationId: SavedQueryUserDeleteOperation
       requestBody:
-        $ref: '#/components/requestBodies/SavedQueryDeleteRequest'
+        $ref: "#/components/requestBodies/SavedQueryDeleteRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/EmptyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/EmptyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /devices:
     post:
       tags:
@@ -177,29 +177,29 @@ paths:
         filter (query in GUI)
       operationId: AssetsDeviceOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetsRequest'
+        $ref: "#/components/requestBodies/AssetsRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetsResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-  '/devices/{id}':
+        "200":
+          $ref: "#/components/responses/AssetsResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+  "/devices/{id}":
     get:
       tags:
         - Devices
       summary: Get all adapter keys and values for a device by internal_axon_id
       operationId: AssetByIdDeviceOperation
       parameters:
-        - $ref: '#/components/parameters/asset_id_parameter'
+        - $ref: "#/components/parameters/asset_id_parameter"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetByIdResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '404':
-          $ref: '#/components/responses/ErrorNotFoundByIdResponse'
+        "200":
+          $ref: "#/components/responses/AssetByIdResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "404":
+          $ref: "#/components/responses/ErrorNotFoundByIdResponse"
   /devices/count:
     post:
       tags:
@@ -207,14 +207,14 @@ paths:
       summary: Get count of device assets using optional filter (query in GUI)
       operationId: AssetCountDeviceOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetCountRequest'
+        $ref: "#/components/requestBodies/AssetCountRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetCountResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetCountResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /devices/fields:
     get:
       tags:
@@ -222,10 +222,10 @@ paths:
       summary: Get all fields defined for device assets
       operationId: AssetFieldsDeviceOperation
       responses:
-        '200':
-          $ref: '#/components/responses/AssetFieldsResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetFieldsResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /devices/labels:
     get:
       tags:
@@ -233,38 +233,38 @@ paths:
       summary: Get all labels (tags in GUI) assigned to device assets
       operationId: AssetLabelDeviceGetOperation
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelGetResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelGetResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Devices
       summary: Add labels (tags in GUI) to device assets
       operationId: AssetLabelDeviceAddOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetLabelAddRemoveRequest'
+        $ref: "#/components/requestBodies/AssetLabelAddRemoveRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Devices
       summary: Remove labels (tags in GUI) from device assets
       operationId: AssetLabelDeviceRemoveOperation
       requestBody:
-        $ref: '#/components/requestBodies/AssetLabelAddRemoveRequest'
+        $ref: "#/components/requestBodies/AssetLabelAddRemoveRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AssetLabelAddRemoveResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedLabelAddRemoveResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/AssetLabelAddRemoveResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedLabelAddRemoveResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /devices/views:
     get:
       tags:
@@ -272,42 +272,42 @@ paths:
       summary: Get saved queries for devices using paging with optional filter
       operationId: SavedQueryDeviceGetOperation
       parameters:
-        - $ref: '#/components/parameters/saved_query_filter_parameter'
-        - $ref: '#/components/parameters/page_skip_parameter'
-        - $ref: '#/components/parameters/page_limit_parameter'
+        - $ref: "#/components/parameters/saved_query_filter_parameter"
+        - $ref: "#/components/parameters/page_skip_parameter"
+        - $ref: "#/components/parameters/page_limit_parameter"
       responses:
-        '200':
-          $ref: '#/components/responses/SavedQueryDeviceGetResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedQueryResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/SavedQueryDeviceGetResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedQueryResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     post:
       tags:
         - Devices
       summary: Create or overwrite a saved query for devices
       operationId: SavedQueryDeviceCreateOperation
       requestBody:
-        $ref: '#/components/requestBodies/SavedQueryCreateRequest'
+        $ref: "#/components/requestBodies/SavedQueryCreateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/SavedQueryDeviceCreateResponse'
-        '400':
-          $ref: '#/components/responses/ErrorMalformedSavedQueryUserCreateResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/SavedQueryDeviceCreateResponse"
+        "400":
+          $ref: "#/components/responses/ErrorMalformedSavedQueryUserCreateResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
     delete:
       tags:
         - Devices
       summary: Delete a saved query for devices
       operationId: SavedQueryDeviceDeleteOperation
       requestBody:
-        $ref: '#/components/requestBodies/SavedQueryDeleteRequest'
+        $ref: "#/components/requestBodies/SavedQueryDeleteRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/EmptyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
+        "200":
+          $ref: "#/components/responses/EmptyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
   /adapters:
     get:
       tags:
@@ -315,86 +315,86 @@ paths:
       summary: Get metadata for all adapters
       operationId: AdaptersGetOperation
       responses:
-        '200':
-          $ref: '#/components/responses/AdaptersGetResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-  '/adapters/{adapter_name}/{node_id}/upload_file':
+        "200":
+          $ref: "#/components/responses/AdaptersGetResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+  "/adapters/{adapter_name}/{node_id}/upload_file":
     post:
       tags:
         - Adapters
       summary: Upload a file to an adapter on a node
       operationId: AdapterUploadFileOperation
       parameters:
-        - $ref: '#/components/parameters/adapter_name_parameter'
-        - $ref: '#/components/parameters/node_id_parameter'
+        - $ref: "#/components/parameters/adapter_name_parameter"
+        - $ref: "#/components/parameters/node_id_parameter"
       requestBody:
-        $ref: '#/components/requestBodies/AdapterUploadFileRequest'
+        $ref: "#/components/requestBodies/AdapterUploadFileRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/AdapterUploadFileResponse'
-        '400':
-          $ref: '#/components/responses/ErrorInvalidPropertyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '500':
-          $ref: '#/components/responses/ErrorConnectionMalformedResponse'
-  '/adapters/{adapter_unique_name}/config/{config_name}':
+        "200":
+          $ref: "#/components/responses/AdapterUploadFileResponse"
+        "400":
+          $ref: "#/components/responses/ErrorInvalidPropertyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "500":
+          $ref: "#/components/responses/ErrorConnectionMalformedResponse"
+  "/adapters/{adapter_unique_name}/config/{config_name}":
     get:
       tags:
         - Adapters
       summary: Get the advanced settings for an adapter
       operationId: AdapterAdvancedSettingsGetOperation
       parameters:
-        - $ref: '#/components/parameters/adapter_unique_name_parameter'
-        - $ref: '#/components/parameters/config_name_parameter'
+        - $ref: "#/components/parameters/adapter_unique_name_parameter"
+        - $ref: "#/components/parameters/config_name_parameter"
       responses:
-        '200':
-          $ref: '#/components/responses/AdapterAdvancedSettingsGetResponse'
-        '400':
-          $ref: '#/components/responses/ErrorInvalidPropertyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '500':
-          $ref: '#/components/responses/ErrorConnectionMalformedResponse'
+        "200":
+          $ref: "#/components/responses/AdapterAdvancedSettingsGetResponse"
+        "400":
+          $ref: "#/components/responses/ErrorInvalidPropertyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "500":
+          $ref: "#/components/responses/ErrorConnectionMalformedResponse"
     post:
       tags:
         - Adapters
       summary: Set the advanced settings for an adapter
       operationId: AdapterAdvancedSettingsSetOperation
       parameters:
-        - $ref: '#/components/parameters/adapter_unique_name_parameter'
-        - $ref: '#/components/parameters/config_name_parameter'
+        - $ref: "#/components/parameters/adapter_unique_name_parameter"
+        - $ref: "#/components/parameters/config_name_parameter"
       requestBody:
-        $ref: '#/components/requestBodies/AdapterAdvancedSettingsSetRequest'
+        $ref: "#/components/requestBodies/AdapterAdvancedSettingsSetRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/EmptyResponse'
-        '400':
-          $ref: '#/components/responses/ErrorInvalidPropertyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '500':
-          $ref: '#/components/responses/ErrorConnectionMalformedResponse'
-  '/adapters/{adapter_name}/clients':
+        "200":
+          $ref: "#/components/responses/EmptyResponse"
+        "400":
+          $ref: "#/components/responses/ErrorInvalidPropertyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "500":
+          $ref: "#/components/responses/ErrorConnectionMalformedResponse"
+  "/adapters/{adapter_name}/clients":
     post:
       tags:
         - Adapter Connections
       summary: Create a connection for an adapter
       operationId: AdapterConnectionAddOperation
       parameters:
-        - $ref: '#/components/parameters/adapter_name_parameter'
+        - $ref: "#/components/parameters/adapter_name_parameter"
       requestBody:
-        $ref: '#/components/requestBodies/ConnectionAddRequest'
+        $ref: "#/components/requestBodies/ConnectionAddRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/ConnectionAddResponse'
-        '400':
-          $ref: '#/components/responses/ErrorInvalidPropertyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '500':
-          $ref: '#/components/responses/ErrorConnectionMalformedResponse'
+        "200":
+          $ref: "#/components/responses/ConnectionAddResponse"
+        "400":
+          $ref: "#/components/responses/ErrorInvalidPropertyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "500":
+          $ref: "#/components/responses/ErrorConnectionMalformedResponse"
     put:
       tags:
         - Adapter Connections
@@ -404,23 +404,23 @@ paths:
         permissions, it only does a port check
       operationId: AdapterConnectionTestOperation
       parameters:
-        - $ref: '#/components/parameters/adapter_name_parameter'
+        - $ref: "#/components/parameters/adapter_name_parameter"
       requestBody:
-        $ref: '#/components/requestBodies/ConnectionTestRequest'
+        $ref: "#/components/requestBodies/ConnectionTestRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/EmptyResponse'
-        '400':
-          $ref: '#/components/responses/ErrorInvalidPropertyResponse'
-        '401':
-          $ref: '#/components/responses/ErrorUnauthorizedResponse'
-        '500':
-          $ref: '#/components/responses/ErrorConnectionMalformedResponse'
+        "200":
+          $ref: "#/components/responses/EmptyResponse"
+        "400":
+          $ref: "#/components/responses/ErrorInvalidPropertyResponse"
+        "401":
+          $ref: "#/components/responses/ErrorUnauthorizedResponse"
+        "500":
+          $ref: "#/components/responses/ErrorConnectionMalformedResponse"
 components:
   links:
     SavedQueryUserCreateFromGet:
       operationId: SavedQueryUserCreateOperation
-      requestBody: '$response.body#/assets/0'
+      requestBody: "$response.body#/assets/0"
       description: >-
         Saved Queries can be re-created from the return of one of the assets
         returned from `GET /users/views`, as long as the readOnly items are not
@@ -429,7 +429,7 @@ components:
       operationId: SavedQueryUserDeleteOperation
       parameters:
         ids:
-          - '$response.body#/assets/0/uuid'
+          - "$response.body#/assets/0/uuid"
       description: >-
         Saved Queries can be deleted via uuid attribute from any row returned
         from `GET /users/views`
@@ -451,7 +451,7 @@ components:
         parameter in POST body to `DELETE /devices/views`
     SavedQueryDeviceCreateFromGet:
       operationId: SavedQueryDeviceCreateOperation
-      requestBody: '$response.body#/assets/0'
+      requestBody: "$response.body#/assets/0"
       description: >-
         Saved Queries can be re-created from the return one of the assets
         returned from `GET /devices/views`, as long as the readOnly items are
@@ -460,7 +460,7 @@ components:
       operationId: SavedQueryDeviceDeleteOperation
       parameters:
         ids:
-          - '$response.body#/assets/0/uuid'
+          - "$response.body#/assets/0/uuid"
       description: >-
         Saved Queries can be deleted via uuid attribute from any row returned
         from `GET /users/views`
@@ -689,10 +689,10 @@ components:
       properties:
         client_id:
           type: string
-          description: 'the generated client id, adapter specific implementation'
+          description: "the generated client id, adapter specific implementation"
         error:
           type: string
-          description: 'if not empty, an error happened while adding this connection'
+          description: "if not empty, an error happened while adding this connection"
         id:
           type: string
           description: the UUID of the newly added connection
@@ -722,9 +722,9 @@ components:
         assets:
           type: array
           items:
-            $ref: '#/components/schemas/ObjectSavedQuery'
+            $ref: "#/components/schemas/ObjectSavedQuery"
         page:
-          $ref: '#/components/schemas/ObjectPageInfo'
+          $ref: "#/components/schemas/ObjectPageInfo"
       required:
         - assets
         - page
@@ -734,9 +734,9 @@ components:
         assets:
           type: array
           items:
-            $ref: '#/components/schemas/ObjectAsset'
+            $ref: "#/components/schemas/ObjectAsset"
         page:
-          $ref: '#/components/schemas/ObjectPageInfo'
+          $ref: "#/components/schemas/ObjectPageInfo"
       required:
         - assets
         - page
@@ -746,14 +746,14 @@ components:
         generic:
           type: array
           items:
-            $ref: '#/components/schemas/ObjectField'
+            $ref: "#/components/schemas/ObjectField"
         schema:
           type: object
           properties:
             generic:
               type: array
               items:
-                $ref: '#/components/schemas/ObjectField'
+                $ref: "#/components/schemas/ObjectField"
             specific:
               type: object
               description: keyed on adapter name for every configured adapter
@@ -761,7 +761,7 @@ components:
                 adapter_name:
                   type: array
                   items:
-                    $ref: '#/components/schemas/ObjectField'
+                    $ref: "#/components/schemas/ObjectField"
         specific:
           type: object
           description: keyed on adapter name for every configured adapter
@@ -769,7 +769,7 @@ components:
             adapter_name:
               type: array
               items:
-                $ref: '#/components/schemas/ObjectField'
+                $ref: "#/components/schemas/ObjectField"
       description: This returns variable information based on the configured adapters
     ResponseArrayLabels:
       type: array
@@ -793,12 +793,12 @@ components:
       description: keyed on adapter name for every configured adapter
       properties:
         adapter_name:
-          $ref: '#/components/schemas/ArrayAdapter'
+          $ref: "#/components/schemas/ArrayAdapter"
     ArrayAdapter:
       type: array
       description: list of adapter metadata per node
       items:
-        $ref: '#/components/schemas/ObjectAdapter'
+        $ref: "#/components/schemas/ObjectAdapter"
     ObjectAdapter:
       type: object
       description: adapter metadata on a specific node
@@ -815,11 +815,11 @@ components:
           description: a list of all connections for an adapter on a given node
           type: array
           items:
-            $ref: '#/components/schemas/ObjectAdapterClient'
+            $ref: "#/components/schemas/ObjectAdapterClient"
         config:
-          $ref: '#/components/schemas/ObjectAdapterSchema'
+          $ref: "#/components/schemas/ObjectAdapterSchema"
         schema:
-          $ref: '#/components/schemas/ObjectAdapterClientConfigSchema'
+          $ref: "#/components/schemas/ObjectAdapterClientConfigSchema"
         node_id:
           type: string
           description: UUID of node adapter is running on
@@ -838,7 +838,7 @@ components:
             "warning" * If no clients exist, status will be "" * If clients
             exist and all clients are ok, status will be "success"
           enum:
-            - ''
+            - ""
             - warning
             - status
         supported_features:
@@ -895,7 +895,7 @@ components:
             value back when updating a connection will re-use the existing
             encrypted password.
           example:
-            domain: '18.194.38.90:5000'
+            domain: "18.194.38.90:5000"
             password:
               - unchanged
             username: admin
@@ -905,15 +905,15 @@ components:
           description: >-
             the resolved ID for this connection - adapter dependent
             implementation
-          example: '18.194.38.90:5000'
+          example: "18.194.38.90:5000"
         date_fetched:
           type: string
           description: the last time the "Save and Connect" button was pressed
-          example: '2020-03-05 23:25:13+00:00'
+          example: "2020-03-05 23:25:13+00:00"
           format: date-time
         error:
           type: string
-          description: 'if this is not empty, the connection is broken'
+          description: "if this is not empty, the connection is broken"
           example: >-
             HTTPSConnectionPool(host='18.194.38.90', port=5000): Max retries
             exceeded with url: /auth/authenticate (Caused by
@@ -949,9 +949,9 @@ components:
           description: generic advanced settings used by all adapters
           properties:
             schema:
-              $ref: '#/components/schemas/ObjectAdapterConfigSchema'
+              $ref: "#/components/schemas/ObjectAdapterConfigSchema"
             config:
-              $ref: '#/components/schemas/ObjectAdapterAdvancedGenericConfig'
+              $ref: "#/components/schemas/ObjectAdapterAdvancedGenericConfig"
         NameAdapter:
           required:
             - config
@@ -962,9 +962,9 @@ components:
             will be the name of the adapter if this exists
           properties:
             schema:
-              $ref: '#/components/schemas/ObjectAdapterConfigSchema'
+              $ref: "#/components/schemas/ObjectAdapterConfigSchema"
             config:
-              $ref: '#/components/schemas/ObjectAdapterAdvancedSpecificConfig'
+              $ref: "#/components/schemas/ObjectAdapterAdvancedSpecificConfig"
     ObjectAdapterAdvancedSpecificConfig:
       type: object
       description: >-
@@ -1022,7 +1022,7 @@ components:
           type: array
           description: Adapter advanced settings schema definitions
           items:
-            $ref: '#/components/schemas/ObjectSchemaItem'
+            $ref: "#/components/schemas/ObjectSchemaItem"
         type:
           type: string
           description: should always be array
@@ -1050,7 +1050,7 @@ components:
           type: array
           description: Client configuration schema definitions
           items:
-            $ref: '#/components/schemas/ObjectSchemaItem'
+            $ref: "#/components/schemas/ObjectSchemaItem"
         type:
           type: string
           description: should always be array
@@ -1114,7 +1114,7 @@ components:
               - type: integer
               - type: boolean
           description: optional default for configuration item
-          example: '55000'
+          example: "55000"
         name:
           type: string
           description: name of this configuration item
@@ -1195,7 +1195,7 @@ components:
         unique:
           type: boolean
         items:
-          $ref: '#/components/schemas/ObjectFieldItems'
+          $ref: "#/components/schemas/ObjectFieldItems"
       required:
         - name
         - title
@@ -1210,7 +1210,7 @@ components:
           type: string
           example: Host Name
         type:
-          $ref: '#/components/schemas/StringCommonTypes'
+          $ref: "#/components/schemas/StringCommonTypes"
         branched:
           type: boolean
         description:
@@ -1224,11 +1224,11 @@ components:
           items:
             type: string
         format:
-          $ref: '#/components/schemas/StringCommonFormats'
+          $ref: "#/components/schemas/StringCommonFormats"
         unique:
           type: boolean
         items:
-          $ref: '#/components/schemas/ArrayFieldItems'
+          $ref: "#/components/schemas/ArrayFieldItems"
       required:
         - type
     ArrayFieldItems:
@@ -1243,7 +1243,7 @@ components:
             type: string
             example: Host Name
           type:
-            $ref: '#/components/schemas/StringCommonTypes'
+            $ref: "#/components/schemas/StringCommonTypes"
           branched:
             type: boolean
           description:
@@ -1257,11 +1257,11 @@ components:
             items:
               type: string
           format:
-            $ref: '#/components/schemas/StringCommonFormats'
+            $ref: "#/components/schemas/StringCommonFormats"
           unique:
             type: boolean
           items:
-            $ref: '#/components/schemas/ObjectFieldItems'
+            $ref: "#/components/schemas/ObjectFieldItems"
         required:
           - name
           - title
@@ -1336,7 +1336,7 @@ components:
         last_updated:
           type: string
           readOnly: true
-          example: 'Fri, 06 Mar 2020 20:56:10 GMT'
+          example: "Fri, 06 Mar 2020 20:56:10 GMT"
           format: date-time
         name:
           type: string
@@ -1392,7 +1392,7 @@ components:
                 expressions:
                   type: array
                   items:
-                    $ref: '#/components/schemas/ObjectExpression'
+                    $ref: "#/components/schemas/ObjectExpression"
                 filter:
                   type: string
                   example: >-
@@ -1424,7 +1424,7 @@ components:
         children:
           type: array
           items:
-            $ref: '#/components/schemas/ObjectExpression'
+            $ref: "#/components/schemas/ObjectExpression"
         compOp:
           type: string
           example: days
@@ -1487,18 +1487,18 @@ components:
             example: 5e62b8eaeb81e7d9094e7557
       links:
         SavedQueryDeviceDeleteFromCreate:
-          $ref: '#/components/links/SavedQueryDeviceDeleteFromCreate'
+          $ref: "#/components/links/SavedQueryDeviceDeleteFromCreate"
     SavedQueryDeviceGetResponse:
       description: Response from getting Saved Queries for devices using paging
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResponseSavedQueryGet'
+            $ref: "#/components/schemas/ResponseSavedQueryGet"
       links:
         SavedQueryDeviceCreateFromGet:
-          $ref: '#/components/links/SavedQueryDeviceCreateFromGet'
+          $ref: "#/components/links/SavedQueryDeviceCreateFromGet"
         SavedQueryDeviceDeleteFromGet:
-          $ref: '#/components/links/SavedQueryDeviceDeleteFromGet'
+          $ref: "#/components/links/SavedQueryDeviceDeleteFromGet"
     SavedQueryUserCreateResponse:
       description: Response from creating a Saved Query for users
       content:
@@ -1509,18 +1509,18 @@ components:
             example: 5e62b8eaeb81e7d9094e7557
       links:
         SavedQueryUserDeleteFromCreate:
-          $ref: '#/components/links/SavedQueryUserDeleteFromCreate'
+          $ref: "#/components/links/SavedQueryUserDeleteFromCreate"
     SavedQueryUserGetResponse:
       description: Response from getting Saved Queries for users using paging
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResponseSavedQueryGet'
+            $ref: "#/components/schemas/ResponseSavedQueryGet"
       links:
         SavedQueryUserCreateFromGet:
-          $ref: '#/components/links/SavedQueryUserCreateFromGet'
+          $ref: "#/components/links/SavedQueryUserCreateFromGet"
         SavedQueryUserDeleteFromGet:
-          $ref: '#/components/links/SavedQueryUserDeleteFromGet'
+          $ref: "#/components/links/SavedQueryUserDeleteFromGet"
     AssetCountResponse:
       description: >-
         Response from getting count of device or user assets with optional
@@ -1538,19 +1538,19 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResponseAssetPage'
+            $ref: "#/components/schemas/ResponseAssetPage"
     AssetByIdResponse:
       description: Response from getting a device or user asset by internal_axon_id
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ObjectAsset'
+            $ref: "#/components/schemas/ObjectAsset"
     AssetFieldsResponse:
       description: Response from getting fields for device or user assets
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResponseAssetFields'
+            $ref: "#/components/schemas/ResponseAssetFields"
     AssetLabelGetResponse:
       description: >-
         Response from getting all known labels (tags in GUI) for device or user
@@ -1562,7 +1562,7 @@ components:
             - tag2
             - tag3
           schema:
-            $ref: '#/components/schemas/ResponseArrayLabels'
+            $ref: "#/components/schemas/ResponseArrayLabels"
     AssetLabelAddRemoveResponse:
       description: >-
         Response from adding or removing labels (tags in GUI) to device or user
@@ -1578,7 +1578,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ResponseAdaptersGet'
+            $ref: "#/components/schemas/ResponseAdaptersGet"
     AdapterAdvancedSettingsGetResponse:
       description: Response from getting adapters advanced settings
       content:
@@ -1628,8 +1628,8 @@ components:
                 verify_primary_account: true
           schema:
             oneOf:
-              - $ref: '#/components/schemas/ObjectAdapterAdvancedGenericConfig'
-              - $ref: '#/components/schemas/ObjectAdapterAdvancedSpecificConfig'
+              - $ref: "#/components/schemas/ObjectAdapterAdvancedGenericConfig"
+              - $ref: "#/components/schemas/ObjectAdapterAdvancedSpecificConfig"
     AdapterUploadFileResponse:
       description: Response from uploading a file to an adapter on a node
       content:
@@ -1641,14 +1641,14 @@ components:
                 uuid: 5e652a5950410bcb6c42e3ae
                 filename: foo.txt
           schema:
-            $ref: '#/components/schemas/ResponseAdapterUploadFile'
+            $ref: "#/components/schemas/ResponseAdapterUploadFile"
     ConnectionAddResponse:
       description: Response from adding a connection
       content:
         application/json:
           examples:
             Success:
-              description: 'Connection was added with no errors, fetch started'
+              description: "Connection was added with no errors, fetch started"
               value:
                 client_id: 10.0.2.32_Administrator
                 error: null
@@ -1672,7 +1672,7 @@ components:
                 the supplied configuration
               value:
                 client_id: 10.0.2.32_Administrator
-                error: '''verify_ssl'''
+                error: "'verify_ssl'"
                 id: 5e618c7f01984ae8820d80bd
                 status: error
             ErrorImplementation:
@@ -1687,7 +1687,7 @@ components:
                 id: 5e618c7f01984ae8820d80bd
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseClientAdd'
+            $ref: "#/components/schemas/ResponseClientAdd"
     ErrorConnectionMalformedResponse:
       description: errors when adding or testing a connection
       content:
@@ -1710,7 +1710,7 @@ components:
                 additional_data: null
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorInvalidPropertyResponse:
       description: various errors for missing/invalid properties
       content:
@@ -1738,11 +1738,11 @@ components:
                 for hostname, ip address, domain, and/or port are not supplied
                 or are invalid formats
               value:
-                message: 'Invalid URL ''https://:443/'': No host supplied'
+                message: "Invalid URL 'https://:443/': No host supplied"
                 type: InvalidURL
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorUnauthorizedResponse:
       description: errors that come back with 401 codes
       content:
@@ -1771,7 +1771,7 @@ components:
                 message: File must exist
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorMalformedLabelAddRemoveResponse:
       description: Error when request is missing entities or labels properties
       content:
@@ -1796,7 +1796,7 @@ components:
                 message: Tagging did not complete. First error...
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorMalformedQueryResponse:
       description: Error when mongo query is malformed
       content:
@@ -1811,7 +1811,7 @@ components:
                   on <class 'axonius.pql.matching.SchemaFreeParser'>
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorMalformedSavedQueryUserCreateResponse:
       description: Error when request is missing entities or labels properties
       content:
@@ -1830,7 +1830,7 @@ components:
                 message: View data is required in order to save one
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
     ErrorNotFoundByIdResponse:
       description: Error when asset ID is not found
       content:
@@ -1843,7 +1843,7 @@ components:
                 message: Entity ID wasn't found
                 status: error
           schema:
-            $ref: '#/components/schemas/ResponseError'
+            $ref: "#/components/schemas/ResponseError"
   requestBodies:
     SavedQueryDeleteRequest:
       description: >-
@@ -1859,13 +1859,13 @@ components:
                   - 5e62e88deb81e7d909558444
                   - 5e62e88deb81e7d90955853d
           schema:
-            $ref: '#/components/schemas/RequestSavedQueryDelete'
+            $ref: "#/components/schemas/RequestSavedQueryDelete"
     SavedQueryCreateRequest:
       description: Request body for creating a Saved Query for user or device assets
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ObjectSavedQuery'
+            $ref: "#/components/schemas/ObjectSavedQuery"
     ConnectionTestRequest:
       description: Request body for testing a connection
       content:
@@ -1895,7 +1895,7 @@ components:
               value:
                 instanceName: 2cc965f491b3440e86ced9772faed245
           schema:
-            $ref: '#/components/schemas/RequestConnectionTest'
+            $ref: "#/components/schemas/RequestConnectionTest"
     AdapterAdvancedSettingsSetRequest:
       description: Request for setting advanced settings for adapters
       content:
@@ -1945,8 +1945,8 @@ components:
                 verify_primary_account: true
           schema:
             oneOf:
-              - $ref: '#/components/schemas/ObjectAdapterAdvancedGenericConfig'
-              - $ref: '#/components/schemas/ObjectAdapterAdvancedSpecificConfig'
+              - $ref: "#/components/schemas/ObjectAdapterAdvancedGenericConfig"
+              - $ref: "#/components/schemas/ObjectAdapterAdvancedSpecificConfig"
     AdapterUploadFileRequest:
       description: Request body for uploading a file to an adapter on a specific node
       content:
@@ -1976,7 +1976,7 @@ components:
                 verify_ssl: false
                 https_proxy: null
           schema:
-            $ref: '#/components/schemas/RequestConnectionAdd'
+            $ref: "#/components/schemas/RequestConnectionAdd"
     AssetsRequest:
       description: >-
         Request body for getting user or device assets with optional fields
@@ -2023,7 +2023,7 @@ components:
                 skip: 0
                 limit: 2000
           schema:
-            $ref: '#/components/schemas/RequestAssets'
+            $ref: "#/components/schemas/RequestAssets"
     AssetCountRequest:
       description: >-
         Request body for getting count of user or device assets with optional
@@ -2040,7 +2040,7 @@ components:
               value:
                 filter: (specific_data.data.last_seen >= date("NOW - 1d"))
           schema:
-            $ref: '#/components/schemas/RequestAssetCount'
+            $ref: "#/components/schemas/RequestAssetCount"
     AssetLabelAddRemoveRequest:
       description: >-
         Request body for adding or removing labels (tags in GUI) from user or
@@ -2059,18 +2059,18 @@ components:
                     - 5e62e88deb81e7d909558444
                     - 5e62e88deb81e7d90955853d
           schema:
-            $ref: '#/components/schemas/RequestAssetLabelAddRemove'
+            $ref: "#/components/schemas/RequestAssetLabelAddRemove"
   securitySchemes:
     api_key:
       type: apiKey
       name: api-key
       in: header
-      description: 'Get this from account settings in Axonius'
+      description: "Get this from account settings in Axonius"
     api_secret:
       type: apiKey
       name: api-secret
       in: header
-      description: 'Get this from account settings in Axonius'
+      description: "Get this from account settings in Axonius"
 externalDocs:
   description: Axonius API Client in Python
-  url: 'https://axonius-api-client.readthedocs.io/en/latest/'
+  url: "https://axonius-api-client.readthedocs.io/en/latest/"

@@ -2,8 +2,10 @@
 import time
 
 QUERIES = {
-    "not_last_seen_day": '(not (specific_data.data.last_seen >= date("NOW - 1d")))',
-    "exist_complex": '((({f} == ({{"$exists":true,"$ne":[]}})) and {f} != []))',
+    "not_last_seen_day":
+    '(not (specific_data.data.last_seen >= date("NOW - 1d")))',
+    "exist_complex":
+    '((({f} == ({{"$exists":true,"$ne":[]}})) and {f} != []))',
     "exist_simple": '(({f} == ({{"$exists":true,"$ne":""}})))',
 }
 
@@ -117,9 +119,11 @@ CREATE_EC_TRIGGER1 = {
 
 CREATE_EC_ACTION_MAIN = {
     "name": "Badwolf Create Notification {}".format(time.time()),
-    "action": {"action_name": "create_notification", "config": {}},
+    "action": {
+        "action_name": "create_notification",
+        "config": {}
+    },
 }
-
 
 CSV_FILENAME = "badwolf.csv"
 CSV_FIELDS = ["mac_address", "field1"]
@@ -167,7 +171,11 @@ SCHEMA_NUM = {"name": "schema_num", "type": "number", "required": False}
 SCHEMA_BOOL = {"name": "schema_bool", "type": "bool", "required": False}
 SCHEMA_ARRAY = {"name": "schema_array", "type": "array", "required": False}
 SCHEMA_FILE = {"name": "schema_file", "type": "file", "required": False}
-SCHEMA_UNKNOWN = {"name": "schema_unknown", "type": "badwolf", "required": False}
+SCHEMA_UNKNOWN = {
+    "name": "schema_unknown",
+    "type": "badwolf",
+    "required": False
+}
 SCHEMAS = [
     SCHEMA_STR,
     SCHEMA_STR_PASSWORD,

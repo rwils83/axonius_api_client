@@ -6,7 +6,10 @@ import click
 import requests
 
 from ..connect import Connect
-from ..tools import echo_error, echo_ok, echo_warn, json_load
+from ..tools import echo_error
+from ..tools import echo_ok
+from ..tools import echo_warn
+from ..tools import json_load
 
 CONTEXT_SETTINGS = {"auto_envvar_prefix": "AX"}
 SSLWARN_CLS = requests.urllib3.exceptions.InsecureRequestWarning
@@ -49,7 +52,9 @@ class AliasedGroup(click.Group):
         if rv is not None:
             return rv
 
-        matches = [x for x in self.list_commands(ctx) if x.startswith(cmd_name)]
+        matches = [
+            x for x in self.list_commands(ctx) if x.startswith(cmd_name)
+        ]
 
         if not matches:
             return None
@@ -166,14 +171,16 @@ class Context:
         stream_name = format(getattr(stream, "name", stream))
 
         if stream.isatty():
-            self.echo_error(msg=f"No input provided on {stream_name!r}", abort=True)
+            self.echo_error(msg=f"No input provided on {stream_name!r}",
+                            abort=True)
 
         # its STDIN with input or a file
         content = stream.read().strip()
         self.echo_ok(msg=f"Read {len(content)} bytes from {stream_name!r}")
 
         if not content:
-            self.echo_error(msg=f"Empty content supplied to {stream_name!r}", abort=True)
+            self.echo_error(msg=f"Empty content supplied to {stream_name!r}",
+                            abort=True)
 
         return content
 
@@ -189,7 +196,8 @@ class Context:
         if not isinstance(content, expect):
 
             self.echo_error(
-                msg=f"JSON supplied is {type(content)}, required type is {expect}",
+                msg=
+                f"JSON supplied is {type(content)}, required type is {expect}",
                 abort=True,
             )
 
