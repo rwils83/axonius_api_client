@@ -55,7 +55,8 @@ def parse_ass_dvc(user, ass_dvc, client):
     # NEED TO PASS devices apiobj
 
     if not found:
-        print(f"No devices found that match associated device {caption} for " f"user {username}")
+        print(
+            f"No devices found that match associated device {caption} for " f"user {username}")
         return
 
     if len(found) > 1:

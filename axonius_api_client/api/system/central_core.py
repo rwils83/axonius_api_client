@@ -68,5 +68,6 @@ class CentralCore(ChildMixins):
         data.update(restore_opts)
 
         path = self.router.central_core_restore
-        response = self.request(method="post", path=path, json=data, response_timeout=3600)
+        response = self.request(method="post", path=path,
+                                json=data, response_timeout=3600)
         return response

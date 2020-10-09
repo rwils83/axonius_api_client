@@ -79,7 +79,8 @@ def coerce_int(obj: Any) -> int:
         return int(obj)
     except Exception:
         vtype = type(obj).__name__
-        raise ToolsError(f"Supplied value {obj!r} of type {vtype} is not an integer.")
+        raise ToolsError(
+            f"Supplied value {obj!r} of type {vtype} is not an integer.")
 
 
 def coerce_int_float(value: Union[int, float, str]) -> Union[int, float]:
@@ -105,7 +106,8 @@ def coerce_int_float(value: Union[int, float, str]) -> Union[int, float]:
             return float(value)
 
     vtype = type(value).__name__
-    raise ToolsError(f"Supplied value {value!r} of type {vtype} is not an integer or float.")
+    raise ToolsError(
+        f"Supplied value {value!r} of type {vtype} is not an integer or float.")
 
 
 def coerce_bool(obj: Any, errmsg: Optional[str] = None) -> bool:
@@ -396,7 +398,8 @@ def path_read(
     robj = get_path(obj=obj)
 
     if not robj.is_file():
-        raise ToolsError(f"Supplied path='{obj}' (resolved='{robj}') does not exist!")
+        raise ToolsError(
+            f"Supplied path='{obj}' (resolved='{robj}') does not exist!")
 
     if binary:
         data = robj.read_bytes()
@@ -741,12 +744,14 @@ def get_raw_version(value: str) -> str:
     version = value
     if ":" in value:
         if "." in value and value.index(":") > value.index("."):
-            raise ToolsError(f"Invalid version with ':' after '.' in {value!r}")
+            raise ToolsError(
+                f"Invalid version with ':' after '.' in {value!r}")
         converted, version = value.split(":", 1)
     octects = version.split(".")
     for octect in octects:
         if not octect.isdigit():
-            raise ToolsError(f"Invalid version with non-digit {octect!r} in {value!r}")
+            raise ToolsError(
+                f"Invalid version with non-digit {octect!r} in {value!r}")
         if len(octect) > 8:
             octect = octect[:8]
         converted += "".join(["0" for _ in range(8 - len(octect))]) + octect

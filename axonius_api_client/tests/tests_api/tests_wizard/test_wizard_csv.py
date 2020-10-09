@@ -183,7 +183,8 @@ class TestProcessFields(TestWizardCsv):
 
 class TestProcessSqNewSq(TestWizardCsv, TestData):
     def test_no_entries(self, wizard):
-        entry = {Entry.VALUE: "badwolf", EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
+        entry = {Entry.VALUE: "badwolf",
+                 EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
         exp = {
             EntrySq.NAME: "badwolf",
             EntrySq.FDEF: False,
@@ -200,7 +201,8 @@ class TestProcessSqNewSq(TestWizardCsv, TestData):
         assert exp in wizard.SQS_DONE
 
     def test_with_entries(self, wizard, test_data1):
-        entry = {Entry.VALUE: "badwolf", EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
+        entry = {Entry.VALUE: "badwolf",
+                 EntrySq.TAGS: "tag1,tag2", EntrySq.DESC: SRC}
         exp = {
             EntrySq.NAME: "badwolf",
             EntrySq.FDEF: False,
@@ -393,7 +395,8 @@ class TestProcessSq(TestWizardCsv):
 
 class TestProcessSqs(TestWizardCsv):
     def test_sq_not_first(self, wizard):
-        entries = [{Entry.TYPE: Types.SIMPLE, Entry.VALUE: "xx", Entry.SRC: SRC}]
+        entries = [{Entry.TYPE: Types.SIMPLE,
+                    Entry.VALUE: "xx", Entry.SRC: SRC}]
         with pytest.raises(WizardError) as exc:
             wizard._process_sqs(entries=entries)
         assert "First row must be type" in str(exc.value)

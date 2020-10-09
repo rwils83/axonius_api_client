@@ -47,7 +47,8 @@ EXPORT = click.option(
     "-xf",
     "export_format",
     type=click.Choice(
-        ["json-full", "json-config", "json", "table", "table-schemas", "str", "str-args"]
+        ["json-full", "json-config", "json", "table",
+            "table-schemas", "str", "str-args"]
     ),
     help="Format of to export data in",
     default="json-config",
@@ -77,10 +78,12 @@ def prompt_config(
 ):
     """Pass."""
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        adapter = client.adapters.get_by_name(name=adapter_name, node=adapter_node)
+        adapter = client.adapters.get_by_name(
+            name=adapter_name, node=adapter_node)
 
     schemas = list(adapter["schemas"]["cnx"].values())
-    schemas = reversed(sorted(schemas, key=lambda x: [x["required"], x["name"]]))
+    schemas = reversed(
+        sorted(schemas, key=lambda x: [x["required"], x["name"]]))
 
     for schema in schemas:
         prompt_schema(
@@ -112,10 +115,12 @@ def prompt_schema(schema, new_config, prompt_optional, prompt_default, adapter):
         if new_config[name].lower().strip() == "_empty_":
             new_config[name] = None
         if stype == "file":
-            new_config[name] = pathlib.Path(new_config[name]).expanduser().resolve()
+            new_config[name] = pathlib.Path(
+                new_config[name]).expanduser().resolve()
         return
 
-    sane_defaults = CNX_SANE_DEFAULTS.get(adapter["name"], CNX_SANE_DEFAULTS["all"])
+    sane_defaults = CNX_SANE_DEFAULTS.get(
+        adapter["name"], CNX_SANE_DEFAULTS["all"])
     if name in sane_defaults and default is None:
         default = sane_defaults[name]
 
@@ -196,7 +201,8 @@ def show_schema(schema, err=True):
     """Pass."""
     rkw = ["{}: {}".format(k, v) for k, v in schema.items()]
     rkw = "\n  " + "\n  ".join(rkw)
-    click.secho(message=f"\n***  Configuration schema:{rkw}", fg="blue", err=err)
+    click.secho(
+        message=f"\n***  Configuration schema:{rkw}", fg="blue", err=err)
 
 
 def add_cnx(ctx, client, adapter_name, adapter_node, new_config, **kwargs):
@@ -266,7 +272,8 @@ def handle_export(ctx, rows, export_format, **kwargs):
         rows = listify(rows)
         lines = "\n".join(
             [
-                "--node-name {node_name} --name {adapter_name} --id {id}".format(**row)
+                "--node-name {node_name} --name {adapter_name} --id {id}".format(
+                    **row)
                 for row in rows
             ]
         )

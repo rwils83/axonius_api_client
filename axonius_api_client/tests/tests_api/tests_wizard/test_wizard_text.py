@@ -95,7 +95,8 @@ class TestParse(TestWizardText, TestData):
         line5_value = f"!{cplex} // {sub} contains boom"
         line5 = f"{Types.COMPLEX} {line5_value}"
 
-        lines = [line1, line2, line3, line4, line5, "", "   # another boom", "# BOOM"]
+        lines = [line1, line2, line3, line4, line5,
+                 "", "   # another boom", "# BOOM"]
         content = "\n".join(lines)
         _, exp_exprs, exp_query = test_data1
 
@@ -124,7 +125,8 @@ class TestParsePath(TestWizardText, TestData):
         line5_value = f"!{cplex} // {sub} contains boom"
         line5 = f"{Types.COMPLEX} {line5_value}"
 
-        lines = [line1, line2, line3, line4, line5, "", "   # another boom", "# BOOM"]
+        lines = [line1, line2, line3, line4, line5,
+                 "", "   # another boom", "# BOOM"]
         content = "\n".join(lines)
         path.write_text(content)
         _, exp_exprs, exp_query = test_data1

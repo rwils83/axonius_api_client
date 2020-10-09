@@ -23,7 +23,8 @@ class Users(ChildMixins):  # pragma: no cover
     ) -> dict:
         """Pass."""
         if not any([password, generate_password_link, email_password_link]):
-            raise ApiError("Must supply password, generate_password_link, or email_password_link")
+            raise ApiError(
+                "Must supply password, generate_password_link, or email_password_link")
 
         if email_password_link and not email:
             raise ApiError("Must supply email if email_password_link is True")
@@ -49,17 +50,20 @@ class Users(ChildMixins):  # pragma: no cover
         user_obj = self.get_by_name(name=name)
 
         if generate_password_link or email_password_link:
-            password_reset_link = self._get_password_reset_link(uuid=user_obj["uuid"])
+            password_reset_link = self._get_password_reset_link(
+                uuid=user_obj["uuid"])
             if generate_password_link:
                 user_obj["password_reset_link"] = password_reset_link
 
         if email_password_link:
             try:
-                self._email_password_reset_link(uuid=user_obj["uuid"], email=email, new_user=True)
+                self._email_password_reset_link(
+                    uuid=user_obj["uuid"], email=email, new_user=True)
                 user_obj["email_password_link_error"] = None
             except Exception as exc:
                 user_obj["email_password_link_error"] = (
-                    getattr(getattr(exc, "response", None), "text", None) or exc
+                    getattr(getattr(exc, "response", None),
+                            "text", None) or exc
                 )
 
         return user_obj
@@ -84,7 +88,8 @@ class Users(ChildMixins):  # pragma: no cover
 
         if name not in valid:
             valid = "\n" + "\n".join(valid)
-            raise NotFoundError(f"User name {name!r} not found, valid users:{valid}")
+            raise NotFoundError(
+                f"User name {name!r} not found, valid users:{valid}")
 
         return [x for x in users if x["user_name"] == name][0]
 
@@ -103,7 +108,8 @@ class Users(ChildMixins):  # pragma: no cover
         one_of = [first_name, last_name, password, email, role_name]
 
         if all([x is None for x in one_of]):
-            req = ", ".join(["first_name", "last_name", "password", "email", "role_name"])
+            req = ", ".join(["first_name", "last_name",
+                             "password", "email", "role_name"])
             raise ApiError(f"Must supply at least one of: {req!r}")
 
         uuid = user["uuid"]
@@ -137,7 +143,8 @@ class Users(ChildMixins):  # pragma: no cover
     def get_password_reset_link(self, name: str) -> str:
         """Pass."""
         user = self.get_by_name(name=name)
-        user["password_reset_link"] = self._get_password_reset_link(uuid=user["uuid"])
+        user["password_reset_link"] = self._get_password_reset_link(
+            uuid=user["uuid"])
         return user
 
     def email_password_reset_link(
@@ -153,12 +160,15 @@ class Users(ChildMixins):  # pragma: no cover
         email = email or user_email
 
         if not email:
-            raise ApiError("User has no email address defined, must supply email")
+            raise ApiError(
+                "User has no email address defined, must supply email")
 
         if generate_first:
-            user["password_reset_link"] = self._get_password_reset_link(uuid=user["uuid"])
+            user["password_reset_link"] = self._get_password_reset_link(
+                uuid=user["uuid"])
 
-        self._email_password_reset_link(uuid=user["uuid"], email=email, new_user=False)
+        self._email_password_reset_link(
+            uuid=user["uuid"], email=email, new_user=False)
         return email
 
     def _get(self, limit: Optional[int] = None, skip: Optional[int] = None) -> List[dict]:

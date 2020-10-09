@@ -19,7 +19,8 @@ def check_gui_page_size(size: Optional[int] = None) -> int:
     """
     size = size or GUI_PAGE_SIZES[0]
     if size not in GUI_PAGE_SIZES:
-        raise ApiError(f"gui_page_size of {size} is invalid, must be one of {GUI_PAGE_SIZES}")
+        raise ApiError(
+            f"gui_page_size of {size} is invalid, must be one of {GUI_PAGE_SIZES}")
     return size
 
 

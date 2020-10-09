@@ -33,11 +33,13 @@ if __name__ == "__main__":
     j = jdump
     fields_map = devices.fields.get()
     agg_fields = fields_map["agg"]
-    agg_fields = [x["name"] for x in agg_fields if x["is_root"] and x["selectable"]]
+    agg_fields = [x["name"]
+                  for x in agg_fields if x["is_root"] and x["selectable"]]
     agg_fields += ["all"]
     ID = "623de6fad018809afa2f07e4305c90c0"
     query = f'(internal_axon_id == "{ID}")'
-    asset = devices.get(query=query, fields=agg_fields, include_details=True)[0]
+    asset = devices.get(query=query, fields=agg_fields,
+                        include_details=True)[0]
 
 
 def check_same(idx, field, asset, adapter, data_client_used):
@@ -80,7 +82,8 @@ for idx, adapter in enumerate(adapters):
     idx_client_used = asset["meta_data.client_used"][idx]
 
     assert adapter == data_plugin_name, (adapter, data_plugin_name)
-    assert data_client_used == idx_client_used, (data_client_used, idx_client_used)
+    assert data_client_used == idx_client_used, (
+        data_client_used, idx_client_used)
     # check_same(idx, "fetch_time", asset, adapter, data_client_used)
     check_same(idx, "hostname", asset, adapter, data_client_used)
     check_same(idx, "domain", asset, adapter, data_client_used)

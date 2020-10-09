@@ -107,7 +107,8 @@ class Flags:
     }
     LFMT: str = "[" + " ".join(list(FLAGS)) + "]"
     RFMT: str = f"[{RIGHTB}]"
-    FMT_TEXT: str = "\n# " + "\n# ".join([f"{k}  {v}" for k, v in FLAGS.items()])
+    FMT_TEXT: str = "\n# " + \
+        "\n# ".join([f"{k}  {v}" for k, v in FLAGS.items()])
     FMT_CSV: str = ", ".join([f"{k} {v}" for k, v in FLAGS.items()])
 
 

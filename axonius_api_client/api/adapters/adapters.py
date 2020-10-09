@@ -80,7 +80,8 @@ class Adapters(ModelMixins):
         adapters = self.get()
 
         keys = ["node_name", "node_id"]
-        nodes = [x for x in adapters if node.lower() in [str(x[k]).lower() for k in keys]]
+        nodes = [x for x in adapters if node.lower() in [str(x[k]).lower()
+                                                         for k in keys]]
 
         if not nodes:
             err = f"No node named {node!r} found"
@@ -119,10 +120,13 @@ class Adapters(ModelMixins):
 
         if not name_config:
             name = adapter["name"]
-            valid = ", ".join([x for x in CONFIG_TYPES if f"{x}_name" in schemas])
-            raise ApiError(f"Adapter {name} has no config type {config_type!r}, valids: {valid}!")
+            valid = ", ".join(
+                [x for x in CONFIG_TYPES if f"{x}_name" in schemas])
+            raise ApiError(
+                f"Adapter {name} has no config type {config_type!r}, valids: {valid}!")
 
-        data = self._config_get(name_plugin=name_plugin, name_config=name_config)
+        data = self._config_get(name_plugin=name_plugin,
+                                name_config=name_config)
 
         data["schema"] = parse_schema(raw=data["schema"])
 
@@ -143,7 +147,8 @@ class Adapters(ModelMixins):
         kwargs.update(kwargs_config)
         adapter = self.get_by_name(name=name, node=node)
 
-        config_map = self.config_refetch(adapter=adapter, config_type=config_type)
+        config_map = self.config_refetch(
+            adapter=adapter, config_type=config_type)
 
         name_config = f"{config_type}_name"
         name_config = adapter["schemas"][name_config]
@@ -278,8 +283,10 @@ class Adapters(ModelMixins):
             file_headers: headers to use for file
         """
         data = {"field_name": field_name}
-        files = {"userfile": (file_name, file_content, file_content_type, file_headers)}
-        path = self.router.file_upload.format(adapter_name_raw=name_raw, adapter_node_id=node_id)
+        files = {"userfile": (file_name, file_content,
+                              file_content_type, file_headers)}
+        path = self.router.file_upload.format(
+            adapter_name_raw=name_raw, adapter_node_id=node_id)
         ret = self.request(method="post", path=path, data=data, files=files)
         ret["filename"] = file_name
         return ret

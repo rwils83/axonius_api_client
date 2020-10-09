@@ -354,7 +354,8 @@ def find_handlers(
                 handlers[obj.name].append(handler)
 
     if obj.parent and traverse:
-        found = find_handlers(obj=obj.parent, hname=hname, htype=htype, traverse=traverse)
+        found = find_handlers(obj=obj.parent, hname=hname,
+                              htype=htype, traverse=traverse)
         handlers.update(found)
 
     return handlers
@@ -371,7 +372,8 @@ set_log_level(obj=LOG, level=LOG_LEVEL_PACKAGE)
 def handle_unhandled_exception(exc_type, exc_value, exc_traceback):  # pragma: no cover
     """Log unhandled exceptions."""
     sys.__excepthook__(exc_type, exc_value, exc_traceback)
-    LOG.critical("Unhandled exception", exc_info=(exc_type, exc_value, exc_traceback))
+    LOG.critical("Unhandled exception", exc_info=(
+        exc_type, exc_value, exc_traceback))
 
 
 sys.excepthook = handle_unhandled_exception

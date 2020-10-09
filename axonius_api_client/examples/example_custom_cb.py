@@ -95,7 +95,8 @@ if __name__ == "__main__":
 
     now = datetime.utcnow()
     this_time = now.isoformat(sep=" ", timespec="seconds")
-    last_time = (now - timedelta(days=1)).isoformat(sep=" ", timespec="seconds")
+    last_time = (now - timedelta(days=1)
+                 ).isoformat(sep=" ", timespec="seconds")
     filters = [
         f'(specific_data.data.fetch_time < date("{this_time}"))',
         f'(specific_data.data.fetch_time >= date("{last_time}"))',
@@ -103,7 +104,8 @@ if __name__ == "__main__":
     query = " and ".join(filters)
 
     agg_fields = devices.fields.get().get("agg")
-    get_fields = [field.get("name_qual") for field in agg_fields if _field_wanted(field)]
+    get_fields = [field.get("name_qual")
+                  for field in agg_fields if _field_wanted(field)]
     get_fields.extend(
         ["specific_data", "specific_data.data.network_interfaces.ips", "agent_versions"]
     )

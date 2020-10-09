@@ -134,12 +134,14 @@ class Mixins(Model):
             )
 
         body = json_reload(obj=response.text, error=False)
-        self.LOG.debug(f"Received auth path {self._validate_path!r} body:\n{body}")
+        self.LOG.debug(
+            f"Received auth path {self._validate_path!r} body:\n{body}")
 
         try:
             response.raise_for_status()
         except Exception as exc:
             self._logged_in = False
-            raise InvalidCredentials(f"Invalid credentials on {self} -- exception: {exc}")
+            raise InvalidCredentials(
+                f"Invalid credentials on {self} -- exception: {exc}")
 
         self._logged_in = True

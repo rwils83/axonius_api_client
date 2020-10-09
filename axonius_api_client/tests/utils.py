@@ -56,7 +56,8 @@ def exists_query(apiobj, fields=None, not_exist=False):
         pytest.skip(f"Fields {fields} not known for {apiobj}: {exc}")
 
     if not_exist:
-        entries = [{"type": "simple", "value": f"! {x} exists"} for x in fields]
+        entries = [{"type": "simple", "value": f"! {x} exists"}
+                   for x in fields]
     else:
         entries = [{"type": "simple", "value": f"{x} exists"} for x in fields]
 

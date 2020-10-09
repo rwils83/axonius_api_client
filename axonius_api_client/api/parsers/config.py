@@ -75,7 +75,8 @@ def config_check_file(
     if callable(cb_file):
         return cb_file(value=value, schema=schema, callbacks=callbacks, source=source)
 
-    raise ApiError(f"File uploads for {source} setting {sname!r} are not supported yet")
+    raise ApiError(
+        f"File uploads for {source} setting {sname!r} are not supported yet")
 
 
 def config_check_bool(
@@ -162,11 +163,13 @@ def config_check_str(
         if enum_is_str:
             if value not in schema_enum:
                 sinfo = config_info(schema=schema, value=value, source=source)
-                raise ConfigInvalidValue(f"{sinfo}\nIs not one of {schema_enum}!")
+                raise ConfigInvalidValue(
+                    f"{sinfo}\nIs not one of {schema_enum}!")
         else:  # pragma: no cover
             valids = [x["name"] for x in schema_enum]
             if value not in valids:
-                valids = "\n" + "\n".join(["  ".join(x) for x in join_kv(obj=schema_enum)])
+                valids = "\n" + "\n".join(["  ".join(x)
+                                           for x in join_kv(obj=schema_enum)])
                 sinfo = config_info(schema=schema, value=value, source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nIs not one of:{valids}!")
 
@@ -199,7 +202,8 @@ def config_build(
         elif name in new_config:
             value = new_config[name]
             if check:
-                value = config_check(value=value, schema=schema, source=source, callbacks=callbacks)
+                value = config_check(
+                    value=value, schema=schema, source=source, callbacks=callbacks)
             new_config[name] = value
     return new_config
 
@@ -227,7 +231,8 @@ def config_unchanged(
     """Pass."""
     if new_config == old_config or not new_config:
         err = f"No changes supplied for {source}"
-        raise ConfigUnchanged(tablize_schemas(schemas=schemas, config=old_config, err=err))
+        raise ConfigUnchanged(tablize_schemas(
+            schemas=schemas, config=old_config, err=err))
     return new_config
 
 
@@ -392,7 +397,8 @@ def parse_section(raw: dict, raw_config: dict, parent: dict, settings: dict) -> 
 
         # FYI has no title:
         #   settings_gui::saml_login_settings::configure_authncc
-        schema["title"] = schema.get("title", schema_name.replace("_", " ").title())
+        schema["title"] = schema.get(
+            "title", schema_name.replace("_", " ").title())
 
     return parsed
 

@@ -104,7 +104,8 @@ class Cnx(ChildMixins):
 
         config_empty(schemas=cnx_schemas, new_config=new_config, source=source)
 
-        config_required(schemas=cnx_schemas, new_config=new_config, source=source)
+        config_required(schemas=cnx_schemas,
+                        new_config=new_config, source=source)
 
         result = self._add(
             adapter_name_raw=adapter_name_raw,
@@ -178,7 +179,8 @@ class Cnx(ChildMixins):
             sleep: seconds to sleep in between each retry
         """
         tries = 1
-        cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
+        cnxs = self.get_by_adapter(
+            adapter_name=adapter_name, adapter_node=adapter_node)
         while True:
             for cnx in cnxs:
                 if cnx[value_key] == value:
@@ -191,7 +193,8 @@ class Cnx(ChildMixins):
 
             time.sleep(sleep)
 
-            cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
+            cnxs = self.get_by_adapter(
+                adapter_name=adapter_name, adapter_node=adapter_node)
 
         value_key = value_key.upper()
         err = (
@@ -248,7 +251,8 @@ class Cnx(ChildMixins):
             adapter_node: name of node running adapter
         """
         key = "connection_label"
-        cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
+        cnxs = self.get_by_adapter(
+            adapter_name=adapter_name, adapter_node=adapter_node)
         for cnx in cnxs:
             config = cnx.get("config") or {}
             label = config.get(key) or ""
@@ -457,7 +461,8 @@ class Cnx(ChildMixins):
         """
         message = result.get("message", "")
         if message == CNX_GONE:
-            cnxs = self.get_by_adapter(adapter_name=adapter_name, adapter_node=adapter_node)
+            cnxs = self.get_by_adapter(
+                adapter_name=adapter_name, adapter_node=adapter_node)
             err = f"Connection with ID {cnx_id!r} no longer exists!"
             raise CnxGoneError(tablize_cnxs(cnxs=cnxs, err=err))
 
@@ -582,7 +587,8 @@ class Cnx(ChildMixins):
         if isinstance(value, str):
             value = pathlib.Path(value).expanduser().resolve()
             if not value.is_file():
-                sinfo = config_info(schema=schema, value=str(value), source=source)
+                sinfo = config_info(
+                    schema=schema, value=str(value), source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nFile does not exist!")
             return self.parent.file_upload(
                 name=adapter_name,
@@ -604,7 +610,8 @@ class Cnx(ChildMixins):
         if isinstance(value, pathlib.Path):
             value = value.expanduser().resolve()
             if not value.is_file():
-                sinfo = config_info(schema=schema, value=str(value), source=source)
+                sinfo = config_info(
+                    schema=schema, value=str(value), source=source)
                 raise ConfigInvalidValue(f"{sinfo}\nFile does not exist!")
 
             return self.parent.file_upload(
@@ -616,7 +623,8 @@ class Cnx(ChildMixins):
             )
 
         sinfo = config_info(schema=schema, value=str(value), source=source)
-        raise ConfigInvalidValue(f"{sinfo}\nFile is not an existing file or a file-like object!")
+        raise ConfigInvalidValue(
+            f"{sinfo}\nFile is not an existing file or a file-like object!")
 
     # XXX failing with secondary node!!! wrong plugin name?
     def _add(self, adapter_name_raw: str, adapter_node_id: str, new_config: dict) -> str:
@@ -631,7 +639,8 @@ class Cnx(ChildMixins):
         data.update(new_config)
         data["instanceName"] = adapter_node_id
 
-        path = self.parent.router.cnxs.format(adapter_name_raw=adapter_name_raw)
+        path = self.parent.router.cnxs.format(
+            adapter_name_raw=adapter_name_raw)
 
         return self.parent.request(
             method="put",
@@ -654,7 +663,8 @@ class Cnx(ChildMixins):
         data["instanceName"] = adapter_node_id
         data["oldInstanceName"] = adapter_node_id
 
-        path = self.parent.router.cnxs_test.format(adapter_name_raw=adapter_name_raw)
+        path = self.parent.router.cnxs_test.format(
+            adapter_name_raw=adapter_name_raw)
         return self.parent.request(method="post", path=path, json=data, raw=True)
 
     def _delete(

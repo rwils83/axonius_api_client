@@ -60,7 +60,8 @@ def cmd(ctx, url, key, secret, export_format, input_file, continue_on_error, **k
     reader = csv.DictReader(input_file)
     echo = ctx.obj.echo_warn if continue_on_error else ctx.obj.echo_error
 
-    missing_columns = [x for x in REQUIRED_COLUMNS if x not in reader.fieldnames]
+    missing_columns = [
+        x for x in REQUIRED_COLUMNS if x not in reader.fieldnames]
     if missing_columns:
         miss = ", ".join(missing_columns)
         ctx.obj.echo_error(f"CSV is missing required columns: {miss}")

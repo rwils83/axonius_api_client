@@ -43,8 +43,10 @@ def cmd(ctx, url, key, secret, export_format, **kwargs):
         basic = []
         for row in rows:
             new_row = {k: row[k] for k in basic_keys}
-            new_row["cnx_ids_broken"] = [x["id"] for x in row["cnx"] if not x["working"]]
-            new_row["cnx_ids_working"] = [x["id"] for x in row["cnx"] if x["working"]]
+            new_row["cnx_ids_broken"] = [x["id"]
+                                         for x in row["cnx"] if not x["working"]]
+            new_row["cnx_ids_working"] = [x["id"]
+                                          for x in row["cnx"] if x["working"]]
             basic.append(new_row)
 
         click.secho(json_dump(basic))
@@ -53,7 +55,8 @@ def cmd(ctx, url, key, secret, export_format, **kwargs):
     elif export_format == "table":
         click.secho(tablize_adapters(adapters=rows))
     elif export_format == "str-args":
-        lines = "\n".join(["--node-name {node_name} --name {name}".format(**row) for row in rows])
+        lines = "\n".join(
+            ["--node-name {node_name} --name {name}".format(**row) for row in rows])
         click.secho(lines)
     elif export_format == "str":
         lines = "\n".join(["{node_name}:{name}".format(**row) for row in rows])

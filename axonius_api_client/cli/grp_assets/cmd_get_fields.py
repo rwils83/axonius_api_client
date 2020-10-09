@@ -36,7 +36,8 @@ OPTIONS = [
         "field_key",
         default="name_qual",
         help="Which field key to match against for --field-re",
-        type=click.Choice(["name_qual", "name", "name_base", "column_title", "column_name"]),
+        type=click.Choice(["name_qual", "name", "name_base",
+                           "column_title", "column_name"]),
         show_envvar=True,
         show_default=True,
     ),
@@ -185,6 +186,8 @@ def cmd(
             "column_title": "Title",
             "type_norm": "Normalized Type",
         }
-        matches = [{keys[k]: v for k, v in x.items() if k in keys} for x in matches]
-        click.secho(tablize(value=matches, err=None, fmt="simple", footer=True))
+        matches = [{keys[k]: v for k, v in x.items() if k in keys}
+                   for x in matches]
+        click.secho(tablize(value=matches, err=None,
+                            fmt="simple", footer=True))
         ctx.exit(0)

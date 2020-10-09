@@ -209,11 +209,13 @@ def parse_schemas(
             },
         ]
 
-    field_names = [strip_left(obj=f["name"], fix=adapter_prefix).strip(".") for f in raw_fields]
+    field_names = [strip_left(obj=f["name"], fix=adapter_prefix).strip(
+        ".") for f in raw_fields]
 
     for field in raw_fields:
         title = field["title"]
-        name_base = strip_left(obj=field["name"], fix=adapter_prefix).strip(".")
+        name_base = strip_left(
+            obj=field["name"], fix=adapter_prefix).strip(".")
         field["adapter_name"] = adapter_name
         field["adapter_title"] = adapter_title
         field["adapter_prefix"] = adapter_prefix

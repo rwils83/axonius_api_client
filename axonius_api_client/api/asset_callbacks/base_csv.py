@@ -57,7 +57,8 @@ class Csv(Base):
             dialect=dialect,
             extrasaction=extras,
         )
-        self._stream.writerow(dict(zip(self.final_columns, self.final_columns)))
+        self._stream.writerow(
+            dict(zip(self.final_columns, self.final_columns)))
         self.do_export_schema()
 
     def stop(self, **kwargs):
@@ -78,7 +79,8 @@ class Csv(Base):
         """
         rows = listify(rows)
         for row in rows:
-            self._stream.fieldnames += [x for x in row if x not in self._stream.fieldnames]
+            self._stream.fieldnames += [
+                x for x in row if x not in self._stream.fieldnames]
             self._stream.writerow(row)
 
     def process_row(self, row: Union[List[dict], dict]) -> List[dict]:
@@ -90,7 +92,8 @@ class Csv(Base):
         rows = listify(row)
         self.do_start()
 
-        row_return = [{"internal_axon_id": row["internal_axon_id"]} for row in rows]
+        row_return = [{"internal_axon_id": row["internal_axon_id"]}
+                      for row in rows]
         rows = self.do_pre_row(rows=rows)
         rows = self.do_row(rows=rows)
         self.write_rows(rows=rows)

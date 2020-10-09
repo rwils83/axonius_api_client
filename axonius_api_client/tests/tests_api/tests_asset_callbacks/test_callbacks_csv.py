@@ -25,7 +25,8 @@ class TestCallbacksCsv(Callbacks):
             for x in get_schema(apiobj=apiobj, field=field_complex, key="sub_fields")
             if x["is_root"]
         ]
-        original_rows = get_rows_exist(apiobj=apiobj, fields=field_complex, max_rows=5)
+        original_rows = get_rows_exist(
+            apiobj=apiobj, fields=field_complex, max_rows=5)
 
         io_fd = io.StringIO()
 

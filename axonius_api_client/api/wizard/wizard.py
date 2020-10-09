@@ -116,7 +116,8 @@ class Wizard:
             try:
                 self._check_entry_keys(entry=entry, keys=Entry.REQ)
                 etype = entry[Entry.TYPE]
-                entry[Entry.TYPE] = self._check_entry_type(etype=etype, types=Types.DICT)
+                entry[Entry.TYPE] = self._check_entry_type(
+                    etype=etype, types=Types.DICT)
                 entry, is_open, tracker = self._parse_flags(
                     entry=entry,
                     idx=idx,
@@ -239,14 +240,16 @@ class Wizard:
         value_raw = entry[Entry.VALUE]
         field, operator, value = self._split_simple(value_raw=value_raw)
         field = self._get_field(value=field, value_raw=value_raw)
-        operator = self._get_operator(operator=operator, field=field, value_raw=value_raw)
+        operator = self._get_operator(
+            operator=operator, field=field, value_raw=value_raw)
         aql_value, expr_value = self.VALUE_PARSER(
             enum=field.get("enum", []),
             enum_items=field.get("items", {}).get("enum"),
             parser=operator.parser.name,
             value=value,
         )
-        query = operator.template.format(field=field[Fields.NAME], aql_value=aql_value)
+        query = operator.template.format(
+            field=field[Fields.NAME], aql_value=aql_value)
         expr = Expr.build(
             entry=entry,
             field=field,
@@ -275,13 +278,16 @@ class Wizard:
         sub_exprs = []
         for sub_idx, sub_raw in enumerate(subs_raw):
             try:
-                sub_expr = self._parse_sub(field=field, idx=sub_idx, value_raw=sub_raw)
+                sub_expr = self._parse_sub(
+                    field=field, idx=sub_idx, value_raw=sub_raw)
                 sub_exprs.append(sub_expr)
             except Exception as exc:
-                raise WizardError(f"Error parsing sub field from '{value_raw}'\n{exc}")
+                raise WizardError(
+                    f"Error parsing sub field from '{value_raw}'\n{exc}")
 
         sub_queries = Expr.get_subs_query(sub_exprs=sub_exprs)
-        query = Templates.COMPLEX.format(field=field[Fields.NAME], sub_queries=sub_queries)
+        query = Templates.COMPLEX.format(
+            field=field[Fields.NAME], sub_queries=sub_queries)
         expr = Expr.build(
             entry=entry,
             field=field,
@@ -306,7 +312,8 @@ class Wizard:
             :exc:`axonius_api_client.exceptions.WizardError`:
                 if sub field supplied is not a valid sub field of the complex field
         """
-        sub_field, operator, sub_value = self._split_simple(value_raw=value_raw)
+        sub_field, operator, sub_value = self._split_simple(
+            value_raw=value_raw)
 
         field_subs = {x[Fields.NAME]: x for x in field[Fields.SUBS]}
 
@@ -321,14 +328,16 @@ class Wizard:
 
         sub_field = field_subs[sub_field]
 
-        operator = self._get_operator(operator=operator, field=sub_field, value_raw=value_raw)
+        operator = self._get_operator(
+            operator=operator, field=sub_field, value_raw=value_raw)
         aql_value, expr_value = self.VALUE_PARSER(
             enum=sub_field.get("enum", []),
             enum_items=sub_field.get("items", {}).get("enum"),
             parser=operator.parser.name,
             value=sub_value,
         )
-        query = operator.template.format(field=sub_field[Fields.NAME], aql_value=aql_value)
+        query = operator.template.format(
+            field=sub_field[Fields.NAME], aql_value=aql_value)
         expr = Expr.build_child(
             field=sub_field[Fields.NAME],
             idx=idx,
@@ -356,7 +365,8 @@ class Wizard:
 
         pattern = Patterns.FLAGS.pattern
         match = Patterns.FLAGS.search(value_raw)
-        self.LOG.debug(f"Value {value_raw!r} regex match {match} using pattern {pattern}")
+        self.LOG.debug(
+            f"Value {value_raw!r} regex match {match} using pattern {pattern}")
         check_right = [f" {Flags.RIGHTB}", Flags.RIGHTB]
 
         if match:
@@ -364,11 +374,13 @@ class Wizard:
             self.LOG.debug(f"Parsed value {value_raw!r} into {groups}")
 
             if not groups.get("value"):
-                raise WizardError(f"Empty value after parsing {value_raw!r} into {groups}")
+                raise WizardError(
+                    f"Empty value after parsing {value_raw!r} into {groups}")
 
             value = groups.get("value")
 
-            flags += [x.strip() for x in list(groups.get("flags", []) or []) if x.strip()]
+            flags += [x.strip()
+                      for x in list(groups.get("flags", []) or []) if x.strip()]
 
             for check in check_right:
                 if value.endswith(check):
@@ -393,15 +405,18 @@ class Wizard:
 
         if split:
             field = split.pop(0).strip()
-            self.LOG.debug(f"Got field {field!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got field {field!r} from {split} from '{value_raw}'")
 
         if split:
             operator = split.pop(0).lower().strip()
-            self.LOG.debug(f"Got operator {operator!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got operator {operator!r} from {split} from '{value_raw}'")
 
         if split:
             value = split.pop(0).lstrip()
-            self.LOG.debug(f"Got value {value!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got value {value!r} from {split} from '{value_raw}'")
 
         self._check_patterns(
             value_raw=value_raw,
@@ -434,11 +449,13 @@ class Wizard:
 
         if split:
             field = split.pop(0).strip()
-            self.LOG.debug(f"Got complex field {field!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got complex field {field!r} from {split} from '{value_raw}'")
 
         if split:
             subs_raw = [x.lstrip() for x in split if x.lstrip()]
-            self.LOG.debug(f"Got sub fields {subs_raw!r} from {split} from '{value_raw}'")
+            self.LOG.debug(
+                f"Got sub fields {subs_raw!r} from {split} from '{value_raw}'")
 
         self._check_patterns(
             value_raw=value_raw,
@@ -446,7 +463,8 @@ class Wizard:
             src="FIELD",
             patterns=Patterns.FIELD,
         )
-        self._check_patterns(value_raw=value_raw, value=subs_raw, src="SUB-FIELD(s)", patterns=[])
+        self._check_patterns(value_raw=value_raw,
+                             value=subs_raw, src="SUB-FIELD(s)", patterns=[])
 
         return field, subs_raw
 
@@ -560,11 +578,13 @@ class Wizard:
         for key in keys:
             if key not in entry:
                 found = ", ".join(list(entry))
-                raise WizardError(f"Missing required key {key!r}, found keys: {found}")
+                raise WizardError(
+                    f"Missing required key {key!r}, found keys: {found}")
 
             value = entry[key]
             if not value:
-                raise WizardError(f"Empty required key {key!r} with value {value}")
+                raise WizardError(
+                    f"Empty required key {key!r} with value {value}")
 
             if not isinstance(value, str):
                 vtype = type(value).__name__
@@ -587,7 +607,8 @@ class Wizard:
                 if value is empty or does not match one of the patterns
         """
         if not value:
-            raise WizardError(f"Empty required {src} as {value!r} from value '{value_raw}'")
+            raise WizardError(
+                f"Empty required {src} as {value!r} from value '{value_raw}'")
 
         for check in patterns:
             match = check.search(value)

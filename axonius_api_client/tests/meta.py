@@ -167,7 +167,8 @@ SCHEMA_NUM = {"name": "schema_num", "type": "number", "required": False}
 SCHEMA_BOOL = {"name": "schema_bool", "type": "bool", "required": False}
 SCHEMA_ARRAY = {"name": "schema_array", "type": "array", "required": False}
 SCHEMA_FILE = {"name": "schema_file", "type": "file", "required": False}
-SCHEMA_UNKNOWN = {"name": "schema_unknown", "type": "badwolf", "required": False}
+SCHEMA_UNKNOWN = {"name": "schema_unknown",
+                  "type": "badwolf", "required": False}
 SCHEMAS = [
     SCHEMA_STR,
     SCHEMA_STR_PASSWORD,

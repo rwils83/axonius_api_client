@@ -61,29 +61,40 @@ class OperatorNameMap(BaseData):
 @dataclasses.dataclass
 class OperatorNameMaps(BaseData):
     contains: OperatorNameMap = OperatorNameMap(name="contains", op="contains")
-    count_equals: OperatorNameMap = OperatorNameMap(name="count_equals", op="count_equals")
-    count_less_than: OperatorNameMap = OperatorNameMap(name="count_below", op="count_below")
-    count_more_than: OperatorNameMap = OperatorNameMap(name="count_above", op="count_above")
+    count_equals: OperatorNameMap = OperatorNameMap(
+        name="count_equals", op="count_equals")
+    count_less_than: OperatorNameMap = OperatorNameMap(
+        name="count_below", op="count_below")
+    count_more_than: OperatorNameMap = OperatorNameMap(
+        name="count_above", op="count_above")
     endswith: OperatorNameMap = OperatorNameMap(name="endswith", op="ends")
     equals: OperatorNameMap = OperatorNameMap(name="equals", op="equals")
     exists: OperatorNameMap = OperatorNameMap(name="exists", op="exists")
     is_false: OperatorNameMap = OperatorNameMap(name="false", op="false")
     is_true: OperatorNameMap = OperatorNameMap(name="true", op="true")
     is_in: OperatorNameMap = OperatorNameMap(name="in", op="IN")
-    is_in_subnet: OperatorNameMap = OperatorNameMap(name="in_subnet", op="subnet")
+    is_in_subnet: OperatorNameMap = OperatorNameMap(
+        name="in_subnet", op="subnet")
     is_ipv4: OperatorNameMap = OperatorNameMap(name="is_ipv4", op="isIPv4")
     is_ipv6: OperatorNameMap = OperatorNameMap(name="is_ipv6", op="isIPv6")
-    is_not_in_subnet: OperatorNameMap = OperatorNameMap(name="not_in_subnet", op="notInSubnet")
+    is_not_in_subnet: OperatorNameMap = OperatorNameMap(
+        name="not_in_subnet", op="notInSubnet")
     last_days: OperatorNameMap = OperatorNameMap(name="last_days", op="days")
-    last_hours: OperatorNameMap = OperatorNameMap(name="last_hours", op="hours")
+    last_hours: OperatorNameMap = OperatorNameMap(
+        name="last_hours", op="hours")
     less_than: OperatorNameMap = OperatorNameMap(name="less_than", op="<")
     more_than: OperatorNameMap = OperatorNameMap(name="more_than", op=">")
-    next_days: OperatorNameMap = OperatorNameMap(name="next_days", op="next_days")
-    next_hours: OperatorNameMap = OperatorNameMap(name="next_hours", op="next_hours")
+    next_days: OperatorNameMap = OperatorNameMap(
+        name="next_days", op="next_days")
+    next_hours: OperatorNameMap = OperatorNameMap(
+        name="next_hours", op="next_hours")
     regex: OperatorNameMap = OperatorNameMap(name="regex", op="regex")
-    startswith: OperatorNameMap = OperatorNameMap(name="startswith", op="starts")
-    earlier_than: OperatorNameMap = OperatorNameMap(name="earlier_than", op="earlier than")
-    later_than: OperatorNameMap = OperatorNameMap(name="later_than", op="later than")
+    startswith: OperatorNameMap = OperatorNameMap(
+        name="startswith", op="starts")
+    earlier_than: OperatorNameMap = OperatorNameMap(
+        name="earlier_than", op="earlier than")
+    later_than: OperatorNameMap = OperatorNameMap(
+        name="later_than", op="later than")
 
 
 @dataclasses.dataclass
@@ -176,7 +187,8 @@ class Operators(BaseData):
     )
     ip_in_subnet: Operator = Operator(
         name_map=OperatorNameMaps.is_in_subnet,
-        template=('({field}_raw == match({{"$gte": {aql_value[0]}, "$lte": ' "{aql_value[1]}}}))"),
+        template=(
+            '({field}_raw == match({{"$gte": {aql_value[0]}, "$lte": ' "{aql_value[1]}}}))"),
         parser=Parsers.to_in_subnet,
     )
     ip_not_in_subnet: Operator = Operator(
@@ -570,7 +582,8 @@ class OperatorTypeMaps(BaseData):
 
         name = field["name_qual"]
         err = f"Unable to map field {name!r} with {attrs_str(attrs)}"
-        valid_str = "\n  ".join([f"{k}: {attrs_str(v)}" for k, v in valid.items()])
+        valid_str = "\n  ".join(
+            [f"{k}: {attrs_str(v)}" for k, v in valid.items()])
         raise NotFoundError("\n".join([err, valid_str, err]))
 
     @classmethod

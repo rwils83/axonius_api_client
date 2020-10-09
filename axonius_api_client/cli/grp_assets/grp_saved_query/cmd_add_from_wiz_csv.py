@@ -29,7 +29,8 @@ def cmd(ctx, url, key, secret, input_file, abort, overwrite, export_format, **kw
         print(len(sqs))
         for sq in sqs:
             name = sq["name"]
-            check_sq_exist(ctx=ctx, apiobj=apiobj, name=name, overwrite=overwrite)
+            check_sq_exist(ctx=ctx, apiobj=apiobj,
+                           name=name, overwrite=overwrite)
             row = apiobj.saved_query.add(**sq)
             ctx.obj.echo_ok(f"Successfully created saved query: {name}")
             handle_export(ctx=ctx, rows=row, export_format=export_format)

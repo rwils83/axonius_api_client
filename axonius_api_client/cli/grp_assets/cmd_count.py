@@ -27,7 +27,8 @@ def cmd(ctx, url, key, secret, query_file, wizard_content, help_detailed=None, *
     apiobj = getattr(client, p_grp)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        kwargs = load_wiz(apiobj=apiobj, wizard_content=wizard_content, kwargs=kwargs)
+        kwargs = load_wiz(
+            apiobj=apiobj, wizard_content=wizard_content, kwargs=kwargs)
         raw_data = apiobj.count(**kwargs)
 
     click.secho(format(raw_data))

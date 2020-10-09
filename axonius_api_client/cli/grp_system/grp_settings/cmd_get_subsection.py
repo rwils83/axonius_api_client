@@ -19,7 +19,8 @@ def cmd(ctx, url, key, secret, section, sub_section, export_format, **kwargs):
     apiobj = getattr(client.system, apiname)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        settings = apiobj.get_sub_section(section=section, sub_section=sub_section)
+        settings = apiobj.get_sub_section(
+            section=section, sub_section=sub_section)
 
     if export_format == "str":
         str_subsection(meta=settings)

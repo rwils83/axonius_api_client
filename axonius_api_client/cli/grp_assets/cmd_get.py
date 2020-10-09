@@ -23,7 +23,8 @@ OPTIONS = [
     get_option_fields_default(default=True),
     *QUERY,
     *WIZ,
-    get_option_help(choices=["auth", "query", "assetexport", "selectfields", "wizard"]),
+    get_option_help(
+        choices=["auth", "query", "assetexport", "selectfields", "wizard"]),
 ]
 
 
@@ -43,5 +44,6 @@ def cmd(ctx, url, key, secret, query_file, wizard_content, whitelist=None, **kwa
     apiobj = getattr(client, p_grp)
 
     with ctx.obj.exc_wrap(wraperror=ctx.obj.wraperror):
-        kwargs = load_wiz(apiobj=apiobj, wizard_content=wizard_content, kwargs=kwargs)
+        kwargs = load_wiz(
+            apiobj=apiobj, wizard_content=wizard_content, kwargs=kwargs)
         apiobj.get(**kwargs)

@@ -188,7 +188,8 @@ class AssetMixin(ModelMixins):
         }
 
         callbacks_cls = get_callbacks_cls(export=export)
-        callbacks = callbacks_cls(apiobj=self, getargs=kwargs, state=state, store=store)
+        callbacks = callbacks_cls(
+            apiobj=self, getargs=kwargs, state=state, store=store)
         self.LAST_CALLBACKS: Base = callbacks
 
         callbacks.start()
@@ -266,7 +267,8 @@ class AssetMixin(ModelMixins):
             history_date=store["history_date"],
         )
 
-        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt, exact=True)
+        state["fetch_seconds_this_page"] = dt_sec_ago(
+            obj=page_start_dt, exact=True)
         state["fetch_seconds_total"] += state["fetch_seconds_this_page"]
 
         # only first page has totalResources with integer when cursor paging!!
@@ -277,9 +279,12 @@ class AssetMixin(ModelMixins):
 
         state["rows_fetched_this_page"] = len(page["assets"])
         state["rows_fetched_total"] += state["rows_fetched_this_page"]
-        state["rows_to_fetch_left"] = state["rows_to_fetch_total"] - state["rows_fetched_total"]
-        state["pages_to_fetch_total"] = math.ceil(state["rows_to_fetch_total"] / state["page_size"])
-        state["pages_to_fetch_left"] = math.ceil(state["rows_to_fetch_left"] / state["page_size"])
+        state["rows_to_fetch_left"] = state["rows_to_fetch_total"] - \
+            state["rows_fetched_total"]
+        state["pages_to_fetch_total"] = math.ceil(
+            state["rows_to_fetch_total"] / state["page_size"])
+        state["pages_to_fetch_left"] = math.ceil(
+            state["rows_to_fetch_left"] / state["page_size"])
 
         state["page_cursor"] = page.get("cursor")
         return page
@@ -298,16 +303,19 @@ class AssetMixin(ModelMixins):
             history_date=store["history_date"],
         )
 
-        state["fetch_seconds_this_page"] = dt_sec_ago(obj=page_start_dt, exact=True)
+        state["fetch_seconds_this_page"] = dt_sec_ago(
+            obj=page_start_dt, exact=True)
         state["fetch_seconds_total"] += state["fetch_seconds_this_page"]
 
         state["rows_to_fetch_total"] = page["page"]["totalResources"]
         state["rows_fetched_this_page"] = len(page["assets"])
         state["rows_fetched_total"] += state["rows_fetched_this_page"]
-        state["rows_to_fetch_left"] = state["rows_to_fetch_total"] - state["rows_fetched_total"]
+        state["rows_to_fetch_left"] = state["rows_to_fetch_total"] - \
+            state["rows_fetched_total"]
         state["page_number"] = page["page"]["number"]
         state["pages_to_fetch_total"] = page["page"]["totalPages"]
-        state["pages_to_fetch_left"] = state["pages_to_fetch_total"] - state["page_number"]
+        state["pages_to_fetch_left"] = state["pages_to_fetch_total"] - \
+            state["page_number"]
         return page
 
     def get_by_id(self, id: str) -> dict:
@@ -352,7 +360,8 @@ class AssetMixin(ModelMixins):
         **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Pass."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(
+            value=field, field_manual=field_manual)
 
         match = listify(values)
         match = [f"'{x.strip()}'" for x in match]
@@ -381,7 +390,8 @@ class AssetMixin(ModelMixins):
         **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Pass."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(
+            value=field, field_manual=field_manual)
         flags = ', "i"' if cast_insensitive else ""
         inner = f'{field} == regex("{value}"{flags})'
         kwargs["query"] = self._build_query(
@@ -403,7 +413,8 @@ class AssetMixin(ModelMixins):
         **kwargs,
     ) -> Union[Generator[dict, None, None], List[dict]]:
         """Build query to get an asset by field value."""
-        field = self.fields.get_field_name(value=field, field_manual=field_manual)
+        field = self.fields.get_field_name(
+            value=field, field_manual=field_manual)
 
         inner = f'{field} == "{value}"'
 

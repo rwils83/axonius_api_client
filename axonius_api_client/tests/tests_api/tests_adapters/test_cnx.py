@@ -35,7 +35,8 @@ class TestCnxPrivate(TestCnxBase):
 
 class TestCnxPublic(TestCnxBase):
     def test_get_by_adapter(self, apiobj):
-        cnxs = apiobj.cnx.get_by_adapter(adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE)
+        cnxs = apiobj.cnx.get_by_adapter(
+            adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE)
         assert isinstance(cnxs, list)
         for cnx in cnxs:
             assert isinstance(cnx, dict)
@@ -43,11 +44,13 @@ class TestCnxPublic(TestCnxBase):
 
     def test_get_by_adapter_badname(self, apiobj):
         with pytest.raises(NotFoundError):
-            apiobj.cnx.get_by_adapter(adapter_name="badwolf", adapter_node=DEFAULT_NODE)
+            apiobj.cnx.get_by_adapter(
+                adapter_name="badwolf", adapter_node=DEFAULT_NODE)
 
     def test_get_by_adapter_badnode(self, apiobj):
         with pytest.raises(NotFoundError):
-            apiobj.cnx.get_by_adapter(adapter_name=CSV_ADAPTER, adapter_node="badwolf")
+            apiobj.cnx.get_by_adapter(
+                adapter_name=CSV_ADAPTER, adapter_node="badwolf")
 
     def test_get_by_uuid(self, apiobj):
         cnx = get_cnx_existing(apiobj)
@@ -111,7 +114,8 @@ class TestCnxPublic(TestCnxBase):
 
     def test_test_fail_no_domain(self, apiobj):
         with pytest.raises(ConfigRequired):
-            apiobj.cnx.test(adapter_name="tanium", adapter_node=DEFAULT_NODE, username="x")
+            apiobj.cnx.test(adapter_name="tanium",
+                            adapter_node=DEFAULT_NODE, username="x")
 
     def test_update_cnx_nochange(self, apiobj):
         cnx = get_cnx_broken(apiobj)
@@ -127,7 +131,8 @@ class TestCnxPublic(TestCnxBase):
         else:
             new_label = "badwolf"
 
-        cnx_update = apiobj.cnx.update_cnx(cnx_update=cnx, connection_label=new_label)
+        cnx_update = apiobj.cnx.update_cnx(
+            cnx_update=cnx, connection_label=new_label)
         assert cnx_update["config"]["connection_label"] == new_label
 
         cnx_reset = apiobj.cnx.update_by_id(
@@ -158,9 +163,11 @@ class TestCnxPublic(TestCnxBase):
         assert getattr(exc.value, "cnx_old", None)
         assert getattr(exc.value, "result", None)
         assert exc.value.cnx_new["config"]["https_proxy"] == new_https_proxy
-        assert exc.value.cnx_old["config"].get("https_proxy") == old_https_proxy
+        assert exc.value.cnx_old["config"].get(
+            "https_proxy") == old_https_proxy
 
-        cnx_reset = apiobj.cnx.update_cnx(cnx_update=exc.value.cnx_new, https_proxy=old_https_proxy)
+        cnx_reset = apiobj.cnx.update_cnx(
+            cnx_update=exc.value.cnx_new, https_proxy=old_https_proxy)
         assert cnx_reset["config"]["https_proxy"] == old_https_proxy
 
     def test_cb_file_upload_fail(self, apiobj, csv_file_path, monkeypatch):
@@ -174,7 +181,8 @@ class TestCnxPublic(TestCnxBase):
             apiobj.cnx.cb_file_upload(
                 value=[{"badwolf": "badwolf"}],
                 schema={"name": "badwolf"},
-                callbacks={"adapter_name": "badwolf", "adapter_node": "badwolf"},
+                callbacks={"adapter_name": "badwolf",
+                           "adapter_node": "badwolf"},
                 source="badwolf",
             )
 
@@ -204,7 +212,8 @@ class TestCnxPublic(TestCnxBase):
             apiobj.cnx.cb_file_upload(
                 value={"badwolf": "badwolf"},
                 schema={"name": "badwolf"},
-                callbacks={"adapter_name": "badwolf", "adapter_node": "badwolf"},
+                callbacks={"adapter_name": "badwolf",
+                           "adapter_node": "badwolf"},
                 source="badwolf",
             )
 
@@ -235,7 +244,8 @@ class TestCnxPublic(TestCnxBase):
             apiobj.cnx.cb_file_upload(
                 value=file_path,
                 schema={"name": "badwolf"},
-                callbacks={"adapter_name": "badwolf", "adapter_node": "badwolf"},
+                callbacks={"adapter_name": "badwolf",
+                           "adapter_node": "badwolf"},
                 source="badwolf",
             )
 
@@ -266,7 +276,8 @@ class TestCnxPublic(TestCnxBase):
             apiobj.cnx.cb_file_upload(
                 value=str(file_path),
                 schema={"name": "badwolf"},
-                callbacks={"adapter_name": "badwolf", "adapter_node": "badwolf"},
+                callbacks={"adapter_name": "badwolf",
+                           "adapter_node": "badwolf"},
                 source="badwolf",
             )
 
@@ -278,7 +289,8 @@ class TestCnxPublic(TestCnxBase):
             # "is_installed_sw": False,
             # "s3_use_ec2_attached_instance_profile": False,
         }
-        cnx_added = apiobj.cnx.add(adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
+        cnx_added = apiobj.cnx.add(
+            adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
         for k, v in config.items():
             assert v == cnx_added["config"][k]
 
@@ -305,7 +317,8 @@ class TestCnxPublic(TestCnxBase):
             "user_id": "badwolf",
             "file_path": file_path,
         }
-        cnx_added = apiobj.cnx.add(adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
+        cnx_added = apiobj.cnx.add(
+            adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
 
         assert isinstance(cnx_added["config"]["file_path"], dict)
 
@@ -332,7 +345,8 @@ class TestCnxPublic(TestCnxBase):
             "file_path": file_path,
         }
         with pytest.raises(ConfigInvalidValue):
-            apiobj.cnx.add(adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
+            apiobj.cnx.add(adapter_name=CSV_ADAPTER,
+                           adapter_node=DEFAULT_NODE, **config)
 
     def test_add_remove_error(self, apiobj, csv_file_path_broken):
         config = {
@@ -344,7 +358,8 @@ class TestCnxPublic(TestCnxBase):
             # "s3_use_ec2_attached_instance_profile": False,
         }
         with pytest.raises(CnxAddError) as exc:
-            apiobj.cnx.add(adapter_name=CSV_ADAPTER, adapter_node=DEFAULT_NODE, **config)
+            apiobj.cnx.add(adapter_name=CSV_ADAPTER,
+                           adapter_node=DEFAULT_NODE, **config)
 
         assert getattr(exc.value, "cnx_new", None)
         assert not hasattr(exc.value, "cnx_old")

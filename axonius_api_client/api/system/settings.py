@@ -120,7 +120,8 @@ class SettingsChild(ChildMixins):
 
     def update_sub_section(self, section: str, sub_section: str, **kwargs) -> dict:
         """Update the system settings."""
-        settings = self.get_sub_section(section=section, sub_section=sub_section, full_config=True)
+        settings = self.get_sub_section(
+            section=section, sub_section=sub_section, full_config=True)
         title = settings["settings_title"]
         schemas = settings["schemas"]
         source = f"{title} Section Name {section!r} Sub Section Name {sub_section!r}"

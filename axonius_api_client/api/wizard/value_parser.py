@@ -225,7 +225,8 @@ class ValueParser:
         """Parse a value as a string."""
         check_type(value=value, exp=str)
         check_empty(value=value)
-        aql_value = self.check_enum(value=value, enum=enum, enum_items=enum_items)
+        aql_value = self.check_enum(
+            value=value, enum=enum, enum_items=enum_items)
         return aql_value, aql_value
 
     def value_to_str_adapters(
@@ -341,7 +342,8 @@ class ValueParser:
                     )
                 )
             except Exception as exc:
-                raise WizardError(f"Error in item #{item_num} of {len(items)}: {exc}")
+                raise WizardError(
+                    f"Error in item #{item_num} of {len(items)}: {exc}")
 
         aql_value = ", ".join([join_tmpl.format(x) for x in new_items])
         value = ",".join([str(x) for x in new_items])
@@ -365,7 +367,8 @@ class ValueParser:
             custom_id: identifier for source of enum_custom
         """
         if enum_custom is not None and not enum_custom:
-            raise WizardError(f"No {custom_id}s exist, can not query for {custom_id} {value!r}")
+            raise WizardError(
+                f"No {custom_id}s exist, can not query for {custom_id} {value!r}")
 
         enum = enum or enum_items or enum_custom
 
@@ -380,7 +383,8 @@ class ValueParser:
                     return item
 
             valid = "\n - " + "\n - ".join([str(x) for x in enum])
-            raise WizardError(f"invalid choice {value!r}, valid choices:{valid}")
+            raise WizardError(
+                f"invalid choice {value!r}, valid choices:{valid}")
 
         elif isinstance(enum, dict):
             for item, item_value in enum.items():
@@ -390,7 +394,8 @@ class ValueParser:
                     return item_value
 
             valid = "\n - " + "\n - ".join([str(x) for x in enum])
-            raise WizardError(f"invalid choice {value!r}, valid choices:{valid}")
+            raise WizardError(
+                f"invalid choice {value!r}, valid choices:{valid}")
 
     def _tags(self) -> List[str]:
         """Get all known tags (labels) of this asset type."""

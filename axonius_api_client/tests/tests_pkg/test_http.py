@@ -166,7 +166,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_request_attrs=None, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_request_attrs=None,
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -198,7 +199,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_response_attrs="all", certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_response_attrs="all",
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -210,7 +212,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_response_attrs=None, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_response_attrs=None,
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -222,7 +225,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_response_body=True, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_response_body=True,
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -237,7 +241,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_response_body=False, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_response_body=False,
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -249,7 +254,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_request_body=True, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_request_body=True,
+                    certwarn=False, log_level="debug")
 
         http()
 
@@ -264,7 +270,8 @@ class TestHttp:
 
         ax_url = get_url(request)
 
-        http = Http(url=ax_url, log_request_body=False, certwarn=False, log_level="debug")
+        http = Http(url=ax_url, log_request_body=False,
+                    certwarn=False, log_level="debug")
 
         http()
 

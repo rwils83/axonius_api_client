@@ -72,15 +72,18 @@ def parse_adapter(name: str, raw: dict) -> dict:
 
     parsed["cnx"] = parse_cnx(raw=raw, parsed=parsed)
     parsed["cnx_count_total"] = len(parsed["cnx"])
-    parsed["cnx_count_broken"] = len([x for x in parsed["cnx"] if not x["working"]])
-    parsed["cnx_count_working"] = len([x for x in parsed["cnx"] if x["working"]])
+    parsed["cnx_count_broken"] = len(
+        [x for x in parsed["cnx"] if not x["working"]])
+    parsed["cnx_count_working"] = len(
+        [x for x in parsed["cnx"] if x["working"]])
 
     return parsed
 
 
 def get_specific_name(raw: dict) -> str:
     """Pass."""
-    found = [x for x in raw["config"] if x not in [GENERIC_NAME, DISCOVERY_NAME]]
+    found = [x for x in raw["config"] if x not in [
+        GENERIC_NAME, DISCOVERY_NAME]]
     return found[0] if found else ""
 
 

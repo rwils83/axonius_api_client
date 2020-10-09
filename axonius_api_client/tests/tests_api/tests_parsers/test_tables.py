@@ -43,15 +43,18 @@ def test_tablize_err_false():
 
 
 def test_tab_map_orig_false():
-    value = {"name": "schema_str", "type": "string", "required": False, "other": "bloop"}
+    value = {"name": "schema_str", "type": "string",
+             "required": False, "other": "bloop"}
     exp = {"Name": "schema_str", "Type": "string", "Required": False}
     result = tab_map(value=value, key_map=KEY_MAP_SCHEMA, orig=False)
     assert result == exp
 
 
 def test_tab_map_orig_true():
-    value = {"name": "schema_str", "type": "string", "required": False, "other": "bloop"}
-    exp = {"Name": "schema_str", "Type": "string", "Required": False, "other": "bloop"}
+    value = {"name": "schema_str", "type": "string",
+             "required": False, "other": "bloop"}
+    exp = {"Name": "schema_str", "Type": "string",
+           "Required": False, "other": "bloop"}
     result = tab_map(value=value, key_map=KEY_MAP_SCHEMA, orig=True)
     assert result == exp
 

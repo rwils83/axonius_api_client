@@ -136,7 +136,8 @@ class Devices(AssetMixin):
         network = ipaddress.ip_network(value)
         gte = int(network.network_address)
         lte = int(network.broadcast_address)
-        match = "".join(['match({"$gte": ', str(gte), ', "$lte": ', str(lte), "})"])
+        match = "".join(
+            ['match({"$gte": ', str(gte), ', "$lte": ', str(lte), "})"])
 
         inner = f"{field} == {match}"
 
