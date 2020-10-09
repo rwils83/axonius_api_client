@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
-from axonius_api_client.api.parsers.tables import tab_map, tablize
+from axonius_api_client.api.parsers.tables import tab_map
+from axonius_api_client.api.parsers.tables import tablize
 from axonius_api_client.constants import KEY_MAP_SCHEMA
 
 

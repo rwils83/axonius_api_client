@@ -4,11 +4,14 @@ import copy
 
 import pytest
 
-from axonius_api_client.constants import AGG_ADAPTER_ALTS, AGG_ADAPTER_NAME
-from axonius_api_client.exceptions import ApiError, NotFoundError
-
-from ...meta import FIELD_FORMATS, SCHEMA_FIELD_FORMATS, SCHEMA_TYPES
+from ...meta import FIELD_FORMATS
+from ...meta import SCHEMA_FIELD_FORMATS
+from ...meta import SCHEMA_TYPES
 from ...utils import get_schemas
+from axonius_api_client.constants import AGG_ADAPTER_ALTS
+from axonius_api_client.constants import AGG_ADAPTER_NAME
+from axonius_api_client.exceptions import ApiError
+from axonius_api_client.exceptions import NotFoundError
 
 
 class FieldsPrivate:

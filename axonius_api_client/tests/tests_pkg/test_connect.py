@@ -4,11 +4,13 @@ import logging
 
 import pytest
 
+from ..utils import get_key_creds
+from ..utils import get_url
+from ..utils import IS_LINUX
 from axonius_api_client.connect import Connect
-from axonius_api_client.exceptions import ConnectError, InvalidCredentials
+from axonius_api_client.exceptions import ConnectError
+from axonius_api_client.exceptions import InvalidCredentials
 from axonius_api_client.http import requests
-
-from ..utils import IS_LINUX, get_key_creds, get_url
 
 BAD_CRED = "tardis"
 

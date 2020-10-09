@@ -1,15 +1,30 @@
 # -*- coding: utf-8 -*-
 """Wizard for list of dictionaries."""
 import logging
-from typing import List, Optional, Tuple, Union
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from ...constants import ALL_NAME, LOG_LEVEL_WIZARD
+from ...constants import ALL_NAME
+from ...constants import LOG_LEVEL_WIZARD
 from ...exceptions import WizardError
 from ...logs import get_obj_log
-from ...tools import check_type, listify
-from ..parsers.constants import CUSTOM_FIELDS_MAP, Operator, OperatorTypeMaps
-from .constants import (Docs, Entry, Expr, Fields, Flags, Patterns, Results,
-                        Sources, Templates, Types)
+from ...tools import check_type
+from ...tools import listify
+from ..parsers.constants import CUSTOM_FIELDS_MAP
+from ..parsers.constants import Operator
+from ..parsers.constants import OperatorTypeMaps
+from .constants import Docs
+from .constants import Entry
+from .constants import Expr
+from .constants import Fields
+from .constants import Flags
+from .constants import Patterns
+from .constants import Results
+from .constants import Sources
+from .constants import Templates
+from .constants import Types
 from .value_parser import ValueParser
 
 

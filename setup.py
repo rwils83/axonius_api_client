@@ -4,7 +4,8 @@
 import codecs
 import os
 
-from setuptools import find_packages, setup
+from setuptools import find_packages
+from setuptools import setup
 
 PROJECT = "axonius_api_client"
 SHELL_CMD = "axonshell"

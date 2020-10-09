@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ....constants import GUI_PAGE_SIZES
-from ....tools import json_dump, listify
-from ...context import SplitEquals, click
+from ....tools import json_dump
+from ....tools import listify
+from ...context import click
+from ...context import SplitEquals
 from ...options import int_callback
 
 EXPORT_FORMAT = click.option(

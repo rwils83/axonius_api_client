@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 """Table export callbacks class."""
-from typing import List, Optional, Tuple, Union
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 import tabulate
 
-from ...constants import TABLE_FORMAT, TABLE_MAX_ROWS
+from ...constants import TABLE_FORMAT
+from ...constants import TABLE_MAX_ROWS
 from ...exceptions import ApiError
 from ...tools import listify
 from .base import Base

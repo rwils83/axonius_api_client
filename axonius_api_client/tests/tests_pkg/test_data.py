@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client."""
 # import pytest
-
 import dataclasses
 
-from axonius_api_client.data import BaseData, BaseEnum
+from axonius_api_client.data import BaseData
+from axonius_api_client.data import BaseEnum
 
 
 class TestBaseData:

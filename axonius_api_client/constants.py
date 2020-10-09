@@ -4,7 +4,12 @@ import logging
 import os
 import pathlib
 import sys
-from typing import Dict, List, Optional, Tuple, Type, Union
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Type
+from typing import Union
 
 import dotenv
 

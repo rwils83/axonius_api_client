@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
-
 import pytest
 
-from axonius_api_client.exceptions import ApiError, NotFoundError
-
 from ...meta import TEST_USER
+from axonius_api_client.exceptions import ApiError
+from axonius_api_client.exceptions import NotFoundError
 
 
 @pytest.mark.skip("Waiting for update to 3.3!")

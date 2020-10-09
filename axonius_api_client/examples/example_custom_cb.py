@@ -2,7 +2,8 @@
 """Utilities for this package."""
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
 import axonius_api_client as axonapi
 from axonius_api_client.constants import ALL_NAME

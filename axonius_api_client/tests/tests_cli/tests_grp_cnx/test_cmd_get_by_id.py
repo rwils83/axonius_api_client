@@ -2,7 +2,8 @@
 """Test suite for axonius_api_client.tools."""
 from ....cli import cli
 from ....tools import json_load
-from ...utils import get_cnx_existing, load_clirunner
+from ...utils import get_cnx_existing
+from ...utils import load_clirunner
 
 
 class TestGrpCnxCmdGetById:

@@ -2,8 +2,11 @@
 """Command line interface for Axonius API Client."""
 from ....exceptions import NotFoundError
 from ....tools import listify
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, INPUT_FILE, add_options
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import INPUT_FILE
 from .grp_common import ABORT
 
 OPTIONS = [*AUTH, INPUT_FILE, ABORT]

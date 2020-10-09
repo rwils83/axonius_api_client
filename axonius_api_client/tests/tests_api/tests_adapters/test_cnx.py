@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
-
 import pytest
 
-from axonius_api_client.constants import CSV_ADAPTER, DEFAULT_NODE
-from axonius_api_client.exceptions import (CnxAddError, CnxGoneError,
-                                           CnxTestError, CnxUpdateError,
-                                           ConfigInvalidValue, ConfigRequired,
-                                           ConfigUnchanged, NotFoundError)
-
 from ...meta import CSV_FILECONTENT_STR
-from ...utils import get_cnx_broken, get_cnx_existing, get_cnx_working
+from ...utils import get_cnx_broken
+from ...utils import get_cnx_existing
+from ...utils import get_cnx_working
+from axonius_api_client.constants import CSV_ADAPTER
+from axonius_api_client.constants import DEFAULT_NODE
+from axonius_api_client.exceptions import CnxAddError
+from axonius_api_client.exceptions import CnxGoneError
+from axonius_api_client.exceptions import CnxTestError
+from axonius_api_client.exceptions import CnxUpdateError
+from axonius_api_client.exceptions import ConfigInvalidValue
+from axonius_api_client.exceptions import ConfigRequired
+from axonius_api_client.exceptions import ConfigUnchanged
+from axonius_api_client.exceptions import NotFoundError
 
 
 class TestCnxBase:

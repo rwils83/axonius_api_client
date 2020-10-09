@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 """API models for working with device and user assets."""
 import ipaddress
-from typing import Generator, List, Union
+from typing import Generator
+from typing import List
+from typing import Union
 
-from ..routers import API_VERSION, Router
+from ..routers import API_VERSION
+from ..routers import Router
 from .asset_mixin import AssetMixin
 
 

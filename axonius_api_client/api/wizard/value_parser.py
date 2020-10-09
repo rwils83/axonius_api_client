@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
 """Wizard value parsers for the various field types."""
 import re
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from cachetools import TTLCache, cached
+from cachetools import cached
+from cachetools import TTLCache
 
 from ...exceptions import WizardError
-from ...tools import (check_empty, check_type, coerce_int_float,
-                      coerce_str_to_csv, dt_parse_tmpl, get_raw_version,
-                      parse_ip_address, parse_ip_network)
+from ...tools import check_empty
+from ...tools import check_type
+from ...tools import coerce_int_float
+from ...tools import coerce_str_to_csv
+from ...tools import dt_parse_tmpl
+from ...tools import get_raw_version
+from ...tools import parse_ip_address
+from ...tools import parse_ip_network
 
 CACHE: TTLCache = TTLCache(maxsize=1024, ttl=30)
 

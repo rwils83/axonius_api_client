@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, NODE_CNX, add_options
-from .grp_common import EXPORT, ID_CNX, handle_export
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import NODE_CNX
+from .grp_common import EXPORT
+from .grp_common import handle_export
+from .grp_common import ID_CNX
 
 OPTIONS = [
     *AUTH,

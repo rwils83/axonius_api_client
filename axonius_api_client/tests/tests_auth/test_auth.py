@@ -2,13 +2,15 @@
 """Test suite for axonius_api_client.tools."""
 import pytest
 
-# from axonius_api_client.api.routers import API_VERSION
+from ..utils import get_key_creds
+from ..utils import get_url
 from axonius_api_client.auth import ApiKey
-from axonius_api_client.exceptions import (AlreadyLoggedIn, AuthError,
-                                           InvalidCredentials, NotLoggedIn)
+from axonius_api_client.exceptions import AlreadyLoggedIn
+from axonius_api_client.exceptions import AuthError
+from axonius_api_client.exceptions import InvalidCredentials
+from axonius_api_client.exceptions import NotLoggedIn
 from axonius_api_client.http import Http
-
-from ..utils import get_key_creds, get_url
+# from axonius_api_client.api.routers import API_VERSION
 
 
 class TestApiKey:

@@ -4,28 +4,36 @@ import copy
 
 import pytest
 
-from axonius_api_client.api.parsers.config import (config_check,
-                                                   config_check_array,
-                                                   config_check_bool,
-                                                   config_check_file,
-                                                   config_check_int,
-                                                   config_check_str,
-                                                   config_default,
-                                                   config_empty,
-                                                   config_required,
-                                                   config_unchanged,
-                                                   config_unknown,
-                                                   is_uploaded_file,
-                                                   parse_schema)
+from ...meta import SCHEMA_ARRAY
+from ...meta import SCHEMA_BOOL
+from ...meta import SCHEMA_FILE
+from ...meta import SCHEMA_INT
+from ...meta import SCHEMA_NUM
+from ...meta import SCHEMA_STR
+from ...meta import SCHEMA_STR_ENUM
+from ...meta import SCHEMA_STR_PASSWORD
+from ...meta import SCHEMA_UNKNOWN
+from ...meta import SCHEMAS
+from ...meta import SCHEMAS_DICT
+from axonius_api_client.api.parsers.config import config_check
+from axonius_api_client.api.parsers.config import config_check_array
+from axonius_api_client.api.parsers.config import config_check_bool
+from axonius_api_client.api.parsers.config import config_check_file
+from axonius_api_client.api.parsers.config import config_check_int
+from axonius_api_client.api.parsers.config import config_check_str
+from axonius_api_client.api.parsers.config import config_default
+from axonius_api_client.api.parsers.config import config_empty
+from axonius_api_client.api.parsers.config import config_required
+from axonius_api_client.api.parsers.config import config_unchanged
+from axonius_api_client.api.parsers.config import config_unknown
+from axonius_api_client.api.parsers.config import is_uploaded_file
+from axonius_api_client.api.parsers.config import parse_schema
 from axonius_api_client.constants import SETTING_UNCHANGED
-from axonius_api_client.exceptions import (ApiError, ConfigInvalidValue,
-                                           ConfigRequired, ConfigUnchanged,
-                                           ConfigUnknown)
-
-from ...meta import (SCHEMA_ARRAY, SCHEMA_BOOL, SCHEMA_FILE, SCHEMA_INT,
-                     SCHEMA_NUM, SCHEMA_STR, SCHEMA_STR_ENUM,
-                     SCHEMA_STR_PASSWORD, SCHEMA_UNKNOWN, SCHEMAS,
-                     SCHEMAS_DICT)
+from axonius_api_client.exceptions import ApiError
+from axonius_api_client.exceptions import ConfigInvalidValue
+from axonius_api_client.exceptions import ConfigRequired
+from axonius_api_client.exceptions import ConfigUnchanged
+from axonius_api_client.exceptions import ConfigUnknown
 
 
 def test_config_check_str():

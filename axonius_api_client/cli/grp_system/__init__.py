@@ -2,9 +2,14 @@
 """Command line interface for Axonius API Client."""
 import click
 
+from . import grp_central_core
+from . import grp_discover
+from . import grp_meta
+from . import grp_nodes
+from . import grp_roles
+from . import grp_settings
+from . import grp_users
 from ..context import AliasedGroup
-from . import (grp_central_core, grp_discover, grp_meta, grp_nodes, grp_roles,
-               grp_settings, grp_users)
 
 
 @click.group(cls=AliasedGroup)

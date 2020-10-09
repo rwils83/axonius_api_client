@@ -3,9 +3,13 @@
 import csv
 
 from ....tools import join_kv
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, INPUT_FILE, add_options
-from .grp_common import EXPORT, handle_export
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import INPUT_FILE
+from .grp_common import EXPORT
+from .grp_common import handle_export
 
 CONTINUE_ON_ERROR = click.option(
     "--continue-on-error/--no-continue-on-error",

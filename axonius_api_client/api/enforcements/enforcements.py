@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 """API models for working with Enforcement Center."""
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
 from ...tools import listify
-from ..mixins import ModelMixins, PagingMixinsObject
-from ..routers import API_VERSION, Router
+from ..mixins import ModelMixins
+from ..mixins import PagingMixinsObject
+from ..routers import API_VERSION
+from ..routers import Router
 
 
 class Enforcements(ModelMixins, PagingMixinsObject):

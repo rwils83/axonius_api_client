@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """API model for working with system configuration."""
 from .mixins import ModelMixins
-from .routers import API_VERSION, Router
+from .routers import API_VERSION
+from .routers import Router
 
 
 class Instances(ModelMixins):

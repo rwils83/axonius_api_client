@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ..context import CONTEXT_SETTINGS, click
-from ..options import AUTH, QUERY, add_options, get_option_help
-from .grp_common import HISTORY_DATE, WIZ, load_wiz
+from ..context import click
+from ..context import CONTEXT_SETTINGS
+from ..options import add_options
+from ..options import AUTH
+from ..options import get_option_help
+from ..options import QUERY
+from .grp_common import HISTORY_DATE
+from .grp_common import load_wiz
+from .grp_common import WIZ
 
 OPTIONS = [
     *AUTH,

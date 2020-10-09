@@ -4,7 +4,8 @@ import click
 
 from ...api.signup import Signup
 from ...tools import json_dump
-from ..options import URL, add_options
+from ..options import add_options
+from ..options import URL
 
 EXPORT = click.option(
     "--export-format",

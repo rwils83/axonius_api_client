@@ -2,7 +2,10 @@
 """JSON export callbacks class."""
 import json
 import textwrap
-from typing import List, Optional, Tuple, Union
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
 from ...tools import listify
 from .base import Base

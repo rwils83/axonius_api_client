@@ -1,17 +1,33 @@
 # -*- coding: utf-8 -*-
 """API for working with adapter connections."""
 import time
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
-from ...constants import CNX_GONE, CNX_RETRY, CNX_SANE_DEFAULTS, DEFAULT_NODE
-from ...exceptions import (CnxAddError, CnxGoneError, CnxTestError,
-                           CnxUpdateError, ConfigInvalidValue, ConfigRequired,
-                           NotFoundError)
-from ...tools import json_load, pathlib
+from ...constants import CNX_GONE
+from ...constants import CNX_RETRY
+from ...constants import CNX_SANE_DEFAULTS
+from ...constants import DEFAULT_NODE
+from ...exceptions import CnxAddError
+from ...exceptions import CnxGoneError
+from ...exceptions import CnxTestError
+from ...exceptions import CnxUpdateError
+from ...exceptions import ConfigInvalidValue
+from ...exceptions import ConfigRequired
+from ...exceptions import NotFoundError
+from ...tools import json_load
+from ...tools import pathlib
 from ..mixins import ChildMixins
-from ..parsers import (config_build, config_default, config_empty, config_info,
-                       config_required, config_unchanged, config_unknown,
-                       tablize_cnxs, tablize_schemas)
+from ..parsers import config_build
+from ..parsers import config_default
+from ..parsers import config_empty
+from ..parsers import config_info
+from ..parsers import config_required
+from ..parsers import config_unchanged
+from ..parsers import config_unknown
+from ..parsers import tablize_cnxs
+from ..parsers import tablize_schemas
 
 
 class Cnx(ChildMixins):

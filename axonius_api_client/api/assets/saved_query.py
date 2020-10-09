@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 """API models for working with device and user assets."""
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
-from ...constants import GUI_PAGE_SIZES, PAGE_SIZE
-from ...exceptions import ApiError, NotFoundError
+from ...constants import GUI_PAGE_SIZES
+from ...constants import PAGE_SIZE
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
 from ...tools import listify
-from ..mixins import ChildMixins, PagingMixinsObject
+from ..mixins import ChildMixins
+from ..mixins import PagingMixinsObject
 
 
 def check_gui_page_size(size: Optional[int] = None) -> int:

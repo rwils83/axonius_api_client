@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """API model for working with system configuration."""
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
-from ...exceptions import ApiError, NotFoundError
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
 from ..mixins import ChildMixins
 from ..parsers import parse_unchanged
 

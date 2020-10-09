@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 from ....tools import json_dump
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, SPLIT_CONFIG_OPT, add_options
-from .grp_common import EXPORT, SECTION, SUB_SECTION, str_section
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import SPLIT_CONFIG_OPT
+from .grp_common import EXPORT
+from .grp_common import SECTION
+from .grp_common import str_section
+from .grp_common import SUB_SECTION
 
 OPTIONS = [*AUTH, EXPORT, SECTION, SUB_SECTION, SPLIT_CONFIG_OPT]
 

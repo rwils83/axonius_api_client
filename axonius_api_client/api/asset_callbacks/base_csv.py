@@ -2,7 +2,8 @@
 """CSV export callbacks class."""
 import codecs
 import csv
-from typing import List, Union
+from typing import List
+from typing import Union
 
 from ...tools import listify
 from .base import Base

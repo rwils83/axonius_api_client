@@ -2,9 +2,11 @@
 """Command line interface for Axonius API Client."""
 import click
 
-from ..constants import DEFAULT_NODE, DEFAULT_PATH, MAX_PAGE_SIZE
-from ..tools import coerce_int
 from . import context
+from ..constants import DEFAULT_NODE
+from ..constants import DEFAULT_PATH
+from ..constants import MAX_PAGE_SIZE
+from ..tools import coerce_int
 from .helps import HELPSTRS
 
 

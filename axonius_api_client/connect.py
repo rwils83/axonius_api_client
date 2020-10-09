@@ -3,22 +3,45 @@
 import logging
 import pathlib
 import re
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
 import requests
 
-from .api import (Adapters, Dashboard, Devices, Enforcements, Instances,
-                  RunAction, System, Users)
+from .api import Adapters
+from .api import Dashboard
+from .api import Devices
+from .api import Enforcements
+from .api import Instances
+from .api import RunAction
+from .api import System
+from .api import Users
 from .auth import ApiKey
-from .constants import (LOG_FILE_MAX_FILES, LOG_FILE_MAX_MB, LOG_FILE_NAME,
-                        LOG_FILE_PATH, LOG_FMT_BRIEF, LOG_FMT_VERBOSE,
-                        LOG_LEVEL_API, LOG_LEVEL_AUTH, LOG_LEVEL_CONSOLE,
-                        LOG_LEVEL_FILE, LOG_LEVEL_HTTP, LOG_LEVEL_PACKAGE,
-                        TIMEOUT_CONNECT, TIMEOUT_RESPONSE)
-from .exceptions import ConnectError, InvalidCredentials
+from .constants import LOG_FILE_MAX_FILES
+from .constants import LOG_FILE_MAX_MB
+from .constants import LOG_FILE_NAME
+from .constants import LOG_FILE_PATH
+from .constants import LOG_FMT_BRIEF
+from .constants import LOG_FMT_VERBOSE
+from .constants import LOG_LEVEL_API
+from .constants import LOG_LEVEL_AUTH
+from .constants import LOG_LEVEL_CONSOLE
+from .constants import LOG_LEVEL_FILE
+from .constants import LOG_LEVEL_HTTP
+from .constants import LOG_LEVEL_PACKAGE
+from .constants import TIMEOUT_CONNECT
+from .constants import TIMEOUT_RESPONSE
+from .exceptions import ConnectError
+from .exceptions import InvalidCredentials
 from .http import Http
-from .logs import LOG, add_file, add_stderr, get_obj_log, set_log_level
-from .tools import json_dump, sysinfo
+from .logs import add_file
+from .logs import add_stderr
+from .logs import get_obj_log
+from .logs import LOG
+from .logs import set_log_level
+from .tools import json_dump
+from .tools import sysinfo
 from .version import __version__ as VERSION
 
 

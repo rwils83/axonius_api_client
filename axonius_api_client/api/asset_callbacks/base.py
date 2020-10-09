@@ -4,13 +4,26 @@ import copy
 import logging
 import re
 import sys
-from typing import Generator, List, Optional, Tuple, Union
+from typing import Generator
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from ...constants import (DEFAULT_PATH, FIELD_JOINER, FIELD_TRIM_LEN,
-                          FIELD_TRIM_STR, SCHEMAS_CUSTOM)
+from ...constants import DEFAULT_PATH
+from ...constants import FIELD_JOINER
+from ...constants import FIELD_TRIM_LEN
+from ...constants import FIELD_TRIM_STR
+from ...constants import SCHEMAS_CUSTOM
 from ...exceptions import ApiError
-from ...tools import (calc_percent, coerce_int, echo_error, echo_ok, echo_warn,
-                      get_path, join_kv, listify)
+from ...tools import calc_percent
+from ...tools import coerce_int
+from ...tools import echo_error
+from ...tools import echo_ok
+from ...tools import echo_warn
+from ...tools import get_path
+from ...tools import join_kv
+from ...tools import listify
 from ..parsers import schema_custom
 
 

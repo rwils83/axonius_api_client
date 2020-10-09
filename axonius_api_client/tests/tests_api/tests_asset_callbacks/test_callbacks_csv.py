@@ -5,7 +5,8 @@ import io
 
 import pytest
 
-from ...utils import get_rows_exist, get_schema
+from ...utils import get_rows_exist
+from ...utils import get_schema
 from .test_callbacks import Callbacks
 
 

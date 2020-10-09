@@ -8,10 +8,13 @@ import sys
 from io import StringIO
 
 import pytest
-from cachetools import TTLCache, cached
+from cachetools import cached
+from cachetools import TTLCache
 from click.testing import CliRunner
 
-from axonius_api_client import Wizard, api, auth
+from axonius_api_client import api
+from axonius_api_client import auth
+from axonius_api_client import Wizard
 from axonius_api_client.cli.context import Context
 from axonius_api_client.constants import AGG_ADAPTER_NAME
 from axonius_api_client.http import Http

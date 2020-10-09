@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client.query_wizard."""
-
 import pytest
 
-from axonius_api_client.api.wizard import ValueParser, WizardText
-from axonius_api_client.api.wizard.constants import Entry, Results, Types
-from axonius_api_client.exceptions import WizardError
-
 from .test_wizard import TestData
+from axonius_api_client.api.wizard import ValueParser
+from axonius_api_client.api.wizard import WizardText
+from axonius_api_client.api.wizard.constants import Entry
+from axonius_api_client.api.wizard.constants import Results
+from axonius_api_client.api.wizard.constants import Types
+from axonius_api_client.exceptions import WizardError
 
 
 class TestWizardText:

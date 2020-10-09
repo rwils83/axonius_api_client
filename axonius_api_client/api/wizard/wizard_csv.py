@@ -4,11 +4,20 @@ import codecs
 import csv
 import io
 import pathlib
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
 from ...exceptions import WizardError
-from ...tools import check_type, kv_dump, listify, path_read
-from .constants import Docs, Entry, EntrySq, Sources, Types
+from ...tools import check_type
+from ...tools import kv_dump
+from ...tools import listify
+from ...tools import path_read
+from .constants import Docs
+from .constants import Entry
+from .constants import EntrySq
+from .constants import Sources
+from .constants import Types
 from .wizard import Wizard
 
 

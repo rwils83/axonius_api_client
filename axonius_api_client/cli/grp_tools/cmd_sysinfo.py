@@ -2,7 +2,8 @@
 """Command line interface for Axonius API Client."""
 import click
 
-from ...tools import json_dump, sysinfo
+from ...tools import json_dump
+from ...tools import sysinfo
 from ..options import add_options
 
 EXPORT = click.option(

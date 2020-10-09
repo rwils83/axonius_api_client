@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ....api.parsers.tables import tablize_cnxs, tablize_schemas
+from ....api.parsers.tables import tablize_cnxs
+from ....api.parsers.tables import tablize_schemas
 from ....constants import CNX_SANE_DEFAULTS
 from ....exceptions import CnxAddError
-from ....tools import json_dump, listify, pathlib
+from ....tools import json_dump
+from ....tools import listify
+from ....tools import pathlib
 from ...context import click
 
 PATH_PROMPT = click.Path(

@@ -3,11 +3,15 @@
 import pytest
 
 from axonius_api_client.api.parsers.constants import Operators
-from axonius_api_client.api.wizard import ValueParser, Wizard
-from axonius_api_client.api.wizard.constants import (Entry, Flags, Results,
-                                                     Types)
+from axonius_api_client.api.wizard import ValueParser
+from axonius_api_client.api.wizard import Wizard
+from axonius_api_client.api.wizard.constants import Entry
+from axonius_api_client.api.wizard.constants import Flags
+from axonius_api_client.api.wizard.constants import Results
+from axonius_api_client.api.wizard.constants import Types
 from axonius_api_client.constants import ALL_NAME
-from axonius_api_client.exceptions import NotFoundError, WizardError
+from axonius_api_client.exceptions import NotFoundError
+from axonius_api_client.exceptions import WizardError
 
 
 class TestWizard:

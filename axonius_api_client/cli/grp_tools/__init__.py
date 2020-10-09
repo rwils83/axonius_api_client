@@ -2,9 +2,12 @@
 """Command line interface for Axonius API Client."""
 import click
 
+from . import cmd_convert_cert
+from . import cmd_shell
+from . import cmd_signup
+from . import cmd_sysinfo
+from . import cmd_write_config
 from ..context import AliasedGroup
-from . import (cmd_convert_cert, cmd_shell, cmd_signup, cmd_sysinfo,
-               cmd_write_config)
 
 
 @click.group(cls=AliasedGroup)

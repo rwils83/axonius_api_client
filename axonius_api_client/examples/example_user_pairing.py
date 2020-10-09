@@ -6,7 +6,8 @@ import os
 import axonius_api_client as axonapi  # noqa: F401
 from axonius_api_client.connect import Connect
 from axonius_api_client.constants import load_dotenv
-from axonius_api_client.tools import json_reload, listify
+from axonius_api_client.tools import json_reload
+from axonius_api_client.tools import listify
 
 FIND_DVC_QUERY_TMPL = (
     '(specific_data.data.hostname == "{value}") or '

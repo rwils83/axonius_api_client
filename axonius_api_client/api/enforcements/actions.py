@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 """API models for working with Enforcement Center."""
-from typing import IO, List, Optional
+from typing import IO
+from typing import List
+from typing import Optional
 
 from ..mixins import ModelMixins
-from ..routers import API_VERSION, Router
+from ..routers import API_VERSION
+from ..routers import Router
 
 
 class RunAction(ModelMixins):

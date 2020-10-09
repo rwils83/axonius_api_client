@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 """API models for working with adapters and connections."""
 import copy
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
-from ...constants import (AGG_ADAPTER_NAME, AGG_ADAPTER_TITLE,
-                          AGG_EXPR_FIELD_TYPE, ALL_NAME)
-from ...tools import strip_left, strip_right
+from ...constants import AGG_ADAPTER_NAME
+from ...constants import AGG_ADAPTER_TITLE
+from ...constants import AGG_EXPR_FIELD_TYPE
+from ...constants import ALL_NAME
+from ...tools import strip_left
+from ...tools import strip_right
 from .constants import OperatorTypeMaps
 
 

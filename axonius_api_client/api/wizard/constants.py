@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 """Constants for wizards."""
 import re
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
 
 class Sources:

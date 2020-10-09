@@ -2,7 +2,8 @@
 """API model for working with system configuration."""
 import math
 
-from ..mixins import ChildMixins, Model
+from ..mixins import ChildMixins
+from ..mixins import Model
 
 
 class Meta(ChildMixins):

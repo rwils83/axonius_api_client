@@ -6,10 +6,18 @@ import logging
 import pathlib
 import platform
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
+from datetime import timedelta
+from datetime import timezone
 from itertools import zip_longest
-from typing import (Any, Callable, Iterable, Iterator, List, Optional, Tuple,
-                    Union)
+from typing import Any
+from typing import Callable
+from typing import Iterable
+from typing import Iterator
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 from urllib.parse import urljoin
 
 import click
@@ -19,8 +27,14 @@ import dateutil.tz
 
 from . import __file__ as PACKAGE_FILE
 from . import __package__ as PACKAGE_ROOT
-from .constants import (ERROR_ARGS, ERROR_TMPL, NO, OK_ARGS, OK_TMPL,
-                        WARN_ARGS, WARN_TMPL, YES)
+from .constants import ERROR_ARGS
+from .constants import ERROR_TMPL
+from .constants import NO
+from .constants import OK_ARGS
+from .constants import OK_TMPL
+from .constants import WARN_ARGS
+from .constants import WARN_TMPL
+from .constants import YES
 from .exceptions import ToolsError
 from .version import VERSION
 

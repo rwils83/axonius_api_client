@@ -2,11 +2,15 @@
 """API models for working with adapters and connections."""
 import copy
 import textwrap
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
 import tabulate
 
-from ...constants import KEY_MAP_ADAPTER, KEY_MAP_CNX, KEY_MAP_SCHEMA
+from ...constants import KEY_MAP_ADAPTER
+from ...constants import KEY_MAP_CNX
+from ...constants import KEY_MAP_SCHEMA
 from ...tools import json_dump
 
 

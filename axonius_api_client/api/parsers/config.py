@@ -2,12 +2,23 @@
 """API models for working with adapters and connections."""
 import copy
 import pathlib
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from ...constants import NO, SETTING_UNCHANGED, YES
-from ...exceptions import (ApiError, ConfigInvalidValue, ConfigRequired,
-                           ConfigUnchanged, ConfigUnknown)
-from ...tools import is_int, join_kv, json_load
+from ...constants import NO
+from ...constants import SETTING_UNCHANGED
+from ...constants import YES
+from ...exceptions import ApiError
+from ...exceptions import ConfigInvalidValue
+from ...exceptions import ConfigRequired
+from ...exceptions import ConfigUnchanged
+from ...exceptions import ConfigUnknown
+from ...tools import is_int
+from ...tools import join_kv
+from ...tools import json_load
 from .tables import tablize_schemas
 
 

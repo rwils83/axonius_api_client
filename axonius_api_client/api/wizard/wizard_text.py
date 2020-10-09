@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 """Wizard for text files."""
 import pathlib
-from typing import List, Union
+from typing import List
+from typing import Union
 
 from ...exceptions import WizardError
-from ...tools import check_type, path_read
-from .constants import Docs, Entry, Sources, Types
+from ...tools import check_type
+from ...tools import path_read
+from .constants import Docs
+from .constants import Entry
+from .constants import Sources
+from .constants import Types
 from .wizard import Wizard
 
 

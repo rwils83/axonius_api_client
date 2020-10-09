@@ -2,7 +2,8 @@
 """API models for working with adapters and connections."""
 from typing import List
 
-from ...constants import DISCOVERY_NAME, GENERIC_NAME
+from ...constants import DISCOVERY_NAME
+from ...constants import GENERIC_NAME
 from ...tools import strip_right
 from .config import parse_schema
 

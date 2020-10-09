@@ -2,10 +2,14 @@
 """API model for working with system configuration."""
 from typing import Optional
 
-from ...exceptions import ApiError, NotFoundError
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
 from ..mixins import ChildMixins
-from ..parsers import (config_build, config_unchanged, config_unknown,
-                       parse_settings, tablize)
+from ..parsers import config_build
+from ..parsers import config_unchanged
+from ..parsers import config_unknown
+from ..parsers import parse_settings
+from ..parsers import tablize
 
 
 class SettingsChild(ChildMixins):

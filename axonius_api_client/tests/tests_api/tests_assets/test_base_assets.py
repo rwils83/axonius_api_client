@@ -3,14 +3,19 @@
 import pytest
 import requests
 
+from ...meta import QUERIES
+from ...utils import check_asset
+from ...utils import check_assets
+from ...utils import get_field_vals
+from ...utils import get_rows_exist
 from axonius_api_client.api import mixins
 from axonius_api_client.constants import MAX_PAGE_SIZE
-from axonius_api_client.exceptions import (ApiError, JsonError, JsonInvalid,
-                                           NotFoundError, ResponseNotOk,
-                                           ToolsError)
-
-from ...meta import QUERIES
-from ...utils import check_asset, check_assets, get_field_vals, get_rows_exist
+from axonius_api_client.exceptions import ApiError
+from axonius_api_client.exceptions import JsonError
+from axonius_api_client.exceptions import JsonInvalid
+from axonius_api_client.exceptions import NotFoundError
+from axonius_api_client.exceptions import ResponseNotOk
+from axonius_api_client.exceptions import ToolsError
 
 
 class ModelMixinsBase:

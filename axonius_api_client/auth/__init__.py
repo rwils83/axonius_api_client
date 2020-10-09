@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """API models package."""
-from . import api_key, models
+from . import api_key
+from . import models
 from .api_key import ApiKey
-from .models import Mixins, Model
+from .models import Mixins
+from .models import Model
 
 __all__ = (
     "models",

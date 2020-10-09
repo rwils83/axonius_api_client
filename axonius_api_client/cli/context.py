@@ -6,7 +6,10 @@ import click
 import requests
 
 from ..connect import Connect
-from ..tools import echo_error, echo_ok, echo_warn, json_load
+from ..tools import echo_error
+from ..tools import echo_ok
+from ..tools import echo_warn
+from ..tools import json_load
 
 CONTEXT_SETTINGS = {"auto_envvar_prefix": "AX"}
 SSLWARN_CLS = requests.urllib3.exceptions.InsecureRequestWarning

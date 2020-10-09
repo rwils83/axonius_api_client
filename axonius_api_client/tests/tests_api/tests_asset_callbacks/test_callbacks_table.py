@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """Test suite for assets."""
-
 import copy
 import io
 
 import pytest
 
-from axonius_api_client.exceptions import ApiError
-
-from ...utils import get_rows_exist, get_schema
+from ...utils import get_rows_exist
+from ...utils import get_schema
 from .test_callbacks import Callbacks
+from axonius_api_client.exceptions import ApiError
 
 
 class TestCallbacksTable(Callbacks):

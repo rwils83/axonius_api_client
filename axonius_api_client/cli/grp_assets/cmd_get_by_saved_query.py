@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ..context import CONTEXT_SETTINGS, click
-from ..options import (AUTH, EXPORT, FIELDS_SELECT, PAGING, SQ_NAME,
-                       add_options, get_option_help)
-from .grp_common import GET_EXPORT, load_whitelist
+from ..context import click
+from ..context import CONTEXT_SETTINGS
+from ..options import add_options
+from ..options import AUTH
+from ..options import EXPORT
+from ..options import FIELDS_SELECT
+from ..options import get_option_help
+from ..options import PAGING
+from ..options import SQ_NAME
+from .grp_common import GET_EXPORT
+from .grp_common import load_whitelist
 
 METHOD = "get-by-saved-query"
 OPTIONS = [

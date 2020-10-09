@@ -4,12 +4,14 @@ import codecs
 
 import pytest
 
-from axonius_api_client.api.wizard import ValueParser, WizardCsv
-from axonius_api_client.api.wizard.constants import (Entry, EntrySq, Results,
-                                                     Types)
-from axonius_api_client.exceptions import WizardError
-
 from .test_wizard import TestData
+from axonius_api_client.api.wizard import ValueParser
+from axonius_api_client.api.wizard import WizardCsv
+from axonius_api_client.api.wizard.constants import Entry
+from axonius_api_client.api.wizard.constants import EntrySq
+from axonius_api_client.api.wizard.constants import Results
+from axonius_api_client.api.wizard.constants import Types
+from axonius_api_client.exceptions import WizardError
 
 SRC = "test moo"
 

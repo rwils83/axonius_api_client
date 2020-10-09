@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 """API for working with adapters."""
 import pathlib
-from typing import List, Optional, Union
+from typing import List
+from typing import Optional
+from typing import Union
 
-from ...constants import CONFIG_TYPES, DEFAULT_NODE
-from ...exceptions import ApiError, NotFoundError
+from ...constants import CONFIG_TYPES
+from ...constants import DEFAULT_NODE
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
 from ...tools import path_read
 from ..mixins import ModelMixins
-from ..parsers import (config_build, config_unchanged, config_unknown,
-                       parse_adapters, parse_schema, tablize_adapters)
-from ..routers import API_VERSION, Router
+from ..parsers import config_build
+from ..parsers import config_unchanged
+from ..parsers import config_unknown
+from ..parsers import parse_adapters
+from ..parsers import parse_schema
+from ..parsers import tablize_adapters
+from ..routers import API_VERSION
+from ..routers import Router
 from .cnx import Cnx
 
 

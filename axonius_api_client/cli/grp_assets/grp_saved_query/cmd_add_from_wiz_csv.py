@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ...context import CONTEXT_SETTINGS, click
-from ...options import AUTH, INPUT_FILE, add_options, get_option_help
-from .grp_common import (ABORT, EXPORT_FORMAT, OVERWRITE, check_sq_exist,
-                         handle_export)
+from ...context import click
+from ...context import CONTEXT_SETTINGS
+from ...options import add_options
+from ...options import AUTH
+from ...options import get_option_help
+from ...options import INPUT_FILE
+from .grp_common import ABORT
+from .grp_common import check_sq_exist
+from .grp_common import EXPORT_FORMAT
+from .grp_common import handle_export
+from .grp_common import OVERWRITE
 
 OPTIONS = [
     *AUTH,

@@ -4,7 +4,8 @@ from ..constants import LOG_LEVEL_API
 from ..exceptions import ResponseNotOk
 from ..http import Http
 from ..logs import get_obj_log
-from .routers import API_VERSION, Router
+from .routers import API_VERSION
+from .routers import Router
 
 
 class Signup:

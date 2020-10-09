@@ -2,7 +2,8 @@
 """JSON to CSV export callbacks class."""
 import json
 import tempfile
-from typing import List, Union
+from typing import List
+from typing import Union
 
 from ...tools import listify
 from .base_csv import Csv

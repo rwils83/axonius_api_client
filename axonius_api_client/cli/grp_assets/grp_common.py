@@ -2,13 +2,22 @@
 """Command line interface for Axonius API Client."""
 import tabulate
 
-from ...api.wizard.constants import Results, Types
-from ...constants import (FIELD_JOINER, FIELD_TRIM_LEN, TABLE_FORMAT,
-                          TABLE_MAX_ROWS)
+from ...api.wizard.constants import Results
+from ...api.wizard.constants import Types
+from ...constants import FIELD_JOINER
+from ...constants import FIELD_TRIM_LEN
+from ...constants import TABLE_FORMAT
+from ...constants import TABLE_MAX_ROWS
 from ...tools import path_read
-from ..context import CONTEXT_SETTINGS, click
-from ..options import (AUTH, EXPORT, FIELDS_SELECT, PAGING, add_options,
-                       get_option_fields_default, get_option_help)
+from ..context import click
+from ..context import CONTEXT_SETTINGS
+from ..options import add_options
+from ..options import AUTH
+from ..options import EXPORT
+from ..options import FIELDS_SELECT
+from ..options import get_option_fields_default
+from ..options import get_option_help
+from ..options import PAGING
 
 HISTORY_DATE = click.option(
     "--history-date",

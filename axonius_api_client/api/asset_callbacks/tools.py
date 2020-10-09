@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Asset export callbacks."""
-from typing import Dict, Optional
+from typing import Dict
+from typing import Optional
 
 from ...exceptions import ApiError
 from .base import Base

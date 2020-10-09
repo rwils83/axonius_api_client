@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """HTTP client."""
 from typing import Union
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse
+from urllib.parse import urlunparse
 
 from .exceptions import HttpError
 

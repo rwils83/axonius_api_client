@@ -6,7 +6,8 @@ import click
 import dotenv
 
 from ...tools import get_path
-from ..options import AUTH, add_options
+from ..options import add_options
+from ..options import AUTH
 
 
 @click.command(name="write-config")

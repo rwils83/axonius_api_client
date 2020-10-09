@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 """API models for working with device and user assets."""
 import re
-from typing import List, Optional, Tuple, Union
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from cachetools import TTLCache, cached
+from cachetools import cached
+from cachetools import TTLCache
 
-from ...constants import (AGG_ADAPTER_ALTS, AGG_ADAPTER_NAME,
-                          FUZZY_SCHEMAS_KEYS, GET_SCHEMA_KEYS,
-                          GET_SCHEMAS_KEYS)
-from ...exceptions import ApiError, NotFoundError
-from ...tools import listify, split_str, strip_right
+from ...constants import AGG_ADAPTER_ALTS
+from ...constants import AGG_ADAPTER_NAME
+from ...constants import FUZZY_SCHEMAS_KEYS
+from ...constants import GET_SCHEMA_KEYS
+from ...constants import GET_SCHEMAS_KEYS
+from ...exceptions import ApiError
+from ...exceptions import NotFoundError
+from ...tools import listify
+from ...tools import split_str
+from ...tools import strip_right
 from ..mixins import ChildMixins
 from ..parsers import parse_fields
 
