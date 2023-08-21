@@ -1,6 +1,6 @@
 PACKAGE := axonius_api_client
 VERSION := $(shell python get_version.py)
-PYVER := $(cat .python_version)
+PYVER   := $(shell cat .python-version)
 
 .PHONY: build docs
 
@@ -8,58 +8,57 @@ help:
 	@cat Makefile.help
 
 init:
-	@echo ">>>>>>>> INITIALIZING FOR VERSION: $(VERSION)"
+	@echo ">>>>>>>> INITIALIZING FOR VERSION: $(VERSION) PYTHON $(PYVER)"
 	$(MAKE) pip_install_tools
 	$(MAKE) clean
-	$(MAKE) pyenv_init
-	$(MAKE) pipenv_init
-	$(MAKE) pipenv_install_lint
-	$(MAKE) pipenv_install_dev
-	$(MAKE) pipenv_install_docs
-	$(MAKE) pipenv_install_build
+	$(MAKE) pipenv_init_ver
+	$(MAKE) pip_install_req
+	$(MAKE) pip_install_lint
+	$(MAKE) pip_install_dev
+	$(MAKE) pip_install_docs
+	$(MAKE) pip_install_build
+
+
+pip_install_req:
+	pip install --upgrade --requirement requirements.txt
 
 pip_install_tools:
-	pip install --quiet --upgrade --requirement requirements-pkg.txt
+	pip install --upgrade --requirement requirements-pkg.txt
 
-pipenv_install_dev:
-	pipenv run pip install --quiet --upgrade --requirement requirements-dev.txt
+pip_install_dev:
+	pip install --upgrade --requirement requirements-dev.txt
 
-pipenv_install_lint:
-	pipenv run pip install --quiet --upgrade --requirement requirements-lint.txt
+pip_install_lint:
+	pip install --upgrade --requirement requirements-lint.txt
 
-pipenv_install_build:
-	pipenv run pip install --quiet --upgrade --requirement requirements-build.txt
+pip_install_build:
+	pip install --upgrade --requirement requirements-build.txt
 
-pipenv_install_docs:
-	pipenv run pip install --quiet --upgrade --requirement docs/requirements.txt
+pip_install_docs:
+	pip install --upgrade --requirement docs/requirements.txt
 
 pipenv_init:
 	pipenv install --dev --skip-lock
 
+pipenv_init_ver:
+	pipenv install --dev --skip-lock --python $(PYVER)
+
 pipenv_clean:
 	pipenv --rm || true
 
-pyenv_init:
-	pyenv install $(PYVER) -s || true
-
 lint:
-	pipenv run isort $(PACKAGE) setup.py shell.py
-	pipenv run pipenv run black -l 100 $(PACKAGE) setup.py shell.py
-	pipenv run pydocstyle --match-dir='(?!tests).*' --match-dir='(?!examples).*' $(PACKAGE) setup.py shell.py
-	pipenv run flake8 --max-line-length 100 $(PACKAGE) setup.py shell.py
-	pipenv run bandit -x $(PACKAGE)/examples,$(PACKAGE)/tests --skip B101 -r $(PACKAGE)
+	pipenv run ruff check --show-source --show-fixes $(PACKAGE) setup.py shell.py
+	pipenv run black --diff --line-length 100 $(PACKAGE) setup.py shell.py
 
-test:
-	pipenv run pytest -ra -vv --showlocals --exitfirst --pdb --cov-config=.coveragerc --cov-report xml --cov-report=html:cov_html --cov=$(PACKAGE) $(PACKAGE)/tests
+lint_fix:
+	pipenv run ruff check --fix $(PACKAGE) setup.py shell.py
+	pipenv run black --line-length 100 $(PACKAGE) setup.py shell.py
 
-test_last:
-	pipenv run pytest -ra -vv --showlocals --exitfirst --last-failed --pdb --cov-config=.coveragerc --cov-report xml --cov-report=html:cov_html --cov=$(PACKAGE) $(PACKAGE)/tests
+cov_open:
+	open artifacts/cov_html/index.html
 
-test_cov_open:
-	open cov_html/index.html
-
-test_clean:
-	rm -rf .egg .eggs junit-report.xml cov_html .tox .pytest_cache .coverage coverage.xml
+clean_tests:
+	rm -rf .egg .eggs .tox .pytest_cache artifacts/
 
 docs:
 	(cd docs && pipenv run make html SPHINXOPTS="-Wna" && cd ..)
@@ -68,9 +67,11 @@ docs_dev:
 	(cd docs && pipenv run make html SPHINXOPTS="-na" && cd ..)
 
 docs_apigen:
-	pip install sphinx -t /tmp/sphinx-latest --quiet --upgrade
-	rm -rf docs/main/api
-	PYTHONPATH=/tmp/sphinx-latest /tmp/sphinx-latest/bin/sphinx-apidoc -e -P -M -f -T -t docs/_templates -o docs/main/api $(PACKAGE) $(PACKAGE)/tests $(PACKAGE)/cli
+	pip install sphinx -t /tmp/sphinx-latest --upgrade
+	rm -rf /tmp/api
+	PYTHONPATH=/tmp/sphinx-latest /tmp/sphinx-latest/bin/sphinx-apidoc \
+		-e -P -M -f -T -t docs/_templates \
+		-o /tmp/api $(PACKAGE) $(PACKAGE)/tests $(PACKAGE)/cli
 
 docs_open:
 	open docs/_build/html/index.html
@@ -82,9 +83,6 @@ docs_coverage:
 docs_linkcheck:
 	(cd docs && pipenv run make linkcheck && cd ..)
 	cat docs/_build/linkcheck/output.txt
-
-docs_clean:
-	rm -rf docs/_build
 
 docs_dumprefs:
 	pipenv run python -m sphinx.ext.intersphinx docs/_build/html/objects.inv
@@ -102,34 +100,36 @@ pkg_publish:
 	# FUTURE: add check that only master branch can publish / git tag
 	$(MAKE) pkg_build
 	$(MAKE) git_check
-	pipenv run twine upload dist/*
+	pipenv run twine upload artifacts/dist/*
 
 pkg_build:
-	$(MAKE) pkg_clean
+	$(MAKE) clean_pkg
 
 	@echo "*** Building Source and Wheel (universal) distribution"
-	pipenv run python setup.py sdist bdist_wheel --universal
+	pipenv run python setup.py sdist bdist_wheel --universal --dist-dir artifacts/dist
 
 	@echo "*** Checking package with twine"
-	pipenv run twine check dist/*
+	pipenv run twine check artifacts/dist/*
 
 pkg_install:
 	$(MAKE) pkg_build
-	pip install dist/*.whl --upgrade
+	pip install artifacts/dist/*.whl --upgrade
 
-pkg_clean:
-	rm -rf build dist *.egg-info
+clean_docs:
+	rm -rf docs/_build
 
-files_clean:
+clean_pkg:
+	rm -rf dist build artifacts/dist axonius_api_client.egg-info
+
+clean_files:
 	find . -type d -name "__pycache__" | xargs rm -rf
 	find . -type f -name ".DS_Store" | xargs rm -f
 	find . -type f -name "*.pyc" | xargs rm -f
+	rm -f axonius_api_client.log*
 
 clean:
-	$(MAKE) files_clean
-	$(MAKE) pkg_clean
-	$(MAKE) test_clean
-	$(MAKE) docs_clean
+	$(MAKE) clean_files
+	$(MAKE) clean_pkg
+	$(MAKE) clean_tests
+	$(MAKE) clean_docs
 	$(MAKE) pipenv_clean
-
-# FUTURE: add cov_publish

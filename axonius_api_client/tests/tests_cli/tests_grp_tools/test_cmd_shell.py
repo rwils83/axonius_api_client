@@ -14,6 +14,11 @@ from ...utils import MockError, load_clirunner
 
 class TestCmdShell:
     def test_prompt(self, request, monkeypatch):
+        try:
+            import readline  # noqa
+        except Exception:
+            pytest.skip("No readline support")
+
         runner = CliRunner(mix_stderr=False)
 
         url = request.config.getoption("--ax-url")
@@ -47,10 +52,15 @@ class TestCmdShell:
         outlines1 = stdout1.splitlines()
 
         assert outlines1[0] == "URL: {}".format(url)
-        assert outlines1[1] == "API Key of user: "
-        assert outlines1[2] == "API Secret of user: "
+        assert outlines1[1].startswith("API Key")
+        assert outlines1[2].startswith("API Secret")
 
     def test_no_prompt(self, request, monkeypatch):
+        try:
+            import readline  # noqa
+        except Exception:
+            pytest.skip("No readline support")
+
         runner = load_clirunner(request, monkeypatch)
 
         prompt_input = "\n".join(["exit()"])
@@ -78,6 +88,11 @@ class TestCmdShell:
 
 class TestCliWriteHistFile:
     def test_default(self, monkeypatch):
+        try:
+            import readline  # noqa
+        except Exception:
+            pytest.skip("No readline support")
+
         runner = CliRunner(mix_stderr=False)
 
         with runner.isolated_filesystem():
@@ -90,6 +105,11 @@ class TestCliWriteHistFile:
 
 class TestCliRegisterReadline:
     def test_default(self, monkeypatch):
+        try:
+            import readline  # noqa
+        except Exception:
+            pytest.skip("No readline support")
+
         runner = CliRunner(mix_stderr=False)
 
         with runner.isolated_filesystem():
@@ -101,6 +121,10 @@ class TestCliRegisterReadline:
             assert histfile.is_file(), list(histpath.iterdir())
 
     def test_exc(self, monkeypatch, capsys):
+        try:
+            import readline  # noqa
+        except Exception:
+            pytest.skip("No readline support")
         runner = CliRunner(mix_stderr=False)
 
         with runner.isolated_filesystem():

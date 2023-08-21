@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
-"""API models package."""
-from . import api_key, models
-from .api_key import ApiKey
-from .models import Mixins, Model
+"""Authenticating with Axonius."""
+from .api_key import AuthApiKey
+from .credentials import AuthCredentials
+from .model import AuthModel
+from .null import AuthNull
+
+# backwards compatibility
+ApiKey = AuthApiKey
+Credentials = AuthCredentials
+
 
 __all__ = (
-    "models",
-    "api_key",
-    "Model",
-    "Mixins",
+    "AuthModel",
+    "AuthApiKey",
+    "AuthCredentials",
+    "AuthNull",
     "ApiKey",
+    "Credentials",
 )

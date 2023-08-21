@@ -1,80 +1,15 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
 import copy
-import warnings
 
 import pytest
 
-from axonius_api_client.constants import CSV_ADAPTER, DEFAULT_NODE
+from axonius_api_client.api import json_api
+from axonius_api_client.constants.adapters import CSV_ADAPTER
 from axonius_api_client.exceptions import ApiError, ConfigUnchanged, ConfigUnknown, NotFoundError
+from axonius_api_client.tools import dt_now
 
-from ...meta import (
-    CSV_FILECONTENT_BYTES,
-    CSV_FILECONTENT_STR,
-    CSV_FILENAME,
-    FIELD_FORMATS,
-    NO_TITLES,
-    SCHEMA_TYPES,
-)
-
-
-def val_parsed_schema(schema):
-    for setting_name, item in schema.items():
-        item_name = item.pop("name")
-        assert isinstance(item_name, str) and item_name
-        assert setting_name == item_name
-
-        item_type = item.pop("type")
-        assert isinstance(item_type, str) and item_type
-        assert item_type in SCHEMA_TYPES
-
-        item_required = item.pop("required")
-        assert isinstance(item_required, bool)
-
-        item_title = item.pop("title")
-        assert isinstance(item_title, str) and item_title
-
-        # optionals
-        item_format = item.pop("format", "")
-        assert isinstance(item_format, str)
-        assert item_format in FIELD_FORMATS or item_format == ""
-
-        item_description = item.pop("description", "")
-        assert isinstance(item_description, str)
-
-        item_enum = item.pop("enum", [])
-        assert isinstance(item_enum, list)
-        for x in item_enum:
-            if isinstance(x, dict):
-                assert isinstance(x["name"], str)
-                assert isinstance(x["title"], str)
-                continue
-            if item_type == "integer":
-                assert isinstance(x, int)
-            else:
-                assert isinstance(x, str) and x
-
-        item_default = item.pop("default", "")
-        assert isinstance(item_default, (str, int, bool)) or item_default in [
-            None,
-            [],
-        ]
-
-        item_items = item.pop("items", {})
-        if isinstance(item_items, list):
-            for x in item_items:
-                assert isinstance(x, dict)
-                assert isinstance(x["name"], str)
-                if x["name"] not in NO_TITLES:
-                    assert isinstance(x["title"], str)
-                assert isinstance(x["type"], str)
-        else:
-            assert isinstance(item_items, dict)
-
-        item_report_id = item.pop("report_id", "")
-        assert isinstance(item_report_id, str)
-
-        assert not item
+from ...meta import CSV_FILECONTENT_BYTES, CSV_FILECONTENT_STR, CSV_FILENAME
 
 
 class TestAdaptersBase:
@@ -84,508 +19,364 @@ class TestAdaptersBase:
 
     @pytest.fixture(scope="class")
     def adapter(self, apiobj):
-        return apiobj.get_by_name(name=CSV_ADAPTER, node=DEFAULT_NODE)
+        return apiobj.get_by_name(name=CSV_ADAPTER, get_clients=False)
+
+    @pytest.fixture(scope="class")
+    def history_filters(self, apiobj):
+        return apiobj.get_fetch_history_filters()
 
 
 class TestAdaptersPrivate(TestAdaptersBase):
     def test_private_get(self, apiobj):
-        adapters = apiobj._get()
-        assert isinstance(adapters, dict)
-        self.val_raw_adapters(adapters=adapters)
+        adapters = apiobj._get(get_clients=True)
+        assert isinstance(adapters, list) and adapters
+        for adapter in adapters:
+            assert isinstance(adapter, json_api.adapters.Adapter)
+            assert str(adapter)
+            assert repr(adapter)
+            for adapter_node in adapter.adapter_nodes:
+                assert isinstance(adapter_node, json_api.adapters.AdapterNode)
+                assert str(adapter_node)
+                assert repr(adapter_node)
 
-    def val_raw_adapters(self, adapters):
-        for name, instances in adapters.items():
-            assert name.endswith("_adapter")
-            assert isinstance(instances, list)
+                an_serial = adapter_node.to_dict_old()
+                generic = an_serial["schemas"]["generic"]
+                discovery = an_serial["schemas"]["discovery"]
+                assert isinstance(generic, dict)
+                assert isinstance(discovery, dict)
+                assert generic
+                assert discovery
 
-            for instance in instances:
-                self.val_raw_adapter(name=name, instance=instance)
+                for adapter_node_cnx in adapter_node.cnxs:
+                    assert isinstance(adapter_node_cnx, json_api.adapters.AdapterNodeCnx)
+                    anc_serial = adapter_node_cnx.to_dict_old()
+                    assert isinstance(anc_serial, dict)
+                    assert isinstance(adapter_node_cnx.label, str)
+                    assert (
+                        isinstance(adapter_node_cnx.schema_cnx, dict)
+                        and adapter_node_cnx.schema_cnx
+                    )
+                    assert (
+                        isinstance(adapter_node_cnx.schema_cnx_discovery, dict)
+                        and adapter_node_cnx.schema_cnx_discovery
+                    )
+                    assert str(adapter_node_cnx)
+                    assert repr(adapter_node_cnx)
 
-    def val_raw_adapter(self, name, instance):
-        node_id = instance.pop("node_id")
-        assert isinstance(node_id, str) and node_id
+    def test_get_labels(self, apiobj):
+        ret = apiobj._get_labels()
+        assert isinstance(ret, json_api.adapters.CnxLabels)
+        assert isinstance(ret.labels, list)
+        for x in ret.labels:
+            assert isinstance(x, dict)
 
-        unique_plugin_name = instance.pop("unique_plugin_name")
-        assert isinstance(unique_plugin_name, str) and unique_plugin_name
-
-        node_name = instance.pop("node_name")
-        assert isinstance(node_name, str) and node_name
-
-        clients = instance.pop("clients")
-        assert isinstance(clients, list)
-
-        config = instance.pop("config")
-        assert isinstance(config, dict) and config
-        assert len(config) in [2, 3]
-        assert "AdapterBase" in config
-
-        for config_name, item in config.items():
-            item_config = item.pop("config")
-            item_schema = item.pop("schema")
-            item_pretty_name = item_schema.pop("pretty_name")
-
-            assert isinstance(item_config, dict) and item_config
-            assert isinstance(item_pretty_name, str) and item_pretty_name
-            assert isinstance(item_schema, dict) and item_schema
-
-            self.val_raw_schema(name=name, schema=item_schema)
-
-            assert not item
-
-        schema = instance.pop("schema")
-        assert isinstance(schema, dict) and schema
-        self.val_raw_schema(name=name, schema=schema)
-
-        status = instance.pop("status")
-        assert status in ["warning", "success", None, ""]
-
-        supported_features = instance.pop("supported_features")
-        assert isinstance(supported_features, list)
-        for x in supported_features:
-            assert isinstance(x, str)
-
-        assert not instance
-
-        for client in clients:
-            self.val_raw_client(name=name, client=client, instance_status=status)
-
-    def val_raw_client(self, name, client, instance_status):
-        assert isinstance(client, dict)
-
-        client_config = client.pop("client_config")
-        assert isinstance(client_config, dict) and client_config
-
-        uuid = client.pop("uuid")
-        assert isinstance(uuid, str) and uuid
-
-        client_id = client.pop("client_id")
-        assert isinstance(client_id, str)
-
-        if not client_id:
-            msg = "Client for {} has an empty client_id {}"
-            msg = msg.format(name, client_id)
-            warnings.warn(msg)
-
-        error = client.pop("error")
-        assert isinstance(error, str) or error is None
-
-        node_id = client.pop("node_id")
-        assert isinstance(node_id, str) and node_id
-
-        status = client.pop("status")
-        assert isinstance(status, str)
-        assert status in ["warning", "error", "success"]
-
-        if status == "error":
-            assert instance_status == "warning"
-
-        date_fetched = client.pop("date_fetched")
-        assert isinstance(date_fetched, str)
-
-        adapter_name = client.pop("adapter_name")
-        assert isinstance(adapter_name, str)
-
-        # TBD: bust out dict?
-        connection_discovery = client.pop("connection_discovery")
-        assert isinstance(connection_discovery, dict)
-
-        last_fetch_time = client.pop("last_fetch_time")
-        assert last_fetch_time is None or isinstance(last_fetch_time, str)
-
-        assert not client
-
-    def val_raw_schema(self, name, schema):
-        assert isinstance(schema, dict)
-
-        items = schema.pop("items")
-        assert isinstance(items, list) and items
-
-        item_names = [x["name"] for x in items]
-
-        for item in items:
-            assert isinstance(item, dict)
-
-            item_name = item.pop("name")
-            assert isinstance(item_name, str) and item_name
-
-            item_type = item.pop("type")
-            assert isinstance(item_type, str) and item_type
-
-            item_title = item.pop("title")
-            assert isinstance(item_title, str) and item_title
-
-            item_format = item.pop("format", "")
-            assert isinstance(item_format, str)
-
-            item_description = item.pop("description", "")
-            assert isinstance(item_description, str)
-
-            item_enum = item.pop("enum", [])
-            assert isinstance(item_enum, list)
-            for x in item_enum:
-                if isinstance(x, dict):
-                    assert isinstance(x["name"], str)
-                    assert isinstance(x["title"], str)
-                    continue
-                assert isinstance(x, (str, int))
-
-            item_default = item.pop("default", "")
-            assert isinstance(item_default, (str, int, bool)) or item_default is None
-
-            item_items = item.pop("items", {})
-            if isinstance(item_items, list):
-                for x in item_items:
-                    assert isinstance(x, dict)
-                    assert isinstance(x["name"], str)
-                    if x["name"] not in NO_TITLES:
-                        assert isinstance(x["title"], str)
-                    assert isinstance(x["type"], str)
-                continue
-            assert isinstance(item_items, dict)
-
-            item_req = item.pop("required", False)
-            assert isinstance(item_req, bool)
-            if item_type not in SCHEMA_TYPES:
-                msg = "Setting for adapter {!r} has an unexpected item_type {!r}"
-                msg = msg.format(name, item_type)
-                warnings.warn(msg)
-
-            item_report_id = item.pop("report_id", "")
-            assert isinstance(item_report_id, str)
-
-            assert not item
-
-        required = schema.pop("required")
-        assert isinstance(required, list)
-        for req in required:
-            assert isinstance(req, str)
-
-            if req not in item_names:
-                msg = "Schema for {} has required item {!r} not in defined items {}"
-                msg = msg.format(name, req, item_names)
-                warnings.warn(msg)
-
-        schema_type = schema.pop("type")
-        assert schema_type == "array"
-
-        assert not schema
+    def test_private_get_no_clients(self, apiobj):
+        adapters = apiobj._get(get_clients=False)
+        assert isinstance(adapters, list) and adapters
+        for adapter in adapters:
+            assert isinstance(adapter, json_api.adapters.Adapter)
+            for adapter_node in adapter.adapter_nodes:
+                assert isinstance(adapter_node, json_api.adapters.AdapterNode)
+                serial = adapter_node.to_dict_old()
+                generic = serial["schemas"]["generic"]
+                discovery = serial["schemas"]["discovery"]
+                assert isinstance(generic, dict) and not generic
+                assert isinstance(discovery, dict) and not discovery
+                assert not adapter_node.cnxs
 
     def test_private_file_upload_str(self, apiobj, adapter):
         data = apiobj._file_upload(
-            name_raw=adapter["name_raw"],
+            adapter_name=adapter["name_raw"],
             node_id=adapter["node_id"],
             field_name=CSV_ADAPTER,
             file_name=CSV_FILENAME,
             file_content=CSV_FILECONTENT_STR,
         )
         assert isinstance(data, dict)
-        assert data["uuid"]
-        assert data["filename"]
+        assert isinstance(data["uuid"], str) and data["uuid"]
+        assert isinstance(data["filename"], str) and data["filename"]
 
     def test_private_file_upload_bytes(self, apiobj, adapter):
         data = apiobj._file_upload(
-            name_raw=adapter["name_raw"],
+            adapter_name=adapter["name_raw"],
             node_id=adapter["node_id"],
             field_name=CSV_ADAPTER,
             file_name=CSV_FILENAME,
             file_content=CSV_FILECONTENT_BYTES,
         )
         assert isinstance(data, dict)
-        assert data["uuid"]
-        assert data["filename"]
+        assert isinstance(data["uuid"], str) and data["uuid"]
+        assert isinstance(data["filename"], str) and data["filename"]
 
     def test_private_config_update(self, apiobj, adapter):
-        current = apiobj._config_get(name_plugin=adapter["name_plugin"], name_config="AdapterBase")
-        key = "user_last_fetched_threshold_hours"
-        current_config = current["config"]
-        config_update = copy.deepcopy(current_config)
-        set_value = config_update[key] + 1
-        config_update[key] = set_value
+        adapter_name_raw = adapter["name_raw"]
+        config_key = "user_last_fetched_threshold_hours"
 
-        set_response = apiobj._config_update(
-            name_raw=adapter["name_raw"],
-            name_config="AdapterBase",
-            new_config=config_update,
+        settings = apiobj._config_get(adapter_name=adapter_name_raw)
+        assert isinstance(settings, json_api.adapters.AdapterSettings)
+
+        generic = settings.config_generic
+        assert isinstance(generic, dict) and generic
+
+        generic_update = copy.deepcopy(generic)
+        value_to_set = generic_update[config_key]
+
+        if isinstance(value_to_set, int):
+            value_to_set += 1
+        else:
+            value_to_set = 48
+
+        generic_update[config_key] = value_to_set
+        update_response = apiobj._config_update(
+            adapter_name=adapter_name_raw,
+            config_name=settings.schema_name_generic,
+            config=generic_update,
         )
+        assert isinstance(update_response, json_api.system_settings.SystemSettings)
+        assert update_response.config[config_key] == value_to_set
 
-        assert set_response.get("config_name")
-        updated = apiobj._config_get(name_plugin=adapter["name_plugin"], name_config="AdapterBase")
-        updated_config = updated["config"]
-        assert updated_config[key] == set_value
-        assert updated_config == config_update
-        assert updated_config != current_config
-
-        reconfig_update = copy.deepcopy(updated_config)
-        reconfig_update[key] = current_config[key]
         reset_response = apiobj._config_update(
-            name_raw=adapter["name_raw"],
-            name_config="AdapterBase",
-            new_config=reconfig_update,
+            adapter_name=adapter_name_raw,
+            config_name=settings.schema_name_generic,
+            config=generic,
         )
-        assert reset_response.get("config_name")
-        post_reset = apiobj._config_get(
-            name_plugin=adapter["name_plugin"], name_config="AdapterBase"
+        assert isinstance(reset_response, json_api.system_settings.SystemSettings)
+        assert reset_response.config[config_key] == generic[config_key]
+
+    def test_get_basic(self, apiobj):
+        data = apiobj._get_basic()
+        assert isinstance(data, json_api.adapters.AdaptersList)
+        adapter = data.find_by_name(value=CSV_ADAPTER)
+        assert adapter["title"] == "CSV"
+        assert adapter["name_raw"] == "csv_adapter"
+        assert adapter["name"] == "csv"
+
+        with pytest.raises(NotFoundError):
+            data.find_by_name("badwolf")
+
+    def test_get_fetch_history(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        data = apiobj._get_fetch_history(request_obj=request_obj)
+        assert isinstance(data, list)
+        for item in data:
+            assert isinstance(item, json_api.adapters.AdapterFetchHistory)
+            assert str(item)
+            assert repr(item)
+
+    def test_get_fetch_history_no_request_obj(self, apiobj):
+        data = apiobj._get_fetch_history()
+        assert isinstance(data, list)
+        for item in data:
+            assert isinstance(item, json_api.adapters.AdapterFetchHistory)
+            assert str(item)
+            assert repr(item)
+
+
+class TestFetchHistoryModel(TestAdaptersBase):
+    def test_set_sort_invalid(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        with pytest.raises(NotFoundError):
+            request_obj.set_sort(value="x", descending=False)
+
+    def test_set_sort_valid(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        attr = list(request_obj.get_schema_cls().validate_attrs())[0]
+        exp = attr
+        ret = request_obj.set_sort(value=attr, descending=False)
+        assert ret == exp
+
+    def test_set_sort_descending(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        attr = list(request_obj.get_schema_cls().validate_attrs())[0]
+        exp = f"-{attr}"
+        ret = request_obj.set_sort(value=attr, descending=True)
+        assert ret == exp
+
+    def test_set_sort_empty(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        attr = None
+        exp = None
+        ret = request_obj.set_sort(value=attr, descending=True)
+        assert ret == exp
+
+    def test_set_filters_invalid_type(self, apiobj, history_filters):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        with pytest.raises(ApiError):
+            request_obj.set_filters(history_filters=history_filters, value_type="x", value="v")
+
+    @pytest.mark.parametrize(
+        "value_type", json_api.adapters.AdapterFetchHistoryFilters.value_types()
+    )
+    def test_set_filters_invalid_value(self, apiobj, history_filters, value_type):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        with pytest.raises(NotFoundError):
+            request_obj.set_filters(
+                history_filters=history_filters, value_type=value_type, value="BaDWolFy a y a"
+            )
+
+    @pytest.mark.parametrize(
+        "value_type", json_api.adapters.AdapterFetchHistoryFilters.value_types()
+    )
+    def test_set_filters_valid_value(self, apiobj, history_filters, value_type):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        items = getattr(history_filters, value_type)
+        if items:
+            if isinstance(items, dict):
+                value = list(items.values())[0]
+                exp = [value["name_raw"]]
+                for value in value.values():
+                    ret = request_obj.set_filters(
+                        history_filters=history_filters, value_type=value_type, value=value
+                    )
+                    assert ret == exp
+            elif isinstance(items, list):
+                value = items[0:2]
+                exp = value
+                ret = request_obj.set_filters(
+                    history_filters=history_filters, value_type=value_type, value=value
+                )
+                assert ret == exp
+
+    def test_set_filters_adapters_empty(self, apiobj, history_filters):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        values = [None, []]
+        exp = []
+        for value in values:
+            ret = request_obj.set_filters(
+                history_filters=history_filters, value_type="adapters", value=value
+            )
+            assert ret == exp
+
+    def test_set_time_range_empty(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        exp = json_api.time_range.TimeRange.build()
+        ret = request_obj.set_time_range()
+        assert ret == exp
+
+    def test_set_time_range_absolute_no_date_start(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        with pytest.raises(ApiError):
+            request_obj.set_time_range(absolute_date_end="2022-01-01")
+
+    def test_set_time_range_absolute_date_start(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        ret = request_obj.set_time_range(absolute_date_start="2022-01-01")
+        assert ret.type == json_api.time_range.DateTypes.absolute.name
+        assert ret.date_from.month == 1
+        assert ret.date_to.month == dt_now().month
+        assert ret.count is None
+        assert ret.unit == json_api.time_range.UnitTypes.get_default()
+
+    def test_set_time_range_absolute_date_start_end(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        ret = request_obj.set_time_range(
+            absolute_date_start="2022-01-01", absolute_date_end="2022-02-01"
         )
-        assert post_reset["config"] == current_config
+        assert ret.type == json_api.time_range.DateTypes.absolute.name
+        assert ret.date_from.month == 1
+        assert ret.date_to.month == 2
+        assert ret.count is None
+        assert ret.unit == json_api.time_range.UnitTypes.get_default()
 
-    def test_private_config_get_generic(self, apiobj):
-        for meta in apiobj.get():
-            data = apiobj._config_get(
-                name_plugin=meta["name_plugin"],
-                name_config=meta["schemas"]["generic_name"],
-            )
-            assert isinstance(data, dict)
+    def test_set_time_range_relative_count(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        ret = request_obj.set_time_range(relative_unit_count=4)
+        assert ret.type == json_api.time_range.DateTypes.relative.name
+        assert ret.date_from is None
+        assert ret.date_to is None
+        assert ret.count == 4
+        assert ret.unit == json_api.time_range.UnitTypes.get_default()
 
-            config = data.pop("config")
-            assert isinstance(config, dict)
+    def test_set_time_range_relative_type_month(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        ret = request_obj.set_time_range(
+            relative_unit_type=json_api.time_range.UnitTypes.month.name, relative_unit_count=2
+        )
+        assert ret.type == json_api.time_range.DateTypes.relative.name
+        assert ret.date_from is None
+        assert ret.date_to is None
+        assert ret.count == 2
+        assert ret.unit == json_api.time_range.UnitTypes.month.name
 
-            schema = data.pop("schema")
-            assert isinstance(schema, dict)
-
-            assert not data
-
-            items = schema.pop("items")
-            assert isinstance(items, list)
-
-            pretty_name = schema.pop("pretty_name")
-            assert isinstance(pretty_name, str) and pretty_name
-
-            required = schema.pop("required")
-            assert isinstance(required, list)
-            assert all([isinstance(x, str) for x in required])
-
-            stype = schema.pop("type")
-            assert stype == "array"
-
-            assert not schema
-
-    def test_private_config_get_specific(self, apiobj):
-        for meta in apiobj.get():
-            if not meta["schemas"]["specific_name"]:
-                continue
-
-            data = apiobj._config_get(
-                name_plugin=meta["name_plugin"],
-                name_config=meta["schemas"]["specific_name"],
-            )
-            assert isinstance(data, dict)
-
-            config = data.pop("config")
-            assert isinstance(config, dict)
-
-            schema = data.pop("schema")
-            assert isinstance(schema, dict)
-
-            assert not data
-
-            items = schema.pop("items")
-            assert isinstance(items, list)
-
-            pretty_name = schema.pop("pretty_name")
-            assert isinstance(pretty_name, str) and pretty_name
-
-            required = schema.pop("required")
-            assert isinstance(required, list)
-            assert all([isinstance(x, str) for x in required])
-
-            stype = schema.pop("type")
-            assert stype == "array"
-
-            assert not schema
+    def test_set_time_range_relative_type_invalid(self, apiobj):
+        request_obj = json_api.adapters.AdapterFetchHistoryRequest()
+        with pytest.raises(ApiError):
+            request_obj.set_time_range(relative_unit_type="badwolf", relative_unit_count=1)
 
 
 class TestAdaptersPublic(TestAdaptersBase):
-    def test_get(self, apiobj):
-        adapters = apiobj.get()
-        assert all(["schemas" in x for x in adapters])
-        self.val_parsed_adapters(adapters=adapters)
+    def test_get_fetch_history(self, apiobj):
+        data = apiobj.get_fetch_history()
+        assert isinstance(data, list)
+        for item in data:
+            assert isinstance(item, json_api.adapters.AdapterFetchHistory)
+            assert str(item)
+            assert repr(item)
 
-    def val_parsed_adapters(self, adapters):
-        assert isinstance(adapters, list)
+    def test_get_fetch_history_filters(self, apiobj):
+        data = apiobj.get_fetch_history_filters()
+        assert isinstance(data, json_api.adapters.AdapterFetchHistoryFilters)
+        assert str(data)
+        assert repr(data)
+
+    def test_get_clients_false(self, apiobj):
+        adapters = apiobj.get(get_clients=False)
         for adapter in adapters:
-            self.val_parsed_adapter(adapter=adapter)
+            assert not adapter["cnx"]
+            assert not adapter["schemas"]["generic"]
+            assert not adapter["schemas"]["specific"]
+            assert not adapter["schemas"]["cnx"]
 
-    def val_parsed_adapter(self, adapter):
-        assert isinstance(adapter, dict)
-
-        name = adapter.pop("name")
-        assert isinstance(name, str)
-
-        name_raw = adapter.pop("name_raw")
-        assert isinstance(name_raw, str)
-
-        name_plugin = adapter.pop("name_plugin")
-        assert isinstance(name_plugin, str)
-
-        node_name = adapter.pop("node_name")
-        assert isinstance(node_name, str)
-
-        node_id = adapter.pop("node_id")
-        assert isinstance(node_id, str)
-
-        status = adapter.pop("status")
-        assert isinstance(status, str)
-        assert status in ["warning", "success", ""]
-
-        features = adapter.pop("features")
-        assert isinstance(features, list)
-        for x in features:
-            assert isinstance(x, str) and x
-
-        schemas = adapter.pop("schemas")
-        assert isinstance(schemas, dict) and schemas
-
-        schema_cnx = schemas.pop("cnx")
-        assert isinstance(schema_cnx, dict) and schema_cnx
-
-        generic_name = schemas.pop("generic_name")
-        assert isinstance(generic_name, str) and generic_name
-        assert generic_name == "AdapterBase"
-
-        generic_schema = schemas.pop("generic")
-        assert isinstance(generic_schema, dict) and generic_schema
-        val_parsed_schema(schema=generic_schema)
-
-        specific_name = schemas.pop("specific_name")
-        assert isinstance(specific_name, str)
-
-        specific_schema = schemas.pop("specific")
-        assert isinstance(specific_schema, dict)
-
-        discovery_name = schemas.pop("discovery_name")
-        assert isinstance(discovery_name, str)
-
-        discovery_schema = schemas.pop("discovery")
-        val_parsed_schema(schema=discovery_schema)
-
-        assert not schemas
-
-        if specific_name:
-            assert specific_schema
-            val_parsed_schema(schema=specific_schema)
-
-        cnx_count_total = adapter.pop("cnx_count_total")
-        assert isinstance(cnx_count_total, int)
-        if not cnx_count_total:
-            assert not status
-
-        cnx_count_broken = adapter.pop("cnx_count_broken")
-        assert isinstance(cnx_count_broken, int)
-
-        cnx_count_working = adapter.pop("cnx_count_working")
-        assert isinstance(cnx_count_working, int)
-        if not cnx_count_broken and cnx_count_working:
-            assert status == "success"
-
-        cnxs = adapter.pop("cnx")
-        assert isinstance(cnxs, list)
-        for cnx in cnxs:
-            self.val_parsed_cnx(
-                cnx=cnx,
-                adapter_name=name,
-                adapter_name_raw=name_raw,
-                adapter_node_id=node_id,
-                adapter_node_name=node_name,
-            )
-
-        config = adapter.pop("config")
-        assert isinstance(config, dict) and config
-
-        generic_config = config.pop("generic")
-        assert isinstance(generic_config, dict) and generic_config
-
-        specific_config = config.pop("specific")
-        assert isinstance(specific_config, dict)
-
-        assert not adapter
-
-    def val_parsed_cnx(
-        self,
-        cnx,
-        adapter_name,
-        adapter_name_raw,
-        adapter_node_id,
-        adapter_node_name,
-    ):
-        assert isinstance(cnx, dict)
-
-        cnx_adapter_name = cnx.pop("adapter_name")
-        assert cnx_adapter_name == adapter_name
-
-        cnx_adapter_name_raw = cnx.pop("adapter_name_raw")
-        assert cnx_adapter_name_raw == adapter_name_raw
-
-        config = cnx.pop("config")
-        assert isinstance(config, dict) and config
-
-        date_fetched = cnx.pop("date_fetched")
-        assert isinstance(date_fetched, str)
-
-        error = cnx.pop("error")
-        assert isinstance(error, str) or error is None
-
-        cnx_id = cnx.pop("id")
-        assert isinstance(cnx_id, str)
-
-        cnx_node_id = cnx.pop("node_id")
-        assert cnx_node_id == adapter_node_id
-
-        cnx_node_name = cnx.pop("node_name")
-        assert cnx_node_name == adapter_node_name
-
-        working = cnx.pop("working")
-        assert isinstance(working, bool)
-
-        status = cnx.pop("status")
-        assert isinstance(status, str) and status
-        assert status in ["warning", "error", "success"]
-
-        uuid = cnx.pop("uuid")
-        assert isinstance(uuid, str) and uuid
-
-        assert not cnx
+    def test_get_clients_true(self, apiobj):
+        adapters = apiobj.get(get_clients=True)
+        for adapter in adapters:
+            assert adapter["schemas"]["generic"]
+            if adapter["schemas"]["specific_name"]:
+                assert adapter["schemas"]["specific"]
+            assert adapter["schemas"]["cnx"]
 
     def test_get_by_name(self, apiobj):
-        adapter = apiobj.get_by_name(name=CSV_ADAPTER, node=DEFAULT_NODE)
+        adapter = apiobj.get_by_name(name=CSV_ADAPTER, get_clients=False)
         assert "schemas" in adapter
-        self.val_parsed_adapter(adapter=adapter)
+
+    def test_get_by_name_basic(self, apiobj):
+        adapter = apiobj.get_by_name_basic(value=CSV_ADAPTER)
+        assert adapter["title"] == "CSV"
+        assert adapter["name_raw"] == "csv_adapter"
+        assert adapter["name"] == "csv"
 
     def test_get_by_name_bad_node(self, apiobj):
         with pytest.raises(NotFoundError):
-            apiobj.get_by_name(name=CSV_ADAPTER, node="badwolf")
+            apiobj.get_by_name(name=CSV_ADAPTER, node="badwolf", get_clients=False)
 
     def test_get_by_name_bad_name(self, apiobj):
         with pytest.raises(NotFoundError):
-            apiobj.get_by_name(name="badwolf", node=DEFAULT_NODE)
+            apiobj.get_by_name(name="badwolf", get_clients=False)
 
     def test_config_get_bad_config_type(self, apiobj):
         with pytest.raises(ApiError):
-            apiobj.config_get(name=CSV_ADAPTER, node=DEFAULT_NODE, config_type="badwolf")
+            apiobj.config_get(name=CSV_ADAPTER, config_type="badwolf")
 
     def test_config_get_discovery(self, apiobj):
-        data = apiobj.config_get(name="aws", node=DEFAULT_NODE, config_type="discovery")
+        data = apiobj.config_get(name="active_directory", config_type="discovery")
         assert isinstance(data, dict)
         config = data.pop("config")
         assert isinstance(config, dict) and config
 
         schema = data.pop("schema")
         assert isinstance(schema, dict) and schema
-
-        val_parsed_schema(schema=schema)
 
     def test_config_get_specific(self, apiobj):
-        data = apiobj.config_get(name="aws", node=DEFAULT_NODE, config_type="specific")
+        data = apiobj.config_get(name="active_directory", config_type="specific")
         assert isinstance(data, dict)
         config = data.pop("config")
         assert isinstance(config, dict) and config
 
         schema = data.pop("schema")
         assert isinstance(schema, dict) and schema
-
-        val_parsed_schema(schema=schema)
 
     def test_config_get_generic(self, apiobj):
-        data = apiobj.config_get(name=CSV_ADAPTER, node=DEFAULT_NODE, config_type="generic")
+        data = apiobj.config_get(name=CSV_ADAPTER, config_type="generic")
         assert isinstance(data, dict)
 
         config = data.pop("config")
@@ -593,8 +384,6 @@ class TestAdaptersPublic(TestAdaptersBase):
 
         schema = data.pop("schema")
         assert isinstance(schema, dict) and schema
-
-        val_parsed_schema(schema=schema)
 
     def test_file_upload_str(self, apiobj, adapter):
         data = apiobj.file_upload(
@@ -614,7 +403,6 @@ class TestAdaptersPublic(TestAdaptersBase):
 
         data = apiobj.file_upload_path(
             name=CSV_ADAPTER,
-            node=DEFAULT_NODE,
             path=test_path,
         )
         assert isinstance(data, dict)
@@ -625,17 +413,16 @@ class TestAdaptersPublic(TestAdaptersBase):
         with pytest.raises(ConfigUnknown):
             apiobj.config_update(
                 name=CSV_ADAPTER,
-                node=DEFAULT_NODE,
                 config_type="generic",
                 badwolf="badwolf",
             )
 
     def test_config_update_unchanged(self, apiobj):
         with pytest.raises(ConfigUnchanged):
-            apiobj.config_update(name=CSV_ADAPTER, node=DEFAULT_NODE, config_type="generic")
+            apiobj.config_update(name=CSV_ADAPTER, config_type="generic")
 
     def test_config_update_generic(self, apiobj, adapter):
-        data = apiobj.config_refetch(adapter=adapter)
+        data = apiobj.config_get(name=adapter["name"])
         current = data["config"]
         key = "user_last_fetched_threshold_hours"
         current_value = current[key]

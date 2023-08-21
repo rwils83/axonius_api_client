@@ -2,9 +2,9 @@
 import time
 
 QUERIES = {
-    "not_last_seen_day": '(not (specific_data.data.last_seen >= date("NOW - 1d")))',
-    "exist_complex": '((({f} == ({{"$exists":true,"$ne":[]}})) and {f} != []))',
-    "exist_simple": '(({f} == ({{"$exists":true,"$ne":""}})))',
+    "not_last_seen_day": '(not ("specific_data.data.last_seen" >= date("NOW - 1d")))',
+    "exist_complex": '((("{f}" == ({{"$exists":true,"$ne":[]}})) and "{f}" != []))',
+    "exist_simple": '(("{f}" == ({{"$exists":true,"$ne":""}})))',
 }
 
 TEST_CLIENT_CERT_NAME = "client_cert.crt"
@@ -72,26 +72,26 @@ oXO3sikOr2yrDS95jHjVzU0iW3xzu8bM9D01swBx0T5kYKWZo4ywpQ==
 
 FIELD_FORMATS = [
     "discrete",
-    "image",
-    "date-time",
-    "table",
-    "ip",
-    "subnet",
-    "version",
-    "password",
-    "time",
     "connection_label",
-]
-SCHEMA_FIELD_FORMATS = [
-    "image",
     "date-time",
-    "table",
-    "logo",
-    "tag",
+    "image",
     "ip",
+    "logo",
+    "ip_preferred",
+    "os-distribution",
+    "password",
     "subnet",
+    "table",
+    "tag",
+    "time",
     "version",
+    "dynamic_field",  # ~3.13
+    "date",  # 4.5
+    "sq",
+    "expirable-tag",  # 4.6
+    "data_scope",
 ]
+SCHEMA_FIELD_FORMATS = FIELD_FORMATS
 SCHEMA_TYPES = ["string", "bool", "array", "integer", "number", "file"]
 TAGS = ["badwolf_tag_1", "badwolf_tag_2"]
 
@@ -188,3 +188,62 @@ TEST_PERM = "Restricted"
 # ABOUT on BUILD: ["Build Date", "Commit Date", "Commit Hash", "Version"]
 # ABOUT on RELEASE: ["Build Date", "Customer ID", "Version"]
 NO_TITLES = ["system_research_date", "system_research_weekdays"]
+
+USER_NAME = "badwolf"
+EMAIL = "jim@axonius.com"
+EMAIL_ALT = "james@axonius.com"
+
+
+class CsvKeys:
+    """Pass."""
+
+    user_id: str = "user_id"
+    file_path: str = "file_path"
+    verify_ssl: str = "verify_ssl"
+
+
+class CsvData:
+    """Pass."""
+
+    from axonius_api_client.tools import csv_writer
+
+    adapter_name: str = "csv"
+    adapter_name_raw: str = "csv_adapter"
+    file_field_name: str = "file_path"
+    file_name: str = "badwolfzzzzzzzz.csv"
+    user_id: str = "badwolfzzzzzzzz"
+    rows = [
+        {
+            "name": "why",
+            "mac_address": "01:37:53:9E:82:7C",
+            "extra_field": "foo1",
+        },
+        {
+            "name": "cuz",
+            "mac_address": "01:37:53:9E:82:8C",
+            "extra_field": "foo2",
+        },
+    ]
+    file_contents: str = csv_writer(rows=rows)
+    config: dict = {CsvKeys.user_id: user_id, CsvKeys.verify_ssl: False}
+
+
+class TanKeys:
+    """Pass."""
+
+    domain: str = "domain"
+    username: str = "username"
+    password: str = "password"
+
+
+class TanData:
+    """Pass."""
+
+    adapter_name: str = "tanium"
+    adapter_name_raw: str = "tanium_adapter"
+    bad_val: str = "dumdum"
+    config_bad: dict = {
+        TanKeys.domain: bad_val,
+        TanKeys.username: bad_val,
+        TanKeys.password: bad_val,
+    }

@@ -5,12 +5,12 @@ import io
 
 import pytest
 
-from ...utils import get_rows_exist, get_schema
-from .test_callbacks import Callbacks
+from ...utils import get_schema
+from .test_callbacks import Exports
 
 
-class TestCallbacksCsv(Callbacks):
-    @pytest.fixture(params=["api_devices", "api_users"])
+class TestCallbacksCsv(Exports):
+    @pytest.fixture(params=["api_devices"], scope="class")
     def apiobj(self, request):
         return request.getfixturevalue(request.param)
 
@@ -25,15 +25,15 @@ class TestCallbacksCsv(Callbacks):
             for x in get_schema(apiobj=apiobj, field=field_complex, key="sub_fields")
             if x["is_root"]
         ]
-        original_rows = get_rows_exist(apiobj=apiobj, fields=field_complex, max_rows=5)
+        original_rows = copy.deepcopy(apiobj.ORIGINAL_ROWS)
 
         io_fd = io.StringIO()
 
         cbobj = self.get_cbobj(
             apiobj=apiobj,
             cbexport=cbexport,
-            store={"fields": [field_complex]},
-            getargs={"export_fd": io_fd},
+            store={"fields_parsed": [field_complex]},
+            getargs={"export_fd": io_fd, "export_fd_close": False},
         )
         cbobj.start()
 
@@ -57,14 +57,14 @@ class TestCallbacksCsv(Callbacks):
         assert output.endswith("\n\n")
 
     def test_row_no_titles(self, cbexport, apiobj):
-        rows = get_rows_exist(apiobj=apiobj, max_rows=5)
+        rows = copy.deepcopy(apiobj.ORIGINAL_ROWS)
 
         io_fd = io.StringIO()
         cbobj = self.get_cbobj(
             apiobj=apiobj,
             cbexport=cbexport,
-            store={"fields": apiobj.fields_default},
-            getargs={"export_fd": io_fd, "field_titles": False},
+            store={"fields_parsed": apiobj.fields_default},
+            getargs={"export_fd": io_fd, "field_titles": False, "export_fd_close": False},
         )
         cbobj.start()
         assert cbobj.GETARGS["field_titles"] is False

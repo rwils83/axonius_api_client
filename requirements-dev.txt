@@ -1,4 +1,5 @@
-codecov
+# codecov
 pytest
 pytest-cov
-pytest-httpbin
+flaky
+coverage

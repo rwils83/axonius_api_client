@@ -2,8 +2,7 @@
 """Command line interface for Axonius API Client."""
 import click
 
-from ...context import AliasedGroup
-from . import cmd_get, cmd_start, cmd_stop
+from ...context import AliasedGroup, load_cmds
 
 
 @click.group(cls=AliasedGroup)
@@ -11,6 +10,4 @@ def discover():
     """Group: Discover and Lifecycle management."""
 
 
-discover.add_command(cmd_get.cmd)
-discover.add_command(cmd_start.cmd)
-discover.add_command(cmd_stop.cmd)
+load_cmds(path=__file__, package=__package__, group=discover)

@@ -1,11 +1,29 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
 import click
+import tabulate
 
-from ..constants import DEFAULT_NODE, DEFAULT_PATH, MAX_PAGE_SIZE
+from .. import DEFAULT_PATH
+from ..constants.api import MAX_PAGE_SIZE, TABLE_FORMAT
 from ..tools import coerce_int
 from . import context
-from .helps import HELPSTRS
+
+
+def build_filter_opt(value_type: str):
+    """Pass."""
+    short_opt = "".join([x[0] for x in value_type.split("_")])
+    long_opt = value_type.replace("_", "-")
+    camel = " ".join(x.title() for x in value_type.split("_"))
+    return click.option(
+        f"--filter-{long_opt}",
+        f"-f{short_opt}",
+        f"{value_type}",
+        help=f"Filter for records with matching {camel} (~ prefix for regex!) (multiple)",
+        multiple=True,
+        show_envvar=True,
+        show_default=True,
+        required=False,
+    )
 
 
 def add_options(options):
@@ -27,7 +45,11 @@ def int_callback(ctx, param, value):
 def help_callback(ctx, param, value):
     """Pass."""
     if value:
+        from .helps import HELPSTRS
+
         helpstr = HELPSTRS[value]
+        if callable(helpstr):
+            helpstr = helpstr(ctx=ctx, param=param, value=value)
         click.secho(helpstr, err=True, fg="blue")
         ctx.exit(0)
 
@@ -78,9 +100,9 @@ AUTH = [
         "-k",
         "key",
         required=True,
-        help="API Key of user in an Axonius instance",
+        help="API Key (or username if credentials=True) of user in an Axonius instance",
         metavar="KEY",
-        prompt="API Key of user",
+        prompt="API Key (or username if credentials=True) of user",
         hide_input=True,
         show_envvar=True,
         show_default=True,
@@ -90,9 +112,9 @@ AUTH = [
         "-s",
         "secret",
         required=True,
-        help="API Secret of user in an Axonius instance",
+        help="API Secret (or password if credentials=True) of user in an Axonius instance",
         metavar="SECRET",
-        prompt="API Secret of user",
+        prompt="API Secret (or password if credentials=True) of user",
         hide_input=True,
         show_envvar=True,
         show_default=True,
@@ -131,7 +153,7 @@ QUERY = [
     ),
 ]
 
-FIELDS_SELECT = [
+FIELDS_SELECT_BASE = [
     click.option(
         "--field",
         "-f",
@@ -149,6 +171,17 @@ FIELDS_SELECT = [
         help="Regular expressions of fields to include (multiples)",
         metavar="ADAPTER_REGEX:FIELD_REGEX",
         multiple=True,
+        show_envvar=True,
+        show_default=True,
+    ),
+    click.option(
+        "--fields-regex-root-only/--no-fields-regex-root-only",
+        "-frro/-nfrro",
+        "fields_regex_root_only",
+        help="Only include root fields for --field-regex",
+        is_flag=True,
+        default=True,
+        required=False,
         show_envvar=True,
         show_default=True,
     ),
@@ -175,38 +208,63 @@ FIELDS_SELECT = [
     ),
 ]
 
-EXPORT = [
+FIELDS_SELECT = [
+    *FIELDS_SELECT_BASE,
     click.option(
-        "--export-file",
-        "-xf",
-        "export_file",
-        default="",
-        help="File to send data to",
-        show_envvar=True,
-        show_default=True,
-        metavar="PATH",
-    ),
-    click.option(
-        "--export-path",
-        "-xp",
-        "export_path",
-        default=DEFAULT_PATH,
-        help="If --export-file supplied, the directory to write --export_file to",
-        type=click.Path(exists=False, resolve_path=True),
-        show_envvar=True,
-        show_default=True,
-    ),
-    click.option(
-        "--export-overwrite/--no-export-overwrite",
-        "-xo/-nxo",
-        "export_overwrite",
-        default=False,
-        help="If --export-file supplied and it exists, overwrite it",
+        "--fields-error/--no-fields-error",
+        "-fer/-nfer",
+        "fields_error",
+        help="Throw errors for invalid fields supplied in --field",
         is_flag=True,
+        default=True,
+        required=False,
         show_envvar=True,
         show_default=True,
     ),
 ]
+OPT_EXPORT_FILE = click.option(
+    "--export-file",
+    "-xf",
+    "export_file",
+    default="",
+    help="File to send data to",
+    show_envvar=True,
+    show_default=True,
+    metavar="PATH",
+)
+OPT_EXPORT_PATH = click.option(
+    "--export-path",
+    "-xp",
+    "export_path",
+    default=DEFAULT_PATH,
+    help="If --export-file supplied, the directory to write --export_file to",
+    type=click.Path(exists=False, resolve_path=True),
+    show_envvar=True,
+    show_default=True,
+)
+OPT_EXPORT_OVERWRITE = click.option(
+    "--export-overwrite/--no-export-overwrite",
+    "-xo/-nxo",
+    "export_overwrite",
+    default=False,
+    help="If --export-file supplied and it exists, overwrite it",
+    is_flag=True,
+    show_envvar=True,
+    show_default=True,
+)
+OPT_EXPORT_BACKUP = click.option(
+    "--export-backup/--no-export-backup",
+    "-xb/-nxb",
+    "export_backup",
+    default=False,
+    help="If --export-file supplied and it exists, rename it with datetime",
+    is_flag=True,
+    show_envvar=True,
+    show_default=True,
+)
+
+EXPORT = [OPT_EXPORT_FILE, OPT_EXPORT_PATH, OPT_EXPORT_OVERWRITE]
+
 
 PAGING = [
     click.option(
@@ -304,10 +362,10 @@ NODE = [
         "--node-name",
         "-nn",
         "node",
-        default=DEFAULT_NODE,
+        default=None,
         show_envvar=True,
         show_default=True,
-        help="Node name",
+        help="Node name (will default to core instance if not supplied)",
     ),
     click.option(
         "--name",
@@ -321,23 +379,25 @@ NODE = [
 ]
 
 
-NODE_CNX = [
-    click.option(
-        "--node-name",
-        "-nn",
-        "adapter_node",
-        default=DEFAULT_NODE,
-        show_envvar=True,
-        show_default=True,
-        help="Node name",
-    ),
-    click.option(
-        "--name",
-        "-n",
-        "adapter_name",
-        required=True,
-        show_envvar=True,
-        show_default=True,
-        help="Adapter name",
-    ),
-]
+ABORT = click.option(
+    "--abort/--no-abort",
+    "-a/-na",
+    "abort",
+    help="Stop on errors",
+    required=False,
+    default=True,
+    show_envvar=True,
+    show_default=True,
+)
+
+TABLE_FMT = click.option(
+    "--table-format",
+    "-tf",
+    "table_format",
+    default=TABLE_FORMAT,
+    help="Base format to use for --export-format=table",
+    type=click.Choice(tabulate.tabulate_formats),
+    show_envvar=True,
+    show_default=True,
+    hidden=False,
+)

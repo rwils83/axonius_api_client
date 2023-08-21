@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-"""API models package."""
-from . import asset_mixin, devices, fields, labels, saved_query, users
+"""APIs for working with assets, saved queries, fields, and tags."""
 from .asset_mixin import AssetMixin
 from .devices import Devices
 from .fields import Fields
 from .labels import Labels
+from .runner import Runner
 from .saved_query import SavedQuery
 from .users import Users
+from .vulnerabilities import Vulnerabilities
 
 __all__ = (
     "Users",
@@ -15,10 +16,6 @@ __all__ = (
     "SavedQuery",
     "Fields",
     "Labels",
-    "users",
-    "devices",
-    "fields",
-    "asset_mixin",
-    "labels",
-    "saved_query",
+    "Vulnerabilities",
+    "Runner",
 )

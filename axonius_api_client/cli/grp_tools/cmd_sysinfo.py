@@ -3,13 +3,30 @@
 import click
 
 from ...tools import json_dump, sysinfo
+from ..context import CONTEXT_SETTINGS
 from ..options import add_options
+
+
+def export_str(data, **kwargs):
+    """Pass."""
+    return "\n".join([f"{k}: {v}" for k, v in data.items()])
+
+
+def export_json(data, **kwargs):
+    """Pass."""
+    return json_dump(data)
+
+
+EXPORT_FORMATS: dict = {
+    "json": export_json,
+    "str": export_str,
+}
 
 EXPORT = click.option(
     "--export-format",
     "-xf",
     "export_format",
-    type=click.Choice(["json", "str"]),
+    type=click.Choice(list(EXPORT_FORMATS)),
     help="Format of to export data in",
     default="str",
     show_envvar=True,
@@ -19,20 +36,11 @@ EXPORT = click.option(
 OPTIONS = [EXPORT]
 
 
-@click.command(name="sysinfo")
+@click.command(name="sysinfo", context_settings=CONTEXT_SETTINGS)
 @add_options(OPTIONS)
 @click.pass_context
 def cmd(ctx, export_format):
     """Print out system and python information."""
     data = sysinfo()
-
-    if export_format == "str":
-        for k, v in data.items():
-            click.secho(f"{k}: {v}")
-        ctx.exit(0)
-
-    if export_format == "json":
-        click.secho(json_dump(data))
-        ctx.exit(0)
-
-    ctx.exit(1)
+    click.secho(EXPORT_FORMATS[export_format](data=data))
+    ctx.exit(0)

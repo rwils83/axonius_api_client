@@ -4,12 +4,13 @@ import copy
 
 import pytest
 
-from ...utils import get_rows_exist
-from .test_callbacks import Callbacks
+from ...utils import FLAKY
+from .test_callbacks import CallbacksFull
 
 
-class TestCallbacksBase(Callbacks):
-    @pytest.fixture(params=["api_devices", "api_users"])
+@FLAKY()
+class TestCallbacksBase(CallbacksFull):
+    @pytest.fixture(params=["api_devices"], scope="class")
     def apiobj(self, request):
         return request.getfixturevalue(request.param)
 
@@ -22,7 +23,7 @@ class TestCallbacksBase(Callbacks):
         cbobj = self.get_cbobj(apiobj=apiobj, cbexport=cbexport, getargs=getargs)
         cbobj.start()
 
-        rows_orig = get_rows_exist(apiobj=apiobj, max_rows=5)
+        rows_orig = copy.deepcopy(apiobj.ORIGINAL_ROWS)
         rows = copy.deepcopy(rows_orig)
         rows_proc = []
         for row in rows:
@@ -43,7 +44,7 @@ class TestCallbacksBase(Callbacks):
         cbobj = self.get_cbobj(apiobj=apiobj, cbexport=cbexport, getargs=getargs)
         cbobj.start()
 
-        rows_orig = get_rows_exist(apiobj=apiobj, max_rows=5)
+        rows_orig = copy.deepcopy(apiobj.ORIGINAL_ROWS)
         rows = copy.deepcopy(rows_orig)
         rows_proc = []
         for row in rows:

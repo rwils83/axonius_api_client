@@ -25,8 +25,6 @@ platform that has python installed.
 
   $ pip install axonius_api_client
 
-.. _fr_220_3:
-
 Offline installs using `pip`_
 ============================================================
 
@@ -34,21 +32,24 @@ If you need to install axonius-api-client to a system that doesn't have
 access to the internet, there are a few hoops to jump through.
 
 .. note::
-    You will need to install `python`_ on both systems,
+    You will need to install the exact same version of `python`_ on both systems.
+
+    If the destination system is linux, the source system should be the exact same linux
+    distribution, version, and build.
 
 .. note::
     On Windows, each system should have should the
     `PATH variable updated`_ to include the Python directories:
 
-    * C:\Program Files\Python38
-    * C:\Program Files\Python38\Scripts
+    * ``C:\Program Files\Python38``
+    * ``C:\Program Files\Python38\Scripts``
 
-On the system that does have internet access, use the following command to download
+On the source system that does have internet access, use the following command to download
 all of the requirements as wheel packages:
 
 .. code-block:: console
 
-   $ pip download -d d:\axonshell_pkg axonius-api-client
+   $ pip download -d d:\axonshell_pkg axonius-api-client --only-binary
 
 Copy the contents of d:\axonshell_pkg to the destination server, and then on the
 destination server run:

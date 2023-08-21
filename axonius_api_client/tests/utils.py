@@ -1,32 +1,49 @@
 # -*- coding: utf-8 -*-
 """Test suite."""
 import csv
+import functools
+import hashlib
 import random
 import re
+import secrets
 import string
 import sys
+import time
+import typing as t
 from io import StringIO
 
 import pytest
+import requests
 from cachetools import TTLCache, cached
 from click.testing import CliRunner
+from flaky import flaky
 
-from axonius_api_client import Wizard, api, auth
-from axonius_api_client.cli.context import Context
-from axonius_api_client.constants import AGG_ADAPTER_NAME
-from axonius_api_client.http import Http
-from axonius_api_client.tools import listify
 
 IS_WINDOWS = sys.platform == "win32"
 IS_LINUX = sys.platform == "linux"
 IS_MAC = sys.platform == "darwin"
+SALT_SIZE = 32  # In Bytes
+SOURCE: str = string.ascii_lowercase + string.digits
 
 
 CACHE: TTLCache = TTLCache(maxsize=1024, ttl=600)
 
 
+# noinspection PyUnusedLocal
+def flaky_filter(err, *args):
+    """Pass."""
+    if issubclass(err[0], requests.exceptions.ReadTimeout):
+        time.sleep(30)
+    return True
+
+
+FLAKY = functools.partial(flaky, max_runs=10, rerun_filter=flaky_filter)
+
+
 def get_field_vals(rows, field):
     """Test utility."""
+    from axonius_api_client.tools import listify
+
     values = [x[field] for x in listify(rows) if x.get(field)]
     values = [x for y in values for x in listify(y)]
     return values
@@ -47,6 +64,8 @@ def check_asset(row):
 
 def exists_query(apiobj, fields=None, not_exist=False):
     """Test utility."""
+    from axonius_api_client import Wizard
+
     if not fields:
         return None
 
@@ -65,35 +84,67 @@ def exists_query(apiobj, fields=None, not_exist=False):
     return query
 
 
-def get_schema(apiobj, field, key=None, adapter=AGG_ADAPTER_NAME):
+def get_schema(apiobj, field, key=None, adapter=None):
     """Test utility."""
+    from axonius_api_client.constants.fields import AGG_ADAPTER_NAME
+    from axonius_api_client.exceptions import NotFoundError
+
+    adapter = adapter or AGG_ADAPTER_NAME
+
     schemas = get_schemas(apiobj=apiobj, adapter=adapter)
-    schema = apiobj.fields.get_field_schema(
-        value=field,
-        schemas=schemas,
-    )
-    return schema[key] if key else schema
+    try:
+        schema = apiobj.fields.get_field_schema(
+            value=field,
+            schemas=schemas,
+        )
+    except NotFoundError as exc:
+        pytest.skip(f"field {field} not found, exc:\n{exc}")
+    else:
+        return schema[key] if key else schema
 
 
-def random_string(length):
+def random_string(length: int = 32, source: str = SOURCE):
     """Test utility."""
-    letters = string.ascii_lowercase
-    result_str = "".join(random.choice(letters) for i in range(length))
+    result_str = "".join(random.choice(source) for _ in range(length))
     return result_str
+
+
+def random_strs(num: int = 1, length: int = 32, source: str = SOURCE) -> t.List[str]:
+    """Test utility."""
+    return [random_string(length=length, source=source) for _ in range(num)]
+
+
+def random_string_salt(length: int, source: str = SOURCE) -> str:
+    """Generate a random string with length, seed it time in milliseconds and salt."""
+    result = ""
+    for i in range(0, length):
+        result += secrets.choice(source)
+    salt = secrets.token_bytes(SALT_SIZE)
+    return hashlib.sha256(f"{salt}{result}".encode("utf-16")).hexdigest()
 
 
 def get_rows_exist(apiobj, fields=None, max_rows=1, not_exist=False, **kwargs):
     """Test utility."""
+    from axonius_api_client.exceptions import NotFoundError
+
     query = exists_query(apiobj=apiobj, fields=fields, not_exist=not_exist)
-    rows = apiobj.get(fields=fields, max_rows=max_rows, query=query, **kwargs)
-    if not rows:
-        pytest.skip(f"No {apiobj} assets with fields {fields}")
-    return rows[0] if max_rows == 1 else rows
+    try:
+        rows = apiobj.get(fields=fields, max_rows=max_rows, query=query, **kwargs)
+    except NotFoundError as exc:
+        pytest.skip(f"fields {fields} not found, exc:\n{exc}")
+    else:
+        if not rows:
+            pytest.skip(f"No {apiobj} assets with fields {fields}")
+        return rows[0] if max_rows == 1 else rows
 
 
 @cached(cache=CACHE)
-def get_schemas(apiobj, adapter=AGG_ADAPTER_NAME):
+def get_schemas(apiobj, adapter=None):
     """Test utility."""
+    from axonius_api_client.constants.fields import AGG_ADAPTER_NAME
+
+    adapter = adapter or AGG_ADAPTER_NAME
+
     return apiobj.fields.get()[adapter]
 
 
@@ -113,19 +164,9 @@ def log_check(caplog, entries, exists=True):
                 raise Exception(error)
 
 
-#
-def get_cnx_existing(apiobj, name=None):
+def get_cnx_existing(apiobj, name=None, reqkeys=None):
     """Test utility."""
-    found = None
-    adapters = apiobj.get()
-    for adapter in adapters:
-        if name and adapter["name"] != name:
-            continue
-        cnxs = adapter["cnx"]
-        for cnx in cnxs:
-            found = cnxs[0]
-            found["schemas"] = adapter["schemas"]["cnx"]
-            break
+    found = get_cnx(apiobj=apiobj, name=name, reqkeys=reqkeys)
 
     if not found:
         pytest.skip("No connections found for any adapter!")
@@ -134,108 +175,209 @@ def get_cnx_existing(apiobj, name=None):
 
 def get_cnx_working(apiobj, name=None, reqkeys=None):
     """Test utility."""
-    problem_children = [
+    problems = [
         "symantec_altiris",  # AX-7165
+        "alibaba",  # noticed in 4.3 that test fails but connection still green
+        "webscan",
     ]
-    reqkeys = reqkeys or []
-
-    found = None
-    adapters = apiobj.get()
-    for adapter in adapters:
-        if name and adapter["name"] != name:
-            continue
-        if adapter["name"] in problem_children:
-            continue
-        schema = adapter["schemas"]["cnx"]
-
-        if reqkeys and not [x for x in reqkeys if x in schema]:
-            continue
-
-        cnxs = adapter["cnx"]
-        for cnx in cnxs:
-            if cnx["working"]:
-                found = cnxs[0]
-                found["schemas"] = schema
-                break
+    found = get_cnx(
+        apiobj=apiobj, cntkey="success_count", name=name, reqkeys=reqkeys, problems=problems
+    )
 
     if not found:
         pytest.skip("No working connections found for any adapter!")
     return found
 
 
-def get_cnx_broken(apiobj, name=None):
+def get_cnx_broken(apiobj, name=None, reqkeys=None):
     """Test utility."""
-    found = None
-    adapters = apiobj.get()
-    for adapter in adapters:
-        if name and adapter["name"] != name:
-            continue
-        cnxs = adapter["cnx"]
-        for cnx in cnxs:
-            if not cnx["working"]:
-                found = cnxs[0]
-                found["schemas"] = adapter["schemas"]["cnx"]
-                break
+    found = get_cnx(apiobj=apiobj, cntkey="error_count", name=name, reqkeys=reqkeys)
 
     if not found:
         pytest.skip("No broken connections found for any adapter!")
     return found
 
 
-def get_url(request):
+# noinspection PyProtectedMember
+def get_cnx(apiobj, cntkey="total_count", name=None, reqkeys=None, problems=None):
+    """Pass."""
+    adapters = apiobj._get(get_clients=False)
+    reqkeys = reqkeys or []
+    problems = problems or []
+
+    for adapter in adapters:
+        for adapter_node in adapter.adapter_nodes:
+            if name and adapter_node.adapter_name != name:
+                continue
+
+            if cntkey and not getattr(adapter_node.clients_count, cntkey):
+                continue
+
+            if problems and adapter_node.adapter_name in problems:
+                continue
+
+            cnxs = apiobj.cnx._get(adapter_name=adapter_node.adapter_name_raw)
+
+            has_req = all([x in cnxs.schema_cnx for x in reqkeys])
+            if not has_req:
+                continue
+
+            for cnx in cnxs.cnxs:
+                if cntkey == "total_count":
+                    return cnx.to_dict_old()
+                if cntkey == "success_count" and cnx.working:
+                    return cnx.to_dict_old()
+                if cntkey == "error_count" and not cnx.working:
+                    return cnx.to_dict_old()
+    return None
+
+
+def get_arg_url(request):
     """Test utility."""
-    return request.config.getoption("--ax-url").rstrip("/")
+    value = request.config.getoption("--ax-url").rstrip("/")
+
+    if isinstance(value, str):
+        value = value.rstrip("/")
+    return value
+
+
+get_url = get_arg_url
 
 
 def get_key_creds(request):
     """Test utility."""
-    key = request.config.getoption("--ax-key")
-    secret = request.config.getoption("--ax-secret")
-    return {"key": key, "secret": secret}
+    key = get_arg_key(request)
+    secret = get_arg_secret(request)
+    creds = get_arg_credentials(request)
+    return {"username": key, "password": secret} if creds else {"keys": key, "secret": secret}
+
+
+def get_http(request, **kwargs):
+    """Test utility."""
+    from axonius_api_client.http import Http
+
+    kwargs.setdefault("url", get_url(request))
+    kwargs.setdefault("cf_run", get_arg_cf_run(request))
+    kwargs.setdefault("cf_error", get_arg_cf_error(request))
+    kwargs.setdefault("cf_token", get_arg_cf_token(request))
+    kwargs.setdefault("certwarn", False)
+
+    http = Http(**kwargs)
+    return http
+
+
+def get_connect(request, **kwargs):
+    """Test utility."""
+    from axonius_api_client.connect import Connect
+
+    kwargs.setdefault("url", get_url(request))
+    kwargs.setdefault("key", get_arg_key(request))
+    kwargs.setdefault("secret", get_arg_secret(request))
+    kwargs.setdefault("credentials", get_arg_credentials(request))
+    kwargs.setdefault("cf_run", get_arg_cf_run(request))
+    kwargs.setdefault("cf_error", get_arg_cf_error(request))
+    kwargs.setdefault("cf_token", get_arg_cf_token(request))
+    kwargs.setdefault("certwarn", False)
+
+    connect = Connect(**kwargs)
+    return connect
+
+
+def get_arg_key(request):
+    """Test utility."""
+    return request.config.getoption("--ax-key")
+
+
+def get_arg_secret(request):
+    """Test utility."""
+    return request.config.getoption("--ax-secret")
+
+
+def get_arg_cf_token(request):
+    """Test utility."""
+    return request.config.getoption("--cf-token")
+
+
+def get_arg_cf_run(request):
+    """Test utility."""
+    return request.config.getoption("--cf-run")
+
+
+def get_arg_cf_error(request):
+    """Test utility."""
+    return request.config.getoption("--cf-error")
+
+
+def get_arg_credentials(request):
+    """Test utility."""
+    value = request.config.getoption("--ax-credentials")
+    return value
+
+
+def get_auth_obj(request):
+    """Test utility."""
+    from axonius_api_client.auth import AuthApiKey, AuthCredentials
+
+    arg_credentials: bool = get_arg_credentials(request)
+    arg_key: str = get_arg_key(request)
+    arg_secret: str = get_arg_secret(request)
+    http = get_http(request)
+    if arg_credentials:
+        obj = AuthCredentials(http=http, username=arg_key, password=arg_secret)
+    else:
+        obj = AuthApiKey(http=http, key=arg_key, secret=arg_secret)
+    return obj
 
 
 def get_auth(request):
     """Test utility."""
-    http = Http(url=get_url(request), certwarn=False)
-
-    obj = auth.ApiKey(http=http, **get_key_creds(request))
+    obj = get_auth_obj(request)
     obj.login()
     return obj
 
 
 def check_apiobj(authobj, apiobj):
     """Test utility."""
-    url = authobj._http.url
-    authclsname = format(authobj.__class__.__name__)
-    assert authclsname in format(apiobj)
-    assert authclsname in repr(apiobj)
-    assert url in format(apiobj)
-    assert url in repr(apiobj)
+    from axonius_api_client import auth
+    from axonius_api_client.http import Http
 
-    assert isinstance(apiobj.auth, auth.Model)
+    url = authobj.http.url
+    name = authobj.__class__.__name__
+
+    obj_str = str(apiobj)
+    obj_repr = repr(apiobj)
+    assert name in obj_str
+    assert url in obj_str
+    assert name in obj_repr
+    assert url in obj_repr
+
+    assert isinstance(apiobj.auth, auth.AuthModel)
     assert isinstance(apiobj.http, Http)
-    assert isinstance(apiobj.router, api.routers.Router)
 
 
 def check_apiobj_children(apiobj, **kwargs):
     """Test utility."""
+    from axonius_api_client import api, auth
+    from axonius_api_client.http import Http
+
     for k, v in kwargs.items():
         attr = getattr(apiobj, k)
-        attrclsname = format(attr.__class__.__name__)
+        name = format(attr.__class__.__name__)
 
         assert isinstance(attr, api.mixins.ChildMixins)
         assert isinstance(attr, v)
 
-        assert isinstance(attr.auth, auth.Model)
+        assert isinstance(attr.auth, auth.AuthModel)
         assert isinstance(attr.http, Http)
-        assert isinstance(attr.router, api.routers.Router)
         assert isinstance(attr.parent, api.mixins.Model)
-        assert attrclsname in format(attr)
-        assert attrclsname in repr(attr)
+        assert name in str(attr)
+        assert name in repr(attr)
 
 
 def check_apiobj_xref(apiobj, **kwargs):
     """Test utility."""
+    from axonius_api_client import api
+
     for k, v in kwargs.items():
         attr = getattr(apiobj, k)
 
@@ -273,6 +415,7 @@ class MockCtx:
     """Test utility."""
 
 
+# noinspection PyUnusedLocal
 def mock_failure(*args, **kwargs):
     """Test utility."""
     raise MockError("badwolf")
@@ -280,6 +423,8 @@ def mock_failure(*args, **kwargs):
 
 def get_mockctx():
     """Test utility."""
+    from axonius_api_client.cli.context import Context
+
     ctx = MockCtx()
     ctx.obj = Context()
     return ctx
@@ -287,11 +432,11 @@ def get_mockctx():
 
 def check_csv_cols(content, cols):
     """Test utility."""
-    QUOTING = csv.QUOTE_NONNUMERIC
+    quoting = csv.QUOTE_NONNUMERIC
     fh = StringIO()
     fh.write(content)
     fh.seek(0)
-    reader = csv.DictReader(fh, quoting=QUOTING)
+    reader = csv.DictReader(fh, quoting=quoting)
     rows = []
     for row in reader:
         rows.append(row)

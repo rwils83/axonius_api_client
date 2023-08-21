@@ -13,6 +13,7 @@ from . import (
     cmd_get_fields,
     cmd_get_fields_default,
     cmd_get_tags,
+    cmds_run_enforcement,
     grp_saved_query,
 )
 from .grp_common import (
@@ -34,6 +35,11 @@ def users():
     """Group: Work with user assets."""
 
 
+@click.group(cls=AliasedGroup)
+def vulnerabilities():
+    """Group (BETA!): Work with vulnerability assets."""
+
+
 CMDS = [
     grp_saved_query.saved_query,
     cmd_count.cmd,
@@ -45,11 +51,13 @@ CMDS = [
     cmd_get_tags.cmd,
     cmd_get_by_id.cmd,
     cmd_destroy.cmd,
+    *cmds_run_enforcement.CMDS,
 ]
 
 for cmd in CMDS:
     users.add_command(cmd)
     devices.add_command(cmd)
+    vulnerabilities.add_command(cmd)
 
 
 def add_cmd(grp_obj, method, cmd):
@@ -65,7 +73,7 @@ def add_cmds(grp_obj, fields):
         cmd = gen_get_by_cmd(
             options=GET_BY_VALUE_BUILDERS,
             doc=f"Get assets where {field} equals value",
-            cmd_name=method.replace("-", "_"),
+            cmd_name=method.replace("_", "-"),
             method=method,
         )
         add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -74,7 +82,7 @@ def add_cmds(grp_obj, fields):
         cmd = gen_get_by_cmd(
             options=GET_BY_VALUES_BUILDERS,
             doc=f"Get assets where {field} equals multiple values",
-            cmd_name=method.replace("-", "_"),
+            cmd_name=method.replace("_", "-"),
             method=method,
         )
         add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -83,7 +91,7 @@ def add_cmds(grp_obj, fields):
         cmd = gen_get_by_cmd(
             options=GET_BY_VALUE_REGEX_BUILDERS,
             doc=f"Get assets where {field} matches regex value",
-            cmd_name=method.replace("-", "_"),
+            cmd_name=method.replace("_", "-"),
             method=method,
         )
         add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -92,7 +100,7 @@ def add_cmds(grp_obj, fields):
     cmd = gen_get_by_cmd(
         options=[*GET_BY_VALUE_BUILDERS, GET_BY_VALUE_FIELD],
         doc="Get assets where a field equals value",
-        cmd_name=method.replace("-", "_"),
+        cmd_name=method.replace("_", "-"),
         method=method,
     )
     add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -101,7 +109,7 @@ def add_cmds(grp_obj, fields):
     cmd = gen_get_by_cmd(
         options=[*GET_BY_VALUES_BUILDERS, GET_BY_VALUE_FIELD],
         doc="Get assets where a field equals multiple values",
-        cmd_name=method.replace("-", "_"),
+        cmd_name=method.replace("_", "-"),
         method=method,
     )
     add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -110,7 +118,7 @@ def add_cmds(grp_obj, fields):
     cmd = gen_get_by_cmd(
         options=[*GET_BY_VALUE_REGEX_BUILDERS, GET_BY_VALUE_FIELD],
         doc="Get assets where a field matches regex value",
-        cmd_name=method.replace("-", "_"),
+        cmd_name=method.replace("_", "-"),
         method=method,
     )
     add_cmd(grp_obj=grp_obj, method=method, cmd=cmd)
@@ -123,7 +131,7 @@ method = "get_by_subnet"
 cmd = gen_get_by_cmd(
     options=GET_BY_VALUE_BUILDERS,
     doc="Get assets in subnet",
-    cmd_name=method.replace("-", "_"),
+    cmd_name=method.replace("_", "-"),
     method=method,
 )
 add_cmd(grp_obj=devices, method=method, cmd=cmd)

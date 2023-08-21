@@ -1,77 +1,114 @@
 # -*- coding: utf-8 -*-
-"""API model for working with system configuration."""
-import math
+"""API for working with product metadata."""
+import typing as t
 
-from ..mixins import ChildMixins, Model
+from ... import features
+from ...tools import calc_gb
+from ..api_endpoints import ApiEndpoints
+from ..mixins import ModelMixins
 
 
-class Meta(ChildMixins):
-    """Child API model for working with instance metadata."""
+class Meta(ModelMixins):
+    """API for working with product metadata.
 
-    def about(self) -> dict:
+    Examples:
+        * Get the about page: :meth:`about`
+        * Get the product version: :meth:`version`
+        * Get historical data disk usage stats: :meth:`historical_sizes`
+
+    """
+
+    ABOUT_DATA1: t.Optional[dict] = None
+    ABOUT_DATA2: t.Optional[dict] = None
+
+    def about(self, error: bool = True) -> dict:
         """Get about page metadata.
 
-        Returns:
-            :obj:`dict`: about page metadata
+        Examples:
+            Create a ``client`` using :obj:`axonius_api_client.connect.Connect`
+
+            >>> data = client.meta.about()
+            >>> j(data)
+            {
+              "Build Date": "Fri Oct 2 00:18:27 UTC 2020",
+              "Customer ID": "e1d48d82f50a4d2085658fea1a59b979",
+              "api_client_version": "4.0",
+              "Version": "3.10"
+            }
+
         """
-        if not hasattr(self, "_about_data"):
-            data = self._about()
-            data["Version"] = self._get_version(about=data)
-            self._about_data = data
-        return self._about_data
+        if not isinstance(self.ABOUT_DATA1, dict) or not self.ABOUT_DATA1:
+            try:
+                self.ABOUT_DATA1 = self._about()
+            except Exception:
+                if error:
+                    raise
+
+        if not isinstance(self.ABOUT_DATA2, dict) or not self.ABOUT_DATA2:
+            try:
+                self.ABOUT_DATA2 = self._about2()
+            except Exception:
+                if error:
+                    raise
+
+        ret = {}
+        ret.update(self.ABOUT_DATA1 or {})
+        ret.update(self.ABOUT_DATA2 or {})
+        features.PRODUCT_ABOUT = ret
+        return ret
 
     def historical_sizes(self) -> dict:
         """Get disk usage metadata.
 
-        Returns:
-            :obj:`dict`: disk usage metadata
-        """
-        return parse_sizes(self._historical_sizes())
+        Examples:
+            Create a ``client`` using :obj:`axonius_api_client.connect.Connect`
 
-    def _get_version(self, about: dict) -> str:
-        """Pass."""
-        version = about.pop("Version", "") or about.pop("Installed Version", "")
-        version = version.replace("_", ".")
-        return version
+            >>> data = client.meta.historical_sizes()
+            >>> data['disk_free_mb']
+            70.93
+            >>> data['disk_used_mb']
+            122.87
+            >>> list(data)
+            ['disk_free_mb', 'disk_used_mb', 'historical_sizes_devices', 'historical_sizes_users']
+
+        """
+        data = self._historical_sizes()
+        data["disk_free_mb"] = calc_gb(value=data["disk_free"], is_kb=False)
+        data["disk_used_mb"] = calc_gb(value=data["disk_used"], is_kb=False)
+        data["historical_sizes_devices"] = data["entity_sizes"].get("Devices", {})
+        data["historical_sizes_users"] = data["entity_sizes"].get("Users", {})
+        return data
 
     @property
     def version(self) -> str:
-        """Get the version of Axonius."""
-        about = self.about()
-        return about["Version"]
+        """Get the version of Axonius.
 
-    def _init(self, parent: Model):
-        """Post init method for subclasses to use for extra setup.
+        Examples:
+            Create a ``client`` using :obj:`axonius_api_client.connect.Connect`
 
-        Args:
-            parent (:obj:`.api.mixins.Model`): parent API model of this child
+            >>> client.meta.version
+            '3.10'
+
         """
-        super(Meta, self)._init(parent=parent)
+        about: dict = self.about()
+        return about.get("Version", about.get("Installed Version", ""))
 
     def _about(self) -> dict:
-        """Direct API method to get the About page.
+        """Direct API method to get the About page."""
+        api_endpoint = ApiEndpoints.system_settings.meta_about
+        return api_endpoint.perform_request(http=self.auth.http)
 
-        Returns:
-            :obj:`dict`: about page metadata
-        """
-        path = self.router.meta_about
-        return self.request(method="get", path=path)
+    def _about2(self) -> dict:
+        """Direct API method to get the About page."""
+        api_endpoint = ApiEndpoints.system_settings.meta_about2
+        return api_endpoint.perform_request(http=self.auth.http)
 
     def _historical_sizes(self) -> dict:
-        """Direct API method to get the metadata about disk usage.
+        """Direct API method to get the metadata about disk usage."""
+        api_endpoint = ApiEndpoints.system_settings.historical_sizes
+        return api_endpoint.perform_request(http=self.auth.http)
 
-        Returns:
-            :obj:`dict`: disk usage metadata
-        """
-        path = self.router.meta_historical_sizes
-        return self.request(method="get", path=path)
-
-
-def parse_sizes(raw: dict) -> dict:
-    """Pass."""
-    parsed = {}
-    parsed["disk_free_mb"] = math.floor(raw["disk_free"] / 1024 / 1024)
-    parsed["disk_used_mb"] = math.ceil(raw["disk_used"] / 1024 / 1024)
-    parsed["historical_sizes_devices"] = raw["entity_sizes"].get("Devices", {})
-    parsed["historical_sizes_users"] = raw["entity_sizes"].get("Users", {})
-    return parsed
+    def _get_constants(self) -> dict:
+        """Direct API method to get constants."""
+        api_endpoint = ApiEndpoints.system_settings.get_constants
+        return api_endpoint.perform_request(http=self.auth.http)

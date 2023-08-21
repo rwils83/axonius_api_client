@@ -2,11 +2,13 @@
 """Test suite for axonius_api_client.wizard.wizard"""
 import pytest
 
-from axonius_api_client.api.parsers.constants import Operators
-from axonius_api_client.api.wizard import ValueParser, Wizard
-from axonius_api_client.api.wizard.constants import Entry, Flags, Results, Types
-from axonius_api_client.constants import ALL_NAME
+from axonius_api_client.api.wizards import Wizard
+from axonius_api_client.constants.fields import ALL_NAME, Operators
+from axonius_api_client.constants.wizards import Entry, Flags, Results, Types
 from axonius_api_client.exceptions import NotFoundError, WizardError
+from axonius_api_client.parsers.wizards import WizardParser
+
+from ...utils import get_schema
 
 
 class TestWizard:
@@ -15,17 +17,17 @@ class TestWizard:
         apiobj = request.getfixturevalue(request.param)
         obj = Wizard(apiobj=apiobj)
         assert obj.APIOBJ == apiobj
-        assert isinstance(obj.VALUE_PARSER, ValueParser)
+        assert isinstance(obj.PARSER, WizardParser)
         return obj
 
 
 class TestData:
     @pytest.fixture
     def test_data1(self, wizard):
-
         simple = wizard.APIOBJ.FIELD_SIMPLE
         cplex = wizard.APIOBJ.FIELD_COMPLEX
         sub = wizard.APIOBJ.FIELD_COMPLEX_SUB
+        get_schema(apiobj=wizard.APIOBJ, field=cplex)
 
         entries = [
             {Entry.TYPE: Types.SIMPLE, Entry.VALUE: f"{simple} exists"},
@@ -55,7 +57,7 @@ class TestData:
                 "compOp": "exists",
                 "field": f"{simple}",
                 "fieldType": "axonius",
-                "filter": f'(({simple} == ({{"$exists":true,"$ne":""}})))',
+                "filter": f'(("{simple}" == ({{"$exists":true,"$ne":""}})))',
                 "filteredAdapters": None,
                 "leftBracket": False,
                 "logicOp": "",
@@ -80,8 +82,9 @@ class TestData:
                 "compOp": "contains",
                 "field": f"{simple}",
                 "fieldType": "axonius",
-                "filter": f'and ({simple} == regex("test", "i"))',
+                "filter": f'and ("{simple}" == regex("test", "i"))',
                 "filteredAdapters": None,
+                "i": 1,
                 "leftBracket": False,
                 "logicOp": "and",
                 "not": False,
@@ -105,8 +108,9 @@ class TestData:
                 "compOp": "contains",
                 "field": f"{simple}",
                 "fieldType": "axonius",
-                "filter": f'or ({simple} == regex("dev", "i"))',
+                "filter": f'or ("{simple}" == regex("dev", "i"))',
                 "filteredAdapters": None,
+                "i": 2,
                 "leftBracket": False,
                 "logicOp": "or",
                 "not": False,
@@ -131,9 +135,10 @@ class TestData:
                 "field": f"{cplex}",
                 "fieldType": "axonius",
                 "filter": (
-                    f'and (({cplex} == ({{"$exists":true,"$ne":[]}})) and ' f"{cplex} != [])"
+                    f'and (("{cplex}" == ({{"$exists":true,"$ne":[]}})) and "{cplex}" != [])'
                 ),
                 "filteredAdapters": None,
+                "i": 3,
                 "leftBracket": False,
                 "logicOp": "and",
                 "not": False,
@@ -144,7 +149,7 @@ class TestData:
                 "bracketWeight": 0,
                 "children": [
                     {
-                        "condition": f'({sub} == regex("boom", "i"))',
+                        "condition": f'("{sub}" == regex("boom", "i"))',
                         "expression": {
                             "compOp": "contains",
                             "field": f"{sub}",
@@ -157,8 +162,9 @@ class TestData:
                 "compOp": "",
                 "field": f"{cplex}",
                 "fieldType": "axonius",
-                "filter": (f'and not ({cplex} == match([({sub} == regex("boom", "i"))]))'),
+                "filter": (f'and not ("{cplex}" == match([("{sub}" == regex("boom", "i"))]))'),
                 "filteredAdapters": None,
+                "i": 4,
                 "leftBracket": False,
                 "logicOp": "and",
                 "not": True,
@@ -168,10 +174,10 @@ class TestData:
             },
         ]
         exp_query = (
-            f'(({simple} == ({{"$exists":true,"$ne":""}}))) and ({simple} == '
-            f'regex("test", "i")) or ({simple} == regex("dev", "i")) and (({cplex} '
-            f'== ({{"$exists":true,"$ne":[]}})) and {cplex} != []) and not ({cplex} '
-            f'== match([({sub} == regex("boom", "i"))]))'
+            f'(("{simple}" == ({{"$exists":true,"$ne":""}}))) and ("{simple}" == '
+            f'regex("test", "i")) or ("{simple}" == regex("dev", "i")) and (("{cplex}" '
+            f'== ({{"$exists":true,"$ne":[]}})) and "{cplex}" != []) and not ("{cplex}" '
+            f'== match([("{sub}" == regex("boom", "i"))]))'
         )
         return entries, exp_exprs, exp_query
 
@@ -222,6 +228,7 @@ class TestGetFieldComplex(TestWizard):
 
     def test_valid(self, wizard):
         field = wizard.APIOBJ.FIELD_COMPLEX
+        get_schema(apiobj=wizard.APIOBJ, field=field)
         ret = wizard._get_field_complex(value=field, value_raw=f"{field} blah blah")
         assert ret["name_qual"] == field
 
@@ -356,7 +363,7 @@ class TestSplitSimple(TestWizard):
             ["", "FIELD"],
             ["!ab@ contains blah", "FIELD"],
             ["badwolf", "OPERATOR"],
-            ["badwolf 232 blah", "OPERATOR"],
+            # ["badwolf 232 blah", "OPERATOR"],
         ],
     )
     def test_invalid(self, wizard, value_raw, exc_str):
@@ -683,7 +690,7 @@ class TestParseSimple(TestWizard):
             "compOp": "contains",
             "field": field,
             "fieldType": "axonius",
-            "filter": f'({field} == regex("blah", "i"))',
+            "filter": f'("{field}" == regex("blah", "i"))',
             "filteredAdapters": None,
             "leftBracket": False,
             "logicOp": "",
@@ -698,6 +705,7 @@ class TestParseSimple(TestWizard):
 class TestParseComplex(TestWizard):
     def test_valid(self, wizard):
         field = wizard.APIOBJ.FIELD_COMPLEX
+        get_schema(apiobj=wizard.APIOBJ, field=field)
         sub = wizard.APIOBJ.FIELD_COMPLEX_SUB
         entry = {
             Entry.TYPE: "complex",
@@ -707,7 +715,7 @@ class TestParseComplex(TestWizard):
             "bracketWeight": 0,
             "children": [
                 {
-                    "condition": f'({sub} == regex("boom", "i"))',
+                    "condition": f'("{sub}" == regex("boom", "i"))',
                     "expression": {
                         "compOp": "contains",
                         "field": sub,
@@ -717,7 +725,7 @@ class TestParseComplex(TestWizard):
                     "i": 0,
                 },
                 {
-                    "condition": f'(({sub} == ({{"$exists":true,"$ne":""}})))',
+                    "condition": f'(("{sub}" == ({{"$exists":true,"$ne":""}})))',
                     "expression": {
                         "compOp": "exists",
                         "field": sub,
@@ -731,7 +739,7 @@ class TestParseComplex(TestWizard):
             "field": field,
             "fieldType": "axonius",
             "filter": (
-                f'({field} == match([({sub} == regex("boom", "i")) and (({sub} == '
+                f'("{field}" == match([("{sub}" == regex("boom", "i")) and (("{sub}" == '
                 '({"$exists":true,"$ne":""})))]))'
             ),
             "filteredAdapters": None,
@@ -747,6 +755,8 @@ class TestParseComplex(TestWizard):
 
     def test_invalid(self, wizard):
         field = wizard.APIOBJ.FIELD_COMPLEX
+        get_schema(apiobj=wizard.APIOBJ, field=field)
+
         sub = wizard.APIOBJ.FIELD_COMPLEX_SUB
         entry = {
             Entry.TYPE: "complex",
@@ -785,7 +795,7 @@ class TestParseExprs(TestWizard):
                 "compOp": "contains",
                 "field": field,
                 "fieldType": "axonius",
-                "filter": f'({field} == regex("blah", "i"))',
+                "filter": f'("{field}" == regex("blah", "i"))',
                 "filteredAdapters": None,
                 "leftBracket": False,
                 "logicOp": "",

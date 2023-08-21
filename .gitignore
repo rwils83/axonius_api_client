@@ -291,4 +291,13 @@ tags
 blah*
 *.log*
 *.env
+*.penv
 shell.py
+*.csv
+.idea
+axonius_oas*.yaml
+artifacts/
+/*.pem
+data.*
+Pipfile.lock
+.vscode

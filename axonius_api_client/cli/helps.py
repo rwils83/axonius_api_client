@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Command line interface for Axonius API Client."""
-from ..api.wizard.constants import Docs
+from ..constants.wizards import Docs
 
 HELPSTR_AUTH = """
 Detailed help for authentication:
@@ -189,11 +189,50 @@ Detailed help for selecting fields:
       network_interfaces fields
 """
 
+HELPSTR_MULTI_CNX_JSON = """
+Example JSON input file:
 
-HELPSTRS = {}
-HELPSTRS["auth"] = HELPSTR_AUTH
-HELPSTRS["assetexport"] = HELPSTR_EXPORT_ASSET
-HELPSTRS["selectfields"] = HELPSTR_SELECT_FIELDS
-HELPSTRS["query"] = HELPSTR_QUERY
-HELPSTRS["wizard"] = Docs.TEXT
-HELPSTRS["wizard_csv"] = Docs.CSV
+[
+    {
+        "adapter_name": "ADAPTER_NAME",
+        "config": {"domain": "HOSTNAME", "username": "USERNAME", "password": "PASSWORD"},
+    },
+    {
+        "adapter_name": "ADAPTER_NAME",
+        "node_name": "NODE_NAME",
+        "config": {"domain": "HOSTNAME", "username": "USERNAME", "password": "PASSWORD"},
+        "active": "n",
+        "save_and_fetch": "n"
+    }
+]
+
+Tips:
+ - use "axonshell adapters cnx get --name ADAPTER_NAME --export-format table-schemas" to see the
+   values that can be supplied for the "config" dictionary.
+ - the first connection only supplies the required keys, and it will be added to the
+   "Core instance" (usually "Master").
+ - the second connection supplies everything, and does not fetch the connection after adding it
+   and sets the connection as inactive
+ - The schema format for this file was changed slightly in 4.20
+    - adapter key now needs to be 'adapter_name'
+    - node key now needs to be 'node_name'
+"""
+
+
+def asset_helper(**kwargs) -> str:
+    """Return the help string for the asset helpers"""
+    from ..constants.asset_helpers import ASSETS_HELPERS
+
+    return ASSETS_HELPERS.to_str()
+
+
+HELPSTRS = {
+    "auth": HELPSTR_AUTH,
+    "assetexport": HELPSTR_EXPORT_ASSET,
+    "selectfields": HELPSTR_SELECT_FIELDS,
+    "query": HELPSTR_QUERY,
+    "wizard": Docs.TEXT,
+    "wizard_csv": Docs.CSV,
+    "multiple_cnx_json": HELPSTR_MULTI_CNX_JSON,
+    "asset_helper": asset_helper,
+}

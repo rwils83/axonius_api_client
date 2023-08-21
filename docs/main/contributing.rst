@@ -18,10 +18,9 @@ Reporting Issues
 
 When reporting issues, please include information for:
 
-- Python distribution and version
-- Operating System platform and version
-- `axonius-api-client` version
-- Full tracebacks of any exceptions
+- Output of ``axonshell tools sysinfo``
+- Tracebacks of any exceptions
+- Log file
 
 Submitting Patches
 ===================================================
@@ -29,26 +28,33 @@ Submitting Patches
 All patches should be submitted as pull requests on the `GitHub project`_.
 
 - Clearly explain what you're trying to accomplish.
-
 - Include tests for any changes.
-
 - Ensure the full :ref:`testing-suite` runs without any errors before submitting
   a pull request.
-
 - Ensure the test coverage reports 100% before submitting a pull request.
-
 - Follow :pep:`8`.
-
 - Use `isort`_ and `black`_ to format your code and `flake8`_, `pydocstyle`_,
   and `bandit`_ to lint your code:
 
 .. code-block:: shell
 
-   $ isort -rc -y axonius_api_client setup.py axonshell*.py
-   $ black axonius_api_client setup.py axonshell*.py
-   $ pydocstyle axonius_api_client setup.py axonshell*.py
-   $ flake8 --max-line-length 89 axonius_api_client setup.py axonshell*.py
-   $ bandit --skip B101 -r axonius_api_client
+  $ isort \
+    axonius_api_client setup.py shell.py
+  $ black \
+    -l 100 \
+    axonius_api_client setup.py shell.py
+  $ pydocstyle \
+    --match-dir='(?!tests).*'\
+    --match-dir='(?!examples).*' \
+    axonius_api_client setup.py shell.py
+  $ flake8 \
+    --max-line-length 100 \
+    axonius_api_client setup.py shell.py
+  $ bandit \
+    -x axonius_api_client/examples,axonius_api_client/tests \
+    --skip B101 \
+    -r \
+    axonius_api_client
 
 .. _testing-suite:
 
@@ -86,44 +92,58 @@ to `cov_html/index.html`:
      --exitfirst \
      axonius_api_client/tests
 
-.. _fr_220_4:
 .. _supported_versions:
 
 Supported Python versions
 ----------------------------------------------------------
 
-* Latest versions of 3.7 and 3.8
+* Latest versions of 3.7, 3.10, and 3.11
 * Microsoft Windows, macOS, Linux
 
 .. note::
 
    Python 2.7 reached its end-of-life on 01/01/2020, and
-   therefore is no longer supported as of 2.2.0.
+   therefore is no longer supported as of API client v2.2.0.
 
 Tested Python versions
 ----------------------------------------------------------
 
-* macOS 10.15.3 (Catalina)
+Versions:
 
-  * Python 3.7.6 64 bit: 02/08/2020
-  * Python 3.8.1 64 bit : 02/08/2020
+* Python 3.7.8 64 bit
+* Python 3.10.8 64 bit
+* Python 3.11.0 64 bit
 
-* Ubuntu Linux 18.04.03 LTS 64 bit
+Operating Systems:
 
-  * Python 3.7.6 64 bit: 02/08/2020
-  * Python 3.8.1 64 bit: 02/08/2020
+* macOS 12.6.1 (Monterey)
+* Ubuntu Linux 18.04.05 64 bit (using "ubuntu-18.04.5-desktop-amd64.iso")
+* Ubuntu Linux 22.04.01 64 bit (using "ubuntu-22.04.1-desktop-amd64.iso")
+* Microsoft Windows 10 x64
+* Microsoft Windows 11 x64
+* Microsoft Windows Server 2016 x64
+* Microsoft Windows Server 2019 x64
+* Microsoft Windows Server 2022 x64
 
-* Microsoft Windows 10 Pro x64 (Version 1909, Build 18363.592)
+Last Updated: 2022/11/01
 
-  * Python 3.8.1 64 bit: 02/08/2020
+Release Strategy
+===================================================
 
-* Microsoft Windows Server 2012 R2 x64 (Version 6.3, Build 9600)
+Micro releases: 1.0.x
+    A micro release is done for any change that does not modify any existing API method.
 
-  * Python 3.8.1 64 bit: 02/08/2020
+    Any scripts that utilize this API library will work with new micro releases with no changes.
 
-* Microsoft Windows Server 2019 x64 (Version 1809, Build 17763.1012)
+Minor releases: 1.x.0:
+    A minor release is only done when an API method is removed or its signature changes.
 
-  * Python 3.8.1 64 bit: 02/08/2020
+    Any scripts that utilize this API library will work with new minor releases, although some minor changes may be required.
+
+Major releases: x.0.0:
+    A major release is only done for architectural and model changes to the API client library.
+
+    Any scripts that utilize this API library might not work with new major releases.
 
 .. _issue tracker: https://github.com/Axonius/axonius_api_client/issues
 .. _GitHub project: https://github.com/Axonius/axonius_api_client

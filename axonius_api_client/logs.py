@@ -3,12 +3,14 @@
 import logging
 import logging.handlers
 import pathlib
+import re
 import sys
 import time
-from typing import Dict, List, Optional, Union
+import typing as t
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
-from . import __package__ as PACKAGE_ROOT
-from .constants import (
+from . import LOG
+from .constants.logs import (
     LOG_DATEFMT_CONSOLE,
     LOG_DATEFMT_FILE,
     LOG_FILE_MAX_FILES,
@@ -28,17 +30,62 @@ from .constants import (
     LOG_NAME_STDOUT,
 )
 from .exceptions import ToolsError
-from .tools import get_path, is_int
+from .tools import echo_debug, echo_error, echo_ok, echo_warn, get_path, is_int
+
+ECHOERS: Tuple[Tuple[int, Callable]] = (
+    (logging.DEBUG, echo_debug),
+    (logging.INFO, echo_ok),
+    (logging.WARNING, echo_warn),
+    (logging.ERROR, echo_error),
+    (logging.CRITICAL, echo_error),
+)
+
+
+class HideFormatter(logging.Formatter):
+    """Hide the rest of the line for any lines against :attr:`HIDE_REGEX`."""
+
+    HIDE_ENABLED: bool = True
+    """Enable hiding of matches to HIDE_REGEX."""
+    HIDE_REGEX: t.Pattern = re.compile(r"(password|secret).*", re.I)
+    """Pattern of sensitive info to hide."""
+    HIDE_REPLACE: str = r"\1 ...REST OF LINE HIDDEN..."
+    """Value to replace matches to HIDE_REGEX with."""
+
+    def format(self, record):
+        """Pass."""
+        record = super().format(record)
+        if self.HIDE_ENABLED:
+            record = self.HIDE_REGEX.sub(self.HIDE_REPLACE, record)
+        return record
+
+
+def get_echoer(level: Union[int, str]) -> Callable:
+    """Pass."""
+    level_str = str_level(level=level)
+    level_int = getattr(logging, level_str)
+    for lvl_int, caller in ECHOERS:
+        if lvl_int >= level_int:
+            return caller
+    return echo_error
+
+
+def get_log_method(obj: logging.Logger, level: Optional[str] = None) -> Callable:
+    """Pass."""
+    level = level.lower() if isinstance(level, str) else level
+    ret = getattr(obj, level, None)
+    return ret if callable(ret) else lambda x: None
 
 
 def gmtime():
     """Set the logging system to use GMT for time strings."""
     logging.Formatter.converter = time.gmtime
+    HideFormatter.converter = time.gmtime
 
 
 def localtime():
     """Set the logging system to use local time for time strings."""
     logging.Formatter.converter = time.localtime
+    HideFormatter.converter = time.localtime
 
 
 def get_obj_log(obj: object, level: Optional[Union[int, str]] = None, **kwargs) -> logging.Logger:
@@ -48,9 +95,6 @@ def get_obj_log(obj: object, level: Optional[Union[int, str]] = None, **kwargs) 
         obj: object to get a logger for
         level: level to set
         logger: logger to get child from
-
-    Returns:
-        :obj:`logging.Logger`: created logger child obj
     """
     logger = kwargs.get("logger", logging.getLogger(obj.__class__.__module__))
     log = logger.getChild(obj.__class__.__name__)
@@ -67,8 +111,13 @@ def set_log_level(
         obj: object to set lvl on
         level: level to set
     """
-    if level:
-        obj.setLevel(getattr(logging, str_level(level=level)))
+    if isinstance(level, (int, str)):
+        level_str = str_level(level=level)
+        if level_str == "OFF":
+            level_int = 0
+        else:
+            level_int = getattr(logging, level_str)
+        obj.setLevel(level_int)
 
 
 def str_level(level: Union[int, str]) -> str:
@@ -86,12 +135,15 @@ def str_level(level: Union[int, str]) -> str:
             return level_mapped
 
     if isinstance(level, str):
-        if hasattr(logging, level.upper()):
-            return level.upper()
+        level = level.upper()
+        if hasattr(logging, level):
+            return level
+        if level == "OFF":
+            return "OFF"
 
     error = (
         f"Invalid logging level {level!r}, must be one of "
-        f"{LOG_LEVELS_STR_CSV} or {LOG_LEVELS_INT_CSV}"
+        f"{LOG_LEVELS_STR_CSV} or OFF or {LOG_LEVELS_INT_CSV}"
     )
     raise ToolsError(error)
 
@@ -205,18 +257,16 @@ def add_null(
     found = find_handlers(obj=obj, hname=hname, traverse=traverse)
     if found:
         return None
-    return add_handler(
-        obj=obj, htype=logging.NullHandler, hname=hname, fmt="", datefmt="", level=""
-    )
+    return add_handler(obj=obj, htype=logging.NullHandler, hname=hname)
 
 
 def add_handler(
     obj: logging.Logger,
     htype: logging.Handler,
-    level: Union[str, int],
     hname: str,
-    fmt: str,
-    datefmt: str,
+    fmt: str = LOG_FMT_CONSOLE,
+    datefmt: str = LOG_DATEFMT_CONSOLE,
+    level: Optional[Union[str, int]] = None,
     **kwargs,
 ) -> logging.Handler:
     """Add a handler to a logger obj.
@@ -231,16 +281,9 @@ def add_handler(
         **kwargs: passed to instantiation of htype
     """
     handler = htype(**kwargs)
-
-    if hname:
-        handler.name = hname
-
-    if fmt:
-        handler.setFormatter(logging.Formatter(fmt=fmt, datefmt=datefmt))
-
-    if level:
-        set_log_level(obj=handler, level=level)
-
+    handler.name = hname
+    set_log_level(obj=handler, level=level)
+    handler.setFormatter(HideFormatter(fmt=fmt, datefmt=datefmt))
     obj.addHandler(handler)
     return handler
 
@@ -350,7 +393,7 @@ def find_handlers(
         if match_name or match_type:
             handlers[obj.name] = handlers.get(obj.name, [])
 
-            if handler not in handlers[obj.name]:
+            if handler not in handlers[obj.name]:  # pragma: no cover
                 handlers[obj.name].append(handler)
 
     if obj.parent and traverse:
@@ -359,9 +402,6 @@ def find_handlers(
 
     return handlers
 
-
-LOG: logging.Logger = logging.getLogger(PACKAGE_ROOT)
-"""root logger used by entire package, named after package."""
 
 add_null(obj=LOG)
 gmtime()

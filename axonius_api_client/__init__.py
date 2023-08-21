@@ -1,99 +1,156 @@
 # -*- coding: utf-8 -*-
 """Python API Client for Axonius.
 
-Examples:
-    >>> import os
-    >>>
-    >>> import axonius_api_client as axonapi  # noqa: F401
-    >>> from axonius_api_client.connect import Connect
-    >>> from axonius_api_client.constants import load_dotenv
-    >>>
-    >>> # read the API key, API secret, and URL from a ".env" file
-    >>> load_dotenv()
-    >>> AX_URL = os.environ["AX_URL"]
-    >>> AX_KEY = os.environ["AX_KEY"]
-    >>> AX_SECRET = os.environ["AX_SECRET"]
-    >>>
-    >>> # create a client using the url, key, and secret
-    >>> ctx = Connect(url=AX_URL, key=AX_KEY, secret=AX_SECRET)
-    >>>
-    >>> # start the client, will perform login to URL using key & secret
-    >>> ctx.start()
-    >>>
-    >>> # work with device assets
-    >>> devices = ctx.devices
-    >>>
-    >>> # work with user assets
-    >>> users = ctx.users
-    >>>
-    >>> # work with adapters and adapter connections
-    >>> adapters = ctx.adapters
-    >>>
-    >>> # work with enforcements
-    >>> enforcements = ctx.enforcements
-    >>>
-    >>> # work with users, roles, global settings, and more
-    >>> system = ctx.system
-    >>>
-    >>> # work with instances
-    >>> instances = ctx.instances
-    >>>
-    >>> # work with dashboards and discovery cycles
-    >>> dashboard = ctx.dashboard
+See Also:
+    :obj:`connect.Connect` for creating a client for using this package.
 
 """
-from . import api, auth, cli, constants, data, exceptions, http, logs, tools, url_parser, version
-from .api import (
-    Adapters,
-    Dashboard,
-    Devices,
-    Enforcements,
-    Instances,
-    Signup,
-    System,
-    Users,
-    Wizard,
-    WizardCsv,
-    WizardText,
-)
-from .auth import ApiKey
-from .connect import Connect
-from .http import Http
-from .url_parser import UrlParser
+import logging
+import sys
+import pathlib
 
-__version__ = version.__version__
+from . import setup_env, version
+
+PACKAGE_ROOT: str = __package__
+PACKAGE_FILE: str = __file__
+PACKAGE_PATH: pathlib.Path = pathlib.Path(PACKAGE_FILE).parent.absolute()
+PROJECTS_PATH: pathlib.Path = PACKAGE_PATH / "projects"
+
+VERSION: str = version.__version__
+__version__ = VERSION
+
+LOG: logging.Logger = logging.getLogger(PACKAGE_ROOT)
+"""root logger used by entire package, named after package."""
+
+DEFAULT_PATH: str = setup_env.DEFAULT_PATH
+"""default path to use throughout the package."""
+
+load_dotenv = setup_env.load_dotenv
+get_env_connect = setup_env.get_env_connect
+
+PRE_DOTENV: dict = setup_env.get_env_ax()
+"""AX.* env variables before loading dotenv."""
+
+INIT_DOTENV: str = load_dotenv()
+"""Initial path to .env file that was loaded"""
+
+POST_DOTENV: dict = setup_env.get_env_ax()
+"""AX.* env variables after loading dotenv."""
+
+# short term hack for projects until they are moved to their own repos
+try:
+    sys.path.insert(0, str(PROJECTS_PATH))
+    from .projects import cf_token, cert_human, url_parser
+
+except Exception:  # pragma: no cover
+    raise
+
+
+try:
+    # noinspection PyCompatibility
+    from . import (
+        api,
+        auth,
+        cli,
+        constants,
+        data,
+        exceptions,
+        http,
+        logs,
+        tools,
+        projects,
+    )
+
+    from .api import (
+        ActivityLogs,
+        Adapters,
+        ApiEndpoints,
+        Cnx,
+        Dashboard,
+        DashboardSpaces,
+        Devices,
+        Enforcements,
+        Instances,
+        Meta,
+        RemoteSupport,
+        Runner,
+        SettingsGlobal,
+        SettingsGui,
+        SettingsLifecycle,
+        Signup,
+        SystemRoles,
+        SystemUsers,
+        Users,
+        Vulnerabilities,
+        Wizard,
+        WizardCsv,
+        WizardText,
+        json_api,
+    )
+    from .auth import AuthApiKey, AuthCredentials, AuthModel, AuthNull
+    from .connect import Connect
+    from .features import Features
+    from .http import Http
+except Exception:  # pragma: no cover
+    raise
+
+
 LOG = logs.LOG
 
 __all__ = (
-    # Connection handler
+    "PACKAGE_ROOT",
+    # API client
     "Connect",
-    # http client
+    # HTTP client
     "Http",
-    # authentication
-    "ApiKey",
-    # api
-    "Users",
-    "Devices",
+    # API authentication
+    "AuthApiKey",
+    "AuthModel",
+    "AuthCredentials",
+    "AuthNull",
+    # API
     "Adapters",
-    "Enforcements",
-    "System",
-    "Signup",
-    "Instances",
+    "Cnx",
     "Dashboard",
+    "DashboardSpaces",
+    "Devices",
+    "Enforcements",
+    "Instances",
+    "Meta",
+    "RemoteSupport",
+    "SettingsGlobal",
+    "SettingsGui",
+    "SettingsLifecycle",
+    "Signup",
+    "SystemRoles",
+    "SystemUsers",
+    "Runner",
+    "Users",
     "Wizard",
-    "WizardText",
+    "Wizard",
     "WizardCsv",
-    "UrlParser",
+    "WizardCsv",
+    "WizardText",
+    "WizardText",
+    "ActivityLogs",
+    "ApiEndpoints",
+    "Features",
+    "Vulnerabilities",
     # modules
     "api",
     "auth",
-    "http",
-    "exceptions",
-    "version",
-    "tools",
-    "constants",
     "cli",
-    "logs",
+    "constants",
     "data",
+    "exceptions",
+    "http",
+    "logs",
+    "tools",
+    "version",
+    "json_api",
+    # projects
+    "projects",
+    "cert_human",
+    "cf_token",
     "url_parser",
 )

@@ -4,7 +4,15 @@ import copy
 
 import pytest
 
-from axonius_api_client.api.parsers.config import (
+from axonius_api_client.constants.api import SETTING_UNCHANGED
+from axonius_api_client.exceptions import (
+    ApiError,
+    ConfigInvalidValue,
+    ConfigRequired,
+    ConfigUnchanged,
+    ConfigUnknown,
+)
+from axonius_api_client.parsers.config import (
     config_check,
     config_check_array,
     config_check_bool,
@@ -18,14 +26,6 @@ from axonius_api_client.api.parsers.config import (
     config_unknown,
     is_uploaded_file,
     parse_schema,
-)
-from axonius_api_client.constants import SETTING_UNCHANGED
-from axonius_api_client.exceptions import (
-    ApiError,
-    ConfigInvalidValue,
-    ConfigRequired,
-    ConfigUnchanged,
-    ConfigUnknown,
 )
 
 from ...meta import (
@@ -247,14 +247,14 @@ def test_config_check_none_bad(schema):
 
 def test_parse_schema_req_true():
     schema = {"items": [{"name": "x"}], "required": ["x"]}
-    exp = {"x": {"name": "x", "required": True}}
+    exp = {"x": {"name": "x", "required": True, "hide_value": False}}
     result = parse_schema(raw=schema)
     assert result == exp
 
 
 def test_parse_schema_req_false():
     schema = {"items": [{"name": "x"}], "required": []}
-    exp = {"x": {"name": "x", "required": False}}
+    exp = {"x": {"name": "x", "required": False, "hide_value": False}}
     result = parse_schema(raw=schema)
     assert result == exp
 

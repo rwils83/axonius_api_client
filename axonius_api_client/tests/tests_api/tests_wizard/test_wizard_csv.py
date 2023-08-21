@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """Test suite for axonius_api_client.query_wizard."""
-import codecs
-
 import pytest
 
-from axonius_api_client.api.wizard import ValueParser, WizardCsv
-from axonius_api_client.api.wizard.constants import Entry, EntrySq, Results, Types
+from axonius_api_client.api.wizards import WizardCsv
+from axonius_api_client.constants.wizards import Entry, EntrySq, Results, Types
 from axonius_api_client.exceptions import WizardError
+from axonius_api_client.parsers.wizards import WizardParser
 
+from ...utils import get_schema
 from .test_wizard import TestData
 
 SRC = "test moo"
@@ -19,7 +19,7 @@ class TestWizardCsv:
         apiobj = request.getfixturevalue(request.param)
         obj = WizardCsv(apiobj=apiobj)
         assert obj.APIOBJ == apiobj
-        assert isinstance(obj.VALUE_PARSER, ValueParser)
+        assert isinstance(obj.PARSER, WizardParser)
         return obj
 
 
@@ -167,6 +167,8 @@ class TestProcessFields(TestWizardCsv):
     def test_no_default(self, wizard):
         simple = wizard.APIOBJ.FIELD_SIMPLE
         cplex = wizard.APIOBJ.FIELD_COMPLEX
+        get_schema(apiobj=wizard.APIOBJ, field=cplex)
+
         entry = {EntrySq.FIELDS: f"{simple},{cplex}"}
         exp = [simple, cplex]
         ret = wizard._process_fields(entry=entry)
@@ -174,6 +176,7 @@ class TestProcessFields(TestWizardCsv):
 
     def test_with_default(self, wizard):
         cplex = wizard.APIOBJ.FIELD_COMPLEX
+        get_schema(apiobj=wizard.APIOBJ, field=cplex)
         cplex_sub = f"{cplex}.{wizard.APIOBJ.FIELD_COMPLEX_SUB}"
         entry = {EntrySq.FIELDS: f"{cplex},{EntrySq.DEFAULT},{cplex_sub}"}
         exp = [cplex, *wizard.APIOBJ.fields_default, cplex_sub]
@@ -190,6 +193,7 @@ class TestProcessSqNewSq(TestWizardCsv, TestData):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         wizard._new_sq(entry=entry)
         assert wizard.SQ == exp
@@ -207,6 +211,7 @@ class TestProcessSqNewSq(TestWizardCsv, TestData):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         wizard._new_sq(entry=entry)
         assert wizard.SQ == exp
@@ -244,6 +249,7 @@ class TestProcessSq(TestWizardCsv):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         exp1_ret = 1
         exp1_entries = []
@@ -266,6 +272,7 @@ class TestProcessSq(TestWizardCsv):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         exp1_entries = []
         exp1_ret = 1
@@ -300,7 +307,7 @@ class TestProcessSq(TestWizardCsv):
                 "compOp": "equals",
                 "field": f"{simple}",
                 "fieldType": "axonius",
-                "filter": f'({simple} == "boom")',
+                "filter": f'("{simple}" == "boom")',
                 "filteredAdapters": None,
                 "leftBracket": False,
                 "logicOp": "",
@@ -309,7 +316,7 @@ class TestProcessSq(TestWizardCsv):
                 "value": "boom",
             }
         ]
-        exp2_sq[Results.QUERY] = f'({simple} == "boom")'
+        exp2_sq[Results.QUERY] = f'("{simple}" == "boom")'
 
         exp2_entries = [
             {
@@ -340,6 +347,7 @@ class TestProcessSq(TestWizardCsv):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         exp1_entries = []
         exp1_ret = 1
@@ -382,6 +390,7 @@ class TestProcessSq(TestWizardCsv):
             EntrySq.FMAN: wizard.APIOBJ.fields_default,
             EntrySq.TAGS: ["tag1", "tag2"],
             EntrySq.DESC: SRC,
+            **EntrySq.OPT_ENTRY,
         }
         exp3_entries = []
         exp3_ret = 0
@@ -447,7 +456,7 @@ class TestProcessSqs(TestWizardCsv):
                         "compOp": "equals",
                         "field": f"{simple}",
                         "fieldType": "axonius",
-                        "filter": f'({simple} == "boom")',
+                        "filter": f'("{simple}" == "boom")',
                         "filteredAdapters": None,
                         "leftBracket": False,
                         "logicOp": "",
@@ -456,7 +465,8 @@ class TestProcessSqs(TestWizardCsv):
                         "value": "boom",
                     }
                 ],
-                Results.QUERY: f'({simple} == "boom")',
+                Results.QUERY: f'("{simple}" == "boom")',
+                **EntrySq.OPT_ENTRY,
             },
             {
                 EntrySq.NAME: "badwolf3",
@@ -464,6 +474,7 @@ class TestProcessSqs(TestWizardCsv):
                 EntrySq.FMAN: wizard.APIOBJ.fields_default,
                 EntrySq.TAGS: ["tag1", "tag2"],
                 EntrySq.DESC: SRC,
+                **EntrySq.OPT_ENTRY,
             },
         ]
         ret = wizard._process_sqs(entries=entries)
@@ -524,9 +535,7 @@ class TestProcessCsv(TestWizardCsv):
 class TestLoadCsv(TestWizardCsv):
     def test_valid(self, wizard):
         simple = wizard.APIOBJ.FIELD_SIMPLE
-        bom = codecs.BOM_UTF8.decode()
         content = f"""
-{bom}
 {Entry.TYPE},{Entry.VALUE},{EntrySq.DESC},{EntrySq.TAGS},{EntrySq.FIELDS}
 "{Types.SAVED_QUERY}","badwolf","it is bad","tag1,tag2",""
 "{Types.SIMPLE}","{simple} contains boom",,,
@@ -543,6 +552,7 @@ class TestLoadCsv(TestWizardCsv):
                 EntrySq.DESC: "it is bad",
                 EntrySq.TAGS: "tag1,tag2",
                 EntrySq.FIELDS: EntrySq.OPT[EntrySq.FIELDS],
+                **EntrySq.OPT_ENTRY,
             },
             {
                 Entry.TYPE: Types.SIMPLE,
@@ -560,9 +570,7 @@ class TestLoadCsv(TestWizardCsv):
 class TestParse(TestWizardCsv):
     def test_valid(self, wizard, tmp_path):
         simple = wizard.APIOBJ.FIELD_SIMPLE
-        bom = codecs.BOM_UTF8.decode()
         content = f"""
-{bom}
 {Entry.TYPE},{Entry.VALUE},{EntrySq.DESC},{EntrySq.TAGS},{EntrySq.FIELDS}
 "{Types.SAVED_QUERY}","badwolf","it is bad","tag1,tag2",""
 "{Types.SIMPLE}","{simple} contains boom",,,
@@ -595,7 +603,7 @@ class TestParse(TestWizardCsv):
                         "compOp": "contains",
                         "field": f"{simple}",
                         "fieldType": "axonius",
-                        "filter": f'({simple} == regex("boom", "i"))',
+                        "filter": f'("{simple}" == regex("boom", "i"))',
                         "filteredAdapters": None,
                         "leftBracket": False,
                         "logicOp": "",
@@ -604,7 +612,8 @@ class TestParse(TestWizardCsv):
                         "value": "boom",
                     }
                 ],
-                Results.QUERY: f'({simple} == regex("boom", "i"))',
+                Results.QUERY: f'("{simple}" == regex("boom", "i"))',
+                **EntrySq.OPT_ENTRY,
             }
         ]
         ret_str = wizard.parse(content=content, source=SRC)
